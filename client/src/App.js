@@ -1,21 +1,38 @@
+
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import HomePage from './pages/HomePage';
+
+// Import Layouts
+import PublicLayout from './components/layout/PublicLayout';
+import MainLayout from './components/layout/MainLayout';
+import AdminLayout from './components/layout/AdminLayout';
+
+// Import Guards
+import ProtectedRoute from './routes/ProtectedRoute';
+import AdminRoute from './routes/AdminRoute';
+
+// Import Public Pages
+import HomePage from './pages/public/HomePage';
+import ContactPage from './pages/public/ContactPage';
+import GalleryPage from './pages/public/GalleryPage';
+import AnnouncementsPage from './pages/public/AnnouncementsPage';
+import LocationsPage from './pages/public/LocationsPage';
+
+// Import Auth Pages
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import OnboardingPage from './pages/OnboardingPage';
-import ProtectedRoute from './routes/ProtectedRoute';
+
+// Import Associate Pages
 import DashboardPage from './pages/associate/DashboardPage';
-import MainLayout from './components/layout/MainLayout';
 import MyDirectsPage from './pages/associate/MyDirectsPage';
 import MyProfilePage from './pages/associate/MyProfilePage';
-import AdminRoute from './routes/AdminRoute'; // <-- IMPORT ADMIN GUARD
-import ManageUsersPage from './pages/admin/ManageUsersPage';
-import AdminLayout from './components/layout/AdminLayout';
-import ManageDepositsPage from './pages/admin/ManageDepositsPage';
 import IncomeDetailPage from './pages/associate/IncomeDetailPage';
-import AdminDashboardPage from './pages/admin/AdminDashboardPage';
 
+// Import Admin Pages
+import AdminDashboardPage from './pages/admin/AdminDashboardPage';
+import ManageUsersPage from './pages/admin/ManageUsersPage';
+import ManageDepositsPage from './pages/admin/ManageDepositsPage';
 // --- Create a temporary Dashboard Page for now ---
 // const DashboardPage = () => <div><h1>Welcome to your Dashboard!</h1><p>This page is protected.</p></div>;
 // const AdminDashboardPage = () => <div><h1>Admin Dashboard</h1></div>;
@@ -23,8 +40,17 @@ function App() {
   return (
     <div>
       <Routes>
-        {/* Public Routes */}
-        <Route path="/" element={<HomePage />} />
+        {/* === Public Website Routes === */}
+        <Route element={<PublicLayout />}>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/contact" element={<ContactPage />} />
+          <Route path="/gallery" element={<GalleryPage />} />
+          <Route path="/announcements" element={<AnnouncementsPage />} />
+          <Route path="/locations" element={<LocationsPage />} />
+          {/* Add other public pages here */}
+        </Route>
+
+        {/* === Auth Routes (No Layout) === */}
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/onboarding" element={<OnboardingPage />} />
