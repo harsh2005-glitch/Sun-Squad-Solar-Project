@@ -1,0 +1,51 @@
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.admin-sidebar {
+  width: 240px;
+  background: #ffffff;
+  box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-sidebar h3 {
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
+  color: #333;
+}
+
+.admin-sidebar ul {
+  list-style: none;
+  padding: 0;
+  flex-grow: 1; /* Pushes the logout button down */
+}
+
+.admin-sidebar li a {
+  display: block;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  color: #555;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.admin-sidebar li a:hover {
+  background-color: #f4f7f6;
+}
+
+/* This is the style for the active link! */
+.admin-sidebar li a.active {
+  background-color: #007bff;
+  color: white;
+}
+
+.admin-main-content {
+  flex: 1;
+  background-color: #f4f7f6;
+  overflow-y: auto;
+}
