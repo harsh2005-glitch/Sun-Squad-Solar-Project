@@ -1,0 +1,175 @@
+@media (max-width: 768px) {
+    .form-row {
+        flex-direction: column;
+    }
+}
+
+
+/* Reusing some root variables for consistency */
+:root {
+    --primary-green: #33A1E0; /* This is the blue color from your button */
+    --white-color: #ffffff;
+    --text-color: #555;
+    --font-family: 'Poppins', sans-serif;
+}
+
+/* Style the body only when the 'auth-page' class is present */
+body.auth-page {
+    font-family: var(--font-family);
+    background: url('../assets/images/auth-bg.jpg') no-repeat center center/cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 1rem; /* Add some padding for small screens */
+    position: relative;
+}
+
+body.auth-page::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(10, 20, 40, 0.6); /* Dark blue overlay */
+    z-index: 0;
+}
+
+.auth-container {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.auth-card {
+    background: var(--white-color);
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    width: 100%; /* Make it flexible */
+    max-width: 400px; /* Set a maximum width */
+    text-align: center;
+    animation: fadeInSlideUp 0.6s ease-out forwards;
+}
+
+.auth-logo {
+    max-width: 150px;
+    margin-bottom: 20px;
+}
+
+.auth-card h2 {
+    margin-bottom: 10px;
+    font-size: 1.8rem;
+}
+
+.auth-subtitle {
+    margin-bottom: 30px;
+    color: var(--text-color);
+}
+
+.input-group {
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.auth-button {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 5px;
+    background: var(--primary-green);
+    color: var(--white-color);
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.auth-button:hover {
+    background-color: #2188c8; /* Darker blue */
+}
+
+.forgot-password {
+    display: inline-block;
+    margin-top: 20px;
+    color: var(--primary-green);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.top-right-link {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 2;
+}
+
+.btn-register {
+    background-color: #dc3545; /* Red color */
+    color: var(--white-color);
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.auth-message.error {
+  text-align: center;
+  margin-top: 1rem;
+  font-weight: 500;
+  color: #e74c3c;
+}
+
+/* === Media Query for Responsiveness === */
+@media (max-width: 480px) {
+    body.auth-page {
+        align-items: flex-start; /* Align form to top on mobile */
+        padding-top: 4rem;
+    }
+
+    .auth-card {
+        padding: 25px;
+    }
+
+    .auth-logo {
+        max-width: 120px;
+    }
+
+    .auth-card h2 {
+        font-size: 1.5rem;
+    }
+
+    .top-right-link {
+        top: 10px;
+        right: 10px;
+    }
+}
+
+@keyframes fadeInSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

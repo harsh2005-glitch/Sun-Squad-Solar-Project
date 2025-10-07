@@ -6,15 +6,7 @@ import logo from '../../assets/images/logo.png'; // Import the logo image
 const PublicHeader = ({ onEnquiryClick }) => {
   return (
     <header id="main-header">
-      <div className="top-bar">
-        <div className="contact-info">
-          <span>sunsquadsolar4@gmail.com</span> | <span>+91 9278450045</span>
-        </div>
-        <div className="social-media">
-          <a href="https://wa.me/919278450045" target="_blank" rel="noopener noreferrer"><i className="fa-brands fa-whatsapp"></i></a>
-          <a href="https://www.instagram.com/sunsquadsolar/" target="_blank" rel="noopener noreferrer"><i className="fa-brands fa-instagram"></i></a>
-        </div>
-      </div>
+      
       <nav className="main-nav">
         <div className="logo">
           <Link to="/"><img src={logo} alt="Company Logo" /></Link>

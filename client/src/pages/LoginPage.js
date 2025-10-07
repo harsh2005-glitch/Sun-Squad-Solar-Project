@@ -1,15 +1,18 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, {useState} from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import authService from '../services/authService';
-import './AuthPages.css';
-function LoginPage() {
+import logo from '../assets/images/logo.png'; // Make sure your logo is in this path
+import '../styles/auth.css';
+const LoginPage = () => {
   const [formData, setFormData] = useState({
     phone: '',
     password: '',
   });
   const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  // This logic remains the same
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevState) => ({
@@ -18,69 +21,87 @@ function LoginPage() {
     }));
   };
 
+  // This logic also remains the same
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage('');
-
+    setLoading(true);
     try {
       const response = await authService.login(formData.phone, formData.password);
-      
-      console.log('Login successful!', response.data);
       localStorage.setItem('user', JSON.stringify(response.data));
       
-      // --- NEW LOGIC HERE ---
-      // Check the user's role from the response
       if (response.data.role === 'admin') {
-        navigate('/admin/dashboard'); // Redirect admins
+        navigate('/admin/dashboard');
       } else if (response.data.onboardingRequired) {
         navigate('/onboarding');
       } else {
-        navigate('/app/dashboard'); // Redirect associates
+        navigate('/app/dashboard');
       }
-
     } catch (error) {
       setMessage(error.response?.data?.message || 'An error occurred during login.');
+    } finally {
+      setLoading(false); // <-- NEW: Set loading to false after API call finishes
     }
   };
 
+  // We need to add the 'auth-page' class to the body for the background
+  // This is a common React pattern for page-specific body styles
+  React.useEffect(() => {
+    document.body.classList.add('auth-page');
+    // Cleanup function to remove the class when the component unmounts
+    return () => {
+      document.body.classList.remove('auth-page');
+    };
+  }, []); // Empty array means this runs only once on mount
+
   return (
-     <div className="auth-container">
-      <form className="auth-form" onSubmit={handleSubmit}>
-      <h2>Login</h2>
-        <div className="form-group">
-          <label>Phone:</label>
-          <input
-            type="text"
-            name="phone"
-            placeholder="Enter your phone number"
-            value={formData.phone}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label>Password:</label>
-          <input
-            type="password"
-            name="password"
-            placeholder="Enter your password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <button type="submit" className="auth-button">Login</button>
-        {message && (
-            <p className={`auth-message ${
-                message.includes('successful') ? 'success' : 'error'
-            }`}>
-                {message}
-            </p>
-        )}
-      </form>
-      {message && <p>{message}</p>}
+    <div className="auth-container">
+      <div className="auth-card">
+        <Link to="/" className="auth-logo-link">
+          <img src={logo} alt="Sun Squad Solar" className="auth-logo" />
+        </Link>
+        <h2>Customer Login</h2>
+        <p className="auth-subtitle">Login with your phone number and password below.</p>
+        
+        <form onSubmit={handleSubmit}>
+          <div className="input-group">
+            <label htmlFor="phone">User ID (Phone)</label>
+            <input
+              type="text"
+              id="phone"
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="input-group">
+            <label htmlFor="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          {/* --- NEW: Button is now disabled and shows text based on loading state --- */}
+          <button type="submit" className="auth-button" disabled={loading}>
+            {loading ? 'Logging in...' : 'Continue'}
+          </button>
+        </form>
+        
+        {message && <p className="auth-message error">{message}</p>}
+        
+        <Link to="/forgot-password" className="forgot-password">Forgot Password</Link>
+      </div>
+      
+      <div className="top-right-link">
+        <Link to="/signup" className="btn-register">New Registration</Link>
+      </div>
     </div>
   );
-}
+};
 
 export default LoginPage;

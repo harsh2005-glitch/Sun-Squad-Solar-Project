@@ -8,6 +8,7 @@ import teamShivam from '../../assets/images/team-shivam.jpg';
 const HomePage = () => {
   return (
     <>
+   
       {/* Hero Section */}
       <section className="hero" />
 
