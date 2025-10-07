@@ -1424,3 +1424,183 @@ body.contact-page-bg::before {
     padding: 120px 5% 60px;
     background-color: transparent; /* Changed from a solid color to transparent */
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ==================================
+   Responsive Design (Mobile First)
+===================================== */
+
+/* --- Hamburger Menu Icon (Hidden on Desktop) --- */
+.menu-toggle {
+    display: none; /* Hide by default */
+    font-size: 1.5rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--dark-grey);
+}
+
+
+/* --- Media Query for Tablets and Mobile Phones --- */
+@media (max-width: 992px) {
+    /* --- Responsive Header --- */
+    .main-nav {
+        position: relative;
+    }
+    
+    /* This is the container for all links and buttons on mobile */
+    .mobile-nav-menu {
+        position: absolute;
+        top: 100%; /* Position below the header */
+        left: 0;
+        width: 100%;
+        background-color: var(--white-color);
+        
+        display: flex; /* Use flexbox to stack items */
+        flex-direction: column;
+        align-items: center;
+        
+        padding: 1rem;
+        box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+        
+        /* Animate the menu sliding in and out */
+        transform: translateY(-150%);
+        transition: transform 0.3s ease-in-out;
+        z-index: 999; /* Ensure it's on top */
+    }
+
+    .mobile-nav-menu.active {
+        transform: translateY(0); /* Slide the menu into view */
+    }
+    
+    /* The main nav links list inside the mobile menu */
+    .nav-links {
+        flex-direction: column;
+        width: 100%;
+        text-align: center;
+    }
+
+    .nav-links li {
+        padding: 1rem 0;
+        width: 100%;
+    }
+
+    /* The nav buttons container on desktop */
+    .desktop-buttons {
+        display: none; /* Hide the desktop version */
+    }
+    
+    /* The buttons inside the mobile menu */
+    .mobile-buttons {
+        display: flex;
+        flex-direction: column; /* Stack the buttons */
+        width: 100%;
+        gap: 1rem;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid #f0f0f0;
+    }
+
+    .mobile-buttons .btn {
+        width: 100%;
+        text-align: center;
+    }
+
+    /* Show the hamburger menu icon */
+    .menu-toggle {
+        display: block;
+    }
+}
+
+/* --- Media Query for Small Mobile Phones --- */
+@media (max-width: 576px) {
+    .top-bar {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .values-container {
+        grid-template-columns: 1fr; /* 1 column on small phones */
+    }
+
+    .footer-sub {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .gallery-grid, .locations-page-grid {
+         /* Adjust grid for smaller screens */
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+}

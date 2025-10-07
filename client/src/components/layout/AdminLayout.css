@@ -49,3 +49,36 @@
   background-color: #f4f7f6;
   overflow-y: auto;
 }
+
+
+
+
+
+@media (max-width: 768px) {
+    .admin-layout {
+        flex-direction: column;
+    }
+
+    .admin-sidebar {
+        width: 100%;
+        height: auto; /* Let it size to its content */
+        flex-direction: row; /* Make items go side-by-side */
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .admin-sidebar h3 {
+         display: none; /* Hide the "Admin Panel" title on mobile */
+    }
+    
+    .admin-sidebar ul {
+        display: flex; /* Make nav links horizontal */
+        gap: 10px;
+        flex-grow: 0; /* Don't let it push the logout button */
+    }
+
+    .admin-sidebar li a {
+        padding: 0.5rem; /* Smaller padding */
+        margin-bottom: 0;
+    }
+}
