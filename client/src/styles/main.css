@@ -1808,20 +1808,28 @@ body.contact-page-bg::before {
     border-bottom: 1px solid #eee;
 }
 
-/* Mobile Styles */
 @media (max-width: 992px) {
-    .admin-sidebar {
+    /* This wrapper will be positioned off-screen */
+    .admin-sidebar-wrapper {
         position: fixed;
         top: 0;
         bottom: 0;
+        left: 0;
         margin-left: -260px; /* Hide sidebar by default */
-        z-index: 1030; /* Make sure it's on top */
+        z-index: 1030;
+        transition: margin-left 0.3s ease;
+        width: 260px; /* Ensure it has a width */
     }
 
-    .admin-sidebar.active {
+    .admin-sidebar-wrapper.active {
         margin-left: 0; /* Show sidebar when active */
     }
     
+    .admin-sidebar {
+        width: 100%; /* Make the sidebar fill its wrapper */
+        height: 100%;
+    }
+
     .sidebar-overlay {
         position: fixed;
         top: 0;
@@ -1830,10 +1838,10 @@ body.contact-page-bg::before {
         bottom: 0;
         background-color: rgba(0,0,0,0.5);
         z-index: 1020;
-        display: none; /* Hidden by default */
+        display: none;
     }
     
     .sidebar-overlay.active {
-        display: block; /* Show overlay when sidebar is active */
+        display: block;
     }
 }

@@ -18,9 +18,9 @@ const AdminLayout = () => {
         onClick={toggleSidebar}
       ></div>
 
-      {/* Pass the toggle function to the sidebar so links can close it */}
-      <AdminSidebar onLinkClick={() => setSidebarActive(false)} />
-      
+      <div className={`admin-sidebar-wrapper ${sidebarActive ? 'active' : ''}`}>
+        <AdminSidebar onLinkClick={() => setSidebarActive(false)} />
+      </div>
       <main className="admin-content">
         {/* Hamburger button for mobile, hidden on larger screens */}
         <Button 
