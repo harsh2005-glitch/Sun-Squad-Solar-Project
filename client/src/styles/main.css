@@ -1604,3 +1604,236 @@ body.contact-page-bg::before {
         grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     }
 }
+/* ==================================
+   CUSTOM BOOTSTRAP NAVBAR STYLING
+===================================== */
+
+/* --- Main Navbar Container --- */
+.navbar {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Change navbar color on scroll */
+.navbar-scrolled {
+    background-color: #ffffff !important; /* Use !important to override Bootstrap's bg-light */
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.navbar-brand img {
+    height: 50px;
+    transition: height 0.3s ease;
+}
+
+.navbar-scrolled .navbar-brand img {
+    height: 40px; /* Make logo slightly smaller on scroll */
+}
+
+
+/* --- Navigation Links --- */
+.navbar .nav-link {
+    font-weight: 500;
+    color: #333 !important;
+    position: relative;
+    padding-bottom: 0.5rem;
+}
+
+/* Underline effect on hover */
+.navbar .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 2px;
+    background-color: var(--primary-green); /* Use your existing green color variable */
+    transition: width 0.3s ease-in-out;
+}
+
+.navbar .nav-link:hover::after {
+    width: 100%;
+}
+
+/* Style for the currently active link */
+.navbar .nav-link.active {
+    color: var(--primary-green) !important;
+    font-weight: 600;
+}
+.navbar .nav-link.active::after {
+    width: 100%; /* Show underline for active link */
+}
+
+
+/* --- Navigation Buttons --- */
+.navbar .btn {
+    border-radius: 50px; /* Pill-shaped buttons */
+    font-weight: 600;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+/* Enquiry Button Style */
+.navbar .btn-outline-primary {
+    border-color: #007bff;
+    color: #007bff;
+}
+.navbar .btn-outline-primary:hover {
+    background-color: #007bff;
+    color: white;
+    transform: translateY(-2px); /* Slight lift effect */
+    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+}
+
+/* Login Button Style */
+.navbar .btn-dark {
+    background-color: #343a40;
+}
+.navbar .btn-dark:hover {
+    background-color: #23272b;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+
+/* ==================================
+   NEW Contact Page Styling
+===================================== */
+
+/* Create the background image and overlay effect */
+body.contact-page-bg {
+    position: relative;
+    background-image: url('../assets/images/auth-bg.jpg'); /* We can re-use the login background */
+    background-size: cover;
+    background-position: center center;
+    background-attachment: fixed;
+}
+
+body.contact-page-bg::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.9); /* A slightly more opaque white overlay */
+    z-index: -1;
+}
+
+/* Override the transparent background for this specific section */
+.contact-section {
+    background-color: transparent !important;
+}
+
+/* NEW styles for the redesigned info cards */
+.info-card-contact {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    background-color: var(--white-color);
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    margin-bottom: 1.5rem;
+}
+
+.info-card-contact .info-icon {
+    flex-shrink: 0;
+    width: 60px;
+    height: 60px;
+    background-color: #e0f8e7; /* Light green background */
+    color: var(--primary-green); /* Your main green color */
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+}
+
+.info-card-contact .info-text h3 {
+    font-size: 1.3rem;
+    color: var(--dark-grey);
+    margin-bottom: 0.25rem;
+}
+
+.info-card-contact .info-text p {
+    margin-bottom: 0;
+    color: var(--text-color);
+}
+
+/* Custom button style for the green send button */
+.btn-submit-green {
+    background-color: var(--primary-green);
+    border-color: var(--primary-green);
+    padding: 0.75rem 2rem;
+    font-weight: 600;
+}
+
+.btn-submit-green:hover {
+    background-color: #37a35a; /* A slightly darker green */
+    border-color: #37a35a;
+}
+
+
+
+/* ==================================
+   NEW Admin Panel Responsive Styling
+===================================== */
+.admin-wrapper {
+    display: flex;
+    min-height: 100vh;
+    background-color: #f8f9fa;
+}
+
+.admin-sidebar {
+    width: 260px;
+    background: #fff;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    transition: margin-left 0.3s ease;
+}
+
+.admin-content {
+    flex-grow: 1;
+    padding: 2rem;
+    overflow-x: hidden; /* Prevents horizontal scroll */
+}
+
+.sidebar-header {
+    padding: 1.5rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+}
+
+/* Mobile Styles */
+@media (max-width: 992px) {
+    .admin-sidebar {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        margin-left: -260px; /* Hide sidebar by default */
+        z-index: 1030; /* Make sure it's on top */
+    }
+
+    .admin-sidebar.active {
+        margin-left: 0; /* Show sidebar when active */
+    }
+    
+    .sidebar-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0,0,0,0.5);
+        z-index: 1020;
+        display: none; /* Hidden by default */
+    }
+    
+    .sidebar-overlay.active {
+        display: block; /* Show overlay when sidebar is active */
+    }
+}

@@ -1,60 +1,65 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import adminService from '../../services/adminService';
-import '../../styles/PageLayout.css'; // <-- IMPORT THE SHARED STYLES
+import { Table, Card, Form, InputGroup } from 'react-bootstrap';
 
-function ManageUsersPage() {
+const ManageUsersPage = () => {
   const [users, setUsers] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await adminService.getAllUsers();
-        setUsers(response.data);
-      } catch (err) {
-        setError('Failed to fetch users.');
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchUsers();
+    adminService.getAllUsers()
+      .then(response => setUsers(response.data))
+      .catch(error => console.error("Failed to fetch users"))
+      .finally(() => setLoading(false));
   }, []);
 
-  if (loading) return <div>Loading users...</div>;
-  if (error) return <div style={{ color: 'red' }}>{error}</div>;
+  // Filter users based on search term
+  const filteredUsers = useMemo(() => {
+    if (!searchTerm) return users;
+    return users.filter(user => 
+      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (user.associateId && user.associateId.includes(searchTerm))
+    );
+  }, [users, searchTerm]);
 
   return (
-    <div className="page-container">
-      <h1 className="page-header">Manage Users</h1>
-      <div className="content-box">
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Associate ID</th>
-              <th>Phone</th>
-              <th>Email</th>
-              <th>Role</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.map(user => (
-              <tr key={user._id}>
-                <td>{user.name}</td>
-                <td>{user.associateId || 'N/A'}</td>
-                <td>{user.phone}</td>
-                <td>{user.email}</td>
-                <td>{user.role}</td>
-                <td>{user.status}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
+    <>
+      <h1 className="mb-4">Manage Users</h1>
+      <Card className="shadow-sm">
+        <Card.Header>
+          <Form>
+            <InputGroup>
+              <InputGroup.Text><i className="fa-solid fa-search"></i></InputGroup.Text>
+              <Form.Control 
+                type="text" 
+                placeholder="Search by name or Associate ID..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </InputGroup>
+          </Form>
+        </Card.Header>
+        <Card.Body>
+          <Table striped bordered hover responsive>
+            {/* ... table header is unchanged ... */}
+            <tbody>
+              {filteredUsers.map(user => (
+                <tr key={user._id}>
+                  <td>{user.name}</td>
+                  <td>{user.associateId || 'N/A'}</td>
+                  <td>{user.phone}</td>
+                  <td>{user.email}</td>
+                  <td>{user.role}</td>
+                  <td>{user.status}</td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        </Card.Body>
+      </Card>
+    </>
   );
-}
+};
 
 export default ManageUsersPage;

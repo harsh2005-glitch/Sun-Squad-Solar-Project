@@ -1,55 +1,93 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+// Import the Bootstrap components we need
+import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 
 const ContactPage = () => {
-  // We will add form handling logic here later
+  // Add and remove a class from the body tag to apply our background
+  useEffect(() => {
+    document.body.classList.add('contact-page-bg');
+    // Cleanup function to remove the class when the component is unmounted
+    return () => {
+      document.body.classList.remove('contact-page-bg');
+    };
+  }, []); // Empty array ensures this runs only on mount and unmount
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    alert("Form submitted!"); // Placeholder
+    alert("Form submitted! (Functionality to be added)");
   };
 
   return (
-    // Add the className to the body tag in your main App or index file if needed
-    // For now, we'll wrap it in a div that can be styled
-    <div className="contact-page-bg">
-      <main>
-        <section className="contact-section">
-          <div className="container">
+    <main>
+      <section className="contact-section">
+        <Container>
+          <div className="text-center">
             <h2 className="section-title">Get In Touch</h2>
             <div className="title-underline"></div>
             <p className="section-subtitle">Have a question? We'd love to hear from you. Contact us, and we’ll get back to you shortly.</p>
-
-            <div className="contact-content-wrapper">
-              <div className="contact-info-block">
-                <div className="info-card">
-                  <i className="fa-solid fa-location-dot"></i>
-                  <div>
-                    <h3>Our Office</h3>
-                    <p>Sant Nagar Colony, Baraipur, Chitaipur<br />Varanasi, 221106</p>
-                  </div>
-                </div>
-                {/* ... other info cards ... */}
-              </div>
-
-              <div className="contact-form-block">
-                <form onSubmit={handleSubmit}>
-                  <div className="form-row">
-                    <input type="text" name="name" placeholder="Your Name" required />
-                    <input type="email" name="email" placeholder="Your Email" required />
-                  </div>
-                  <input type="text" name="subject" placeholder="Subject" required />
-                  <textarea name="message" rows="6" placeholder="Your Message" required></textarea>
-                  <button type="submit" className="btn-submit-form">Send Message</button>
-                </form>
-              </div>
-            </div>
           </div>
-        </section>
 
-        <section className="map-section">
-          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3608.206116901794!2d82.96070707516577!3d25.26365087766825!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x398e332fdf328f73%3A0x1a5c35f7c55c3ffa!2sSUN%20SQUAD%20SOLAR!5e0!3m2!1sen!2sin!4v1759347768628!5m2!1sen!2sin" width="100%" height="450" style={{ border: 0 }} allowFullScreen="" loading="lazy" referrerPolicy="no-referrer-when-downgrade"></iframe>
-        </section>
-      </main>
-    </div>
+          {/* Bootstrap Grid Layout */}
+          <Row className="mt-5 align-items-center">
+            
+            {/* --- Left Column: Info Cards --- */}
+            <Col md={5} lg={4}>
+              <div className="info-card-contact">
+                <div className="info-icon"><i className="fa-solid fa-location-dot"></i></div>
+                <div className="info-text">
+                  <h3>Our Office</h3>
+                  <p>Sant Nagar Colony, Chitaipur, Varanasi, 221106</p>
+                </div>
+              </div>
+              <div className="info-card-contact">
+                <div className="info-icon"><i className="fa-solid fa-envelope"></i></div>
+                <div className="info-text">
+                  <h3>Email Us</h3>
+                  <p>sunsquadsolar4@gmail.com</p>
+                </div>
+              </div>
+              <div className="info-card-contact">
+                <div className="info-icon"><i className="fa-solid fa-phone"></i></div>
+                <div className="info-text">
+                  <h3>Call Us</h3>
+                  <p>+91 9278450045</p>
+                </div>
+              </div>
+            </Col>
+            
+            {/* --- Right Column: Contact Form --- */}
+            <Col md={7} lg={8}>
+              <Form onSubmit={handleSubmit} className="p-4 p-md-5">
+                <Row>
+                  <Col md={6}>
+                    <Form.Group className="mb-3">
+                      <Form.Control type="text" placeholder="Your Name" required />
+                    </Form.Group>
+                  </Col>
+                  <Col md={6}>
+                    <Form.Group className="mb-3">
+                      <Form.Control type="email" placeholder="Your Email" required />
+                    </Form.Group>
+                  </Col>
+                </Row>
+                <Form.Group className="mb-3">
+                  <Form.Control type="text" placeholder="Subject" required />
+                </Form.Group>
+                <Form.Group className="mb-4">
+                  <Form.Control as="textarea" rows={6} placeholder="Your Message" required />
+                </Form.Group>
+                <Button type="submit" className="btn-submit-green">
+                  Send Message
+                </Button>
+              </Form>
+            </Col>
+
+          </Row>
+        </Container>
+      </section>
+      
+      {/* The Map Section is now completely removed */}
+    </main>
   );
 };
 

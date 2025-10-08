@@ -1,5 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Carousel } from 'react-bootstrap';
+
+// --- Import your slider images ---
+import sliderImg1 from '../../assets/images/hero-slider-1.jpg'; // Replace with your actual image file
+import sliderImg2 from '../../assets/images/hero-slider-2.jpg'; // Replace with your actual image file
+import sliderImg3 from '../../assets/images/hero-slider-3.jpg'; // Replace with your actual image file
 
 // Import all necessary images
 import teamAbhishek from '../../assets/images/team-abhishek.jpg';
@@ -8,6 +14,46 @@ import teamShivam from '../../assets/images/team-shivam.jpg';
 const HomePage = () => {
   return (
     <>
+
+    {/* === NEW Bootstrap Carousel Section === */}
+      <Carousel fade indicators={false} controls={false}>
+        <Carousel.Item interval={3000}> {/* interval is in milliseconds (3 seconds) */}
+          <img
+            className="d-block w-100"
+            src={sliderImg1}
+            alt="First slide"
+            style={{ height: '85vh', objectFit: 'cover' }}
+          />
+          <Carousel.Caption>
+            <h3>Powerful Solar Solutions</h3>
+            <p>Harness the power of the sun for a brighter future.</p>
+          </Carousel.Caption>
+        </Carousel.Item>
+        <Carousel.Item interval={3000}>
+          <img
+            className="d-block w-100"
+            src={sliderImg2}
+            alt="Second slide"
+            style={{ height: '85vh', objectFit: 'cover' }}
+          />
+          <Carousel.Caption>
+            <h3>Sustainable Energy for Everyone</h3>
+            <p>Join us in the renewable energy revolution.</p>
+          </Carousel.Caption>
+        </Carousel.Item>
+        <Carousel.Item interval={3000}>
+          <img
+            className="d-block w-100"
+            src={sliderImg3}
+            alt="Third slide"
+            style={{ height: '85vh', objectFit: 'cover' }}
+          />
+          <Carousel.Caption>
+            <h3>Expert Installation & Service</h3>
+            <p>Quality and reliability you can trust.</p>
+          </Carousel.Caption>
+        </Carousel.Item>
+      </Carousel>
     {/* <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"></link> */}
    
       {/* Hero Section */}

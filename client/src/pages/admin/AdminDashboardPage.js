@@ -1,43 +1,51 @@
 import React, { useState, useEffect } from 'react';
 import adminService from '../../services/adminService';
-import '../../styles/PageLayout.css'; // Re-use our great styles
-import '../../pages/associate/DashboardPage.css'; // Re-use the stat card styles
+import { Card, Row, Col, Spinner } from 'react-bootstrap';
 
-function AdminDashboardPage() {
+const AdminDashboardPage = () => {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchStats = async () => {
-      try {
-        const response = await adminService.getDashboardStats();
+    adminService.getDashboardStats()
+      .then(response => {
         setStats(response.data);
-      } catch (error) {
-        console.error("Failed to fetch admin stats", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchStats();
+      })
+      .catch(error => console.error("Failed to fetch stats"))
+      .finally(() => setLoading(false));
   }, []);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) {
+    return <Spinner animation="border" />;
+  }
 
   return (
-    <div className="page-container">
-      <h1 className="page-header">Admin Dashboard</h1>
-      <div className="stats-grid">
-        <div className="stat-card total-team">
-          <h4>Total Associates</h4>
-          <p>{stats ? stats.totalUsers : 0}</p>
-        </div>
-        <div className="stat-card total-business">
-          <h4>Total Business Volume</h4>
-          <p>Rs. {stats ? stats.totalBusiness : 0}</p>
-        </div>
-      </div>
-    </div>
+    <>
+      <h1 className="mb-4">Admin Dashboard</h1>
+      <Row>
+        <Col md={6} className="mb-4">
+          <Card className="text-center shadow-sm h-100">
+            <Card.Body>
+              <div className="fs-1 text-primary mb-2"><i className="fa-solid fa-users"></i></div>
+              <Card.Title>Total Associates</Card.Title>
+              <Card.Text as="h2" className="fw-bold">{stats ? stats.totalUsers : 0}</Card.Text>
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col md={6} className="mb-4">
+          <Card className="text-center shadow-sm h-100">
+            <Card.Body>
+              <div className="fs-1 text-success mb-2"><i className="fa-solid fa-hand-holding-dollar"></i></div>
+              <Card.Title>Total Business Volume</Card.Title>
+              <Card.Text as="h2" className="fw-bold">
+                Rs. {stats ? stats.totalBusiness.toLocaleString('en-IN') : 0}
+              </Card.Text>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+    </>
   );
-}
+};
 
 export default AdminDashboardPage;

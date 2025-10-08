@@ -1,28 +1,39 @@
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
+import { Nav, Button } from 'react-bootstrap';
+import logo from '../../assets/images/logo.png'; // Assuming you have a logo
 
-function AdminSidebar() {
-  // Make sure the useNavigate hook is called here
+// `onLinkClick` is a new prop to close the sidebar on mobile after clicking a link
+const AdminSidebar = ({ onLinkClick }) => {
   const navigate = useNavigate();
-
-  // This function clears the user session and redirects to the login page
   const handleLogout = () => {
     localStorage.removeItem('user');
     navigate('/login');
   };
 
   return (
-    <div className="admin-sidebar">
-      <h3>Admin Panel</h3>
-      <ul>
-        <li><NavLink to="/admin/dashboard" className={({isActive}) => isActive ? "active" : ""}>Dashboard</NavLink></li>
-        <li><NavLink to="/admin/users" className={({isActive}) => isActive ? "active" : ""}>Manage Users</NavLink></li>
-        <li><NavLink to="/admin/deposits" className={({isActive}) => isActive ? "active" : ""}>Manage Deposits</NavLink></li>
-      </ul>
-      {/* Ensure the onClick is correctly assigned here */}
-      <button onClick={handleLogout} className="logout-button">Logout</button>
+    <div className="admin-sidebar d-flex flex-column p-3">
+      <div className="sidebar-header">
+        <img src={logo} height="40" alt="Logo" />
+      </div>
+      
+      <Nav variant="pills" className="flex-column my-4">
+        <Nav.Item>
+          <Nav.Link as={NavLink} to="/admin/dashboard" onClick={onLinkClick}>Dashboard</Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
+          <Nav.Link as={NavLink} to="/admin/users" onClick={onLinkClick}>Manage Users</Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
+          <Nav.Link as={NavLink} to="/admin/deposits" onClick={onLinkClick}>Manage Deposits</Nav.Link>
+        </Nav.Item>
+      </Nav>
+      
+      <Button variant="outline-danger" onClick={handleLogout} className="mt-auto">
+        Logout
+      </Button>
     </div>
   );
-}
+};
 
 export default AdminSidebar;

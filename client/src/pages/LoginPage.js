@@ -57,6 +57,10 @@ const LoginPage = () => {
   return (
     <div className="auth-container">
       <div className="auth-card">
+
+        <div className="top-right-link">
+        <Link to="/signup" className="btn-register">New Registration</Link>
+      </div>
         <Link to="/" className="auth-logo-link">
           <img src={logo} alt="Sun Squad Solar" className="auth-logo" />
         </Link>
@@ -97,9 +101,6 @@ const LoginPage = () => {
         <Link to="/forgot-password" className="forgot-password">Forgot Password</Link>
       </div>
       
-      <div className="top-right-link">
-        <Link to="/signup" className="btn-register">New Registration</Link>
-      </div>
     </div>
   );
 };
