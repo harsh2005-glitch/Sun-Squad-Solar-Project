@@ -2,26 +2,26 @@
   "version": 2,
   "builds": [
     {
-      "src": "/server/server.js",
+      "src": "server/server.js",
       "use": "@vercel/node"
     },
     {
-      "src": "/client/package.json",
+      "src": "client/package.json",
       "use": "@vercel/static-build",
       "config": {
-        "installCommand": "cd client && npm install",
-        "buildCommand": "cd client && npm run build",
+        "installCommand": "npm install --prefix client",
+        "buildCommand": "npm run build --prefix client",
         "outputDirectory": "client/build"
       }
     }
   ],
   "rewrites": [
     {
-      "source": "/api/(.*)",
+      "source": "/api/:path*",
       "destination": "/server/server.js"
     },
     {
-      "source": "/(.*)",
+      "source": "/:path*",
       "destination": "/client/build/index.html"
     }
   ]
