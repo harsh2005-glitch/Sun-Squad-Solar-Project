@@ -27,11 +27,24 @@ const completeOnboarding = (onboardingData) => {
   // 3. Make the protected API call
   return axios.post(`${API_BASE_URL}/auth/complete-onboarding`, onboardingData, config);
 };
+
+// Function to request a password reset email
+const forgotPassword = (email) => {
+  return axios.post(`${API_BASE_URL}/auth/forgotpassword`, { email });
+};
+
+// Function to submit the new password with the token
+const resetPassword = (token, password) => {
+  return axios.put(`${API_BASE_URL}/auth/resetpassword/${token}`, { password });
+};
 // We create an object to export all our functions
 const authService = {
   signup,
   login,
   completeOnboarding,
+   forgotPassword, // <-- Add this
+  resetPassword,  // <-- Add this
+
 };
 
 export default authService;

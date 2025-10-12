@@ -21,6 +21,7 @@ const userSchema = new mongoose.Schema({
     totalBusiness: { type: Number, default: 0 },
     commissionPercentage: { type: Number, default: 2 },
     role: { type: String, enum: ['associate', 'admin'], default: 'associate' },
+    profilePicture: { type: String, default: '' },
     dateOfJoining: { type: Date, default: Date.now }
 }, { timestamps: true });
 

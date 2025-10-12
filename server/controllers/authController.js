@@ -2,7 +2,8 @@
 const User = require('../models/user');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-
+const { Resend } = require('resend');
+const crypto = require('crypto');
 // Helper function to generate a unique Associate ID
 const generateAssociateId = () => {
     // Generates a random 8-digit number. You can customize this logic.
@@ -136,8 +137,100 @@ const completeOnboarding = async (req, res) => {
 };
 
 
+// @desc    Generate and email a password reset token using Resend
+// @route   POST /api/auth/forgotpassword
+const forgotPassword = async (req, res) => {
+    const { email } = req.body;
+    // Initialize Resend with your API key from .env
+    const resend = new Resend(process.env.RESEND_API_KEY);
+
+    let user; // Define user outside the try block for access in catch
+    try {
+        user = await User.findOne({ email });
+        if (!user) {
+            // Security: Always send a success-like response to prevent email enumeration
+            return res.status(200).json({ message: 'If an account with that email exists, a reset link has been sent.' });
+        }
+
+        // 1. Generate the reset token
+        const resetToken = crypto.randomBytes(20).toString('hex');
+
+        // 2. Hash token and set expiry on the user object in the DB
+        user.passwordResetToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+        user.passwordResetExpires = Date.now() + 10 * 60 * 1000; // 10 minutes
+        await user.save({ validateBeforeSave: false });
+
+        // 3. Create the full reset URL for the frontend
+        // IMPORTANT: In production, you MUST replace 'localhost:3000' with your actual frontend domain
+        const resetUrl = `http://localhost:3000/resetpassword/${resetToken}`;
+
+        // 4. Send the email using Resend
+        await resend.emails.send({
+            from: 'Sun Squad Solar <onboarding@resend.dev>', // Resend's default sending address
+            to: [user.email], // The recipient's email
+            subject: 'Password Reset Request',
+            // You can use plain text or create a beautiful HTML email
+            html: `
+                <p>You are receiving this email because you (or someone else) have requested the reset of a password. Please click the following link to complete the process:</p>
+                <a href="${resetUrl}" target="_blank">Reset Your Password</a>
+                <p>This link will expire in 10 minutes.</p>
+                <p>If you did not request this, please ignore this email and your password will remain unchanged.</p>
+            `,
+        });
+        
+        res.status(200).json({ message: 'If an account with that email exists, a reset link has been sent.' });
+
+    } catch (error) {
+        console.error("FORGOT PASSWORD ERROR:", error);
+        // If an error occurs, clear the token fields to allow the user to try again
+        if (user) {
+            user.passwordResetToken = undefined;
+            user.passwordResetExpires = undefined;
+            await user.save({ validateBeforeSave: false });
+        }
+        res.status(500).json({ message: 'Email could not be sent. Please try again later.' });
+    }
+};
+
+
+// @desc    Reset password using token
+// @route   PUT /api/auth/resetpassword/:token
+const resetPassword = async (req, res) => {
+    try {
+        // 1. Get the hashed version of the token from the URL
+        const hashedToken = crypto.createHash('sha256').update(req.params.token).digest('hex');
+
+        // 2. Find the user by the hashed token and check if it's not expired
+        const user = await User.findOne({
+            passwordResetToken: hashedToken,
+            passwordResetExpires: { $gt: Date.now() }, // $gt = greater than
+        });
+
+        if (!user) {
+            return res.status(400).json({ message: 'Invalid or expired token.' });
+        }
+
+        // 3. Set the new password
+        user.password = req.body.password;
+        // 4. Clear the reset token fields
+        user.passwordResetToken = undefined;
+        user.passwordResetExpires = undefined;
+
+        // The 'pre-save' hook in user.js will automatically hash the new password
+        await user.save();
+
+        res.status(200).json({ message: 'Password reset successful! You can now log in.' });
+    } catch (error) {
+        console.error("RESET PASSWORD ERROR:", error);
+        res.status(500).json({ message: 'Server error.' });
+    }
+};
+
+
 module.exports = {
     signupUser,
     loginUser,
     completeOnboarding,
+    forgotPassword,
+    resetPassword,
 };

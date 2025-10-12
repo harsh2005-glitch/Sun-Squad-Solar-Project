@@ -1,89 +1,29 @@
-/* Main container for the dashboard */
-.dashboard-container {
-  padding: 2rem;
+.dashboard-stat-card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-left: 5px solid; /* For the colorful border */
 }
 
-/* Styling for the main heading like "Dashboard" */
-.dashboard-header {
-  margin-bottom: 2rem;
-  font-size: 2rem;
-  color: #2c3e50;
+.dashboard-stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.12);
 }
 
-/* --- User Info Card --- */
-.user-info-card {
-  background-color: white;
-  border-radius: 8px;
-  padding: 1.5rem;
-  margin-bottom: 2rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+.dashboard-stat-card .card-title {
+    font-weight: 500;
+    color: #6c757d; /* Muted text color */
 }
 
-.user-info-card h3 {
-  margin-bottom: 1rem;
+.dashboard-stat-card .card-text {
+    font-size: 2rem;
+    font-weight: 700;
 }
 
-.user-info-card p {
-  line-height: 1.6;
-  color: #555;
-}
-
-.user-info-card .level {
-  font-weight: bold;
-  font-size: 1.2rem;
-  color: #27ae60;
-}
-
-
-/* --- Stats Cards Section --- */
-/* This container will use Flexbox to arrange the cards */
-.stats-grid {
-  display: flex;
-  flex-wrap: wrap; /* Allows cards to wrap to the next line on small screens */
-  gap: 1.5rem; /* Space between the cards */
-  margin-bottom: 2rem;
-}
-
-/* Common style for all stat cards */
-.stat-card {
-  flex: 1; /* Allows the cards to grow and shrink equally */
-  min-width: 180px; /* Prevents cards from getting too small */
-  background-color: white;
-  padding: 1.5rem;
-  border-radius: 8px;
-  text-align: center;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  border-left: 5px solid #ccc; /* Default border color */
-}
-
-.stat-card h4 {
-  margin-bottom: 0.5rem;
-  color: #555;
-  font-size: 1rem;
-}
-
-.stat-card p {
-  font-size: 1.75rem;
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-/* Specific border colors to match your design */
-.self-business { border-color: #3498db; } /* Blue */
-.team-business { border-color: #f1c40f; } /* Yellow */
-.total-business { border-color: #2ecc71; } /* Green */
-.total-team { border-color: #9b59b6; } /* Purple */
-.direct-team { border-color: #e74c3c; } /* Red */
-
-
-/* --- Direct Sponsors Table Section --- */
-.directs-section {
-  background-color: white;
-  border-radius: 8px;
-  padding: 1.5rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.directs-section h3 {
-  margin-bottom: 1rem;
-}
+/* Assigning border colors */
+.border-primary { border-left-color: #0d6efd !important; }
+.border-warning { border-left-color: #ffc107 !important; }
+.border-success { border-left-color: #198754 !important; }
+.border-info { border-left-color: #0dcaf0 !important; }
+.border-danger { border-left-color: #dc3545 !important; }

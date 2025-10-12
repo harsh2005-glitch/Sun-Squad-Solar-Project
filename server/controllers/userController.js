@@ -4,6 +4,8 @@ const Commission = require('../models/commission');
 // @desc    Get data for the user dashboard
 // @route   GET /api/users/dashboard
 // @access  Protected
+
+
 const getDashboardData = async (req, res) => {
     try {
         // req.user is attached by our 'protect' middleware
@@ -26,6 +28,7 @@ const getDashboardData = async (req, res) => {
                 mobile: user.phone,
                 address: user.address,
                 level: user.level,
+                 profilePicture: user.profilePicture,
                 dateOfJoining: user.dateOfJoining,
             },
             businessStats: {
@@ -134,11 +137,36 @@ const getCommissions = async (req, res) => {
         res.status(500).json({ message: 'Server Error' });
     }
 };
+const updateUserProfilePicture = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
 
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    if (req.file) {
+      // req.file is available because of the 'upload' middleware
+      // We save the path to the image, e.g., /uploads/profile-166820381.jpg
+      user.profilePicture = req.file.path; 
+  const updatedUser = await user.save();
+      res.json({
+        message: 'Profile picture updated successfully',
+        profilePicture: updatedUser.profilePicture
+      });
+    } else {
+      res.status(400).json({ message: 'No image file provided' });
+    }
+  } catch (error) {
+    console.error("UPLOAD PICTURE ERROR:", error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+};
 module.exports = {
     getDashboardData,
     getDirects,
     getUserProfile,
     updateUserProfile,
+    updateUserProfilePicture,
     getCommissions, // <-- Add the new function to exports
 };
