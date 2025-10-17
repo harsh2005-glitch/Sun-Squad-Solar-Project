@@ -20,8 +20,10 @@ const app = express();
 const allowedOrigins = [
   'http://localhost:3000',
   'https://sunsquadsolar.vercel.app',
-  'https://sun-squad-solar.vercel.app'
+  'https://sun-squad-solar.vercel.app',
+  'https://www.sunsquadsolar.in'
 ];
+
 const corsOptions = {
   origin: (origin, callback) => {
     if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
@@ -31,7 +33,11 @@ const corsOptions = {
     }
   },
   credentials: true,
-  optionsSuccessStatus: 200
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
+  optionsSuccessStatus: 200,
+  preflightContinue: false,
+  maxAge: 86400 // 24 hours
 };
 
 // Middlewares
