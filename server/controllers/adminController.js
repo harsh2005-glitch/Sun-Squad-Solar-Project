@@ -2,6 +2,8 @@ const User = require('../models/user');
 const Deposit = require('../models/deposit');
 const Commission = require('../models/commission');
 const Settings = require('../models/settings');
+const Transaction = require('../models/transaction');
+
 
 /**
  * @desc    Helper function to determine the correct commission percentage for a user.
@@ -21,15 +23,52 @@ const determineCommissionPercentage = (selfBusiness, teamBusiness, tiers) => {
             return tier.commissionPercentage; // Return the first (highest) tier they qualify for
         }
     }
-    
+
     // If no specific tier is met, return a default minimum (e.g., from the first tier)
-    return tiers[0]?.commissionPercentage || 0; 
+    return tiers[0]?.commissionPercentage || 0;
 };
 
 
 // @desc    Get all users for the admin panel.
 // @route   GET /api/admin/users
 // @access  Admin
+
+const updateUserStatus = async (req, res) => {
+    const { isActive } = req.body; // Expecting { isActive: true } or { isActive: false }
+    const { id } = req.params; // Get the user's ID from the URL
+
+    try {
+        const user = await User.findById(id);
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // We will add an 'isActive' field to the user schema
+        user.isActive = isActive;
+        await user.save();
+
+        res.json({ message: `User has been ${isActive ? 'activated' : 'deactivated'}.` });
+
+    } catch (error) {
+        console.error("UPDATE USER STATUS ERROR:", error);
+        res.status(500).json({ message: 'Server Error' });
+    }
+};
+
+const getGenealogyTree = async (req, res) => {
+    try {
+        // --- ADD selfBusiness and teamBusiness to the select() ---
+        const users = await User.find({})
+            .select('name associateId sponsor directs selfBusiness teamBusiness')
+            .lean();
+
+        res.json(users);
+    } catch (error) {
+        console.error("GET GENEALOGY ERROR:", error);
+        res.status(500).json({ message: 'Server Error' });
+    }
+};
 const getAllUsers = async (req, res) => {
     try {
         const users = await User.find({}).select('-password');
@@ -63,80 +102,132 @@ const getDashboardStats = async (req, res) => {
     }
 };
 
-// @desc    Add a new deposit and trigger all business logic.
+// @desc    Add a new deposit and trigger all updates
 // @route   POST /api/admin/deposits
-// @access  Admin
 const addDeposit = async (req, res) => {
     const { associateId, amount } = req.body;
     const adminId = req.user.id;
-
-    if (!associateId || !amount || amount <= 0) {
-        return res.status(400).json({ message: 'Associate ID and a valid amount are required.' });
-    }
+    const depositAmount = Number(amount);
 
     try {
-        // --- 1. Get Business Rules & Depositor ---
         const settings = await Settings.findOne({ singleton: 'main_settings' });
-        if (!settings || !settings.commissionTiers || settings.commissionTiers.length === 0) {
-            return res.status(500).json({ message: 'Business commission tiers are not configured.' });
-        }
+        if (!settings) throw new Error('Business settings not configured.');
 
         const depositor = await User.findOne({ associateId });
-        if (!depositor) {
-            return res.status(404).json({ message: 'User with that Associate ID not found.' });
-        }
+        if (!depositor) return res.status(404).json({ message: 'User not found.' });
 
-        const depositAmount = Number(amount);
-
-        // --- 2. Create Deposit Record & Update Depositor's Self Business ---
-        const deposit = await Deposit.create({
-            depositor: depositor._id,
+        // Create transaction record
+        await Transaction.create({
+            user: depositor._id,
+            type: 'deposit',
             amount: depositAmount,
-            approvedBy: adminId,
-        });
-        depositor.selfBusiness += depositAmount;
-
-        // --- 3. Update Depositor's Commission Percentage & Calculate Their Commission ---
-        depositor.commissionPercentage = determineCommissionPercentage(
-            depositor.selfBusiness,
-            depositor.teamBusiness, // At this point, their team business hasn't changed yet
-            settings.commissionTiers
-        );
-        await depositor.save();
-
-        // The user earns commission based on their newly updated percentage
-        await Commission.create({
-            recipient: depositor._id,
-            sourceDeposit: deposit._id,
-            sourceUser: depositor._id,
-            amount: depositAmount * (depositor.commissionPercentage / 100),
-            commissionType: 'self',
-            percentageEarned: depositor.commissionPercentage,
+            adminResponsible: adminId,
         });
 
-        // --- 4. Traverse Upline to Update Team Business & Percentages ---
-        let currentSponsor = await User.findById(depositor.sponsor);
-        while (currentSponsor) {
-            // Update the sponsor's team business
-            currentSponsor.teamBusiness += depositAmount;
+        // Trigger the master update function with a positive amount
+        await updateUserAndUpline(depositor._id, depositAmount, settings);
 
-            // Re-evaluate the sponsor's commission percentage based on their new business total
-            currentSponsor.commissionPercentage = determineCommissionPercentage(
-                currentSponsor.selfBusiness,
-                currentSponsor.teamBusiness,
-                settings.commissionTiers
-            );
-            await currentSponsor.save();
-
-            // Move to the next sponsor in the chain
-            currentSponsor = await User.findById(currentSponsor.sponsor);
-        }
-
-        res.status(201).json({ message: 'Deposit added. Business and commission percentages have been updated for the entire chain.' });
-
+        res.status(201).json({ message: 'Deposit recorded and all balances/incomes updated.' });
     } catch (error) {
         console.error("ADD DEPOSIT ERROR:", error);
         res.status(500).json({ message: 'Server Error' });
+    }
+};
+
+
+
+
+// @desc    Add a new withdrawal and trigger all updates
+// @route   POST /api/admin/withdrawals
+const addWithdrawal = async (req, res) => {
+    const { associateId, amount } = req.body;
+    const adminId = req.user.id;
+    const withdrawalAmount = Number(amount);
+
+    try {
+        const settings = await Settings.findOne({ singleton: 'main_settings' });
+        if (!settings) throw new Error('Business settings not configured.');
+        
+        const user = await User.findOne({ associateId });
+        if (!user) return res.status(404).json({ message: 'User not found.' });
+        
+        // Create transaction record
+        await Transaction.create({
+            user: user._id,
+            type: 'withdrawal',
+            amount: withdrawalAmount,
+            adminResponsible: adminId,
+        });
+
+        // Trigger the master update function with a negative amount
+        await updateUserAndUpline(user._id, -withdrawalAmount, settings);
+        
+        res.status(201).json({ message: 'Withdrawal recorded and all balances/incomes updated.' });
+    } catch (error) {
+        console.error("ADD WITHDRAWAL ERROR:", error);
+        res.status(500).json({ message: 'Server Error' });
+    }
+};
+// --- NEW FUNCTION: Get Transaction History ---
+const getTransactionHistory = async (req, res) => {
+    try {
+        const transactions = await Transaction.find({})
+            .populate('user', 'name associateId') // Get user's name and ID
+            .populate('adminResponsible', 'name') // Get admin's name
+            .sort({ createdAt: -1 }); // Show newest first
+
+        res.json(transactions);
+    } catch (error) {
+        console.error("GET TRANSACTIONS ERROR:", error);
+        res.status(500).json({ message: 'Server Error' });
+    }
+};
+
+
+
+// --- NEW: The Slab Calculation Engine ---
+const calculateSlabIncome = (balance, slabs) => {
+    let income = 0;
+    let remainingBalance = balance;
+    
+    // Sort slabs by 'from' amount to process them in order
+    const sortedSlabs = [...slabs].sort((a, b) => a.from - b.from);
+
+    for (const slab of sortedSlabs) {
+        if (remainingBalance <= 0) break;
+
+        // Determine the amount of balance that falls into this slab
+        const slabRange = slab.to - slab.from + (slab.from === 0 ? 0 : 1);
+        const applicableBalance = Math.min(remainingBalance, slabRange);
+        
+        income += applicableBalance * (slab.percentage / 100);
+        
+        remainingBalance -= applicableBalance;
+    }
+    return income;
+};
+
+
+// --- NEW: The Master Update Function ---
+const updateUserAndUpline = async (userId, amountChange, settings) => {
+    const user = await User.findById(userId);
+    if (!user) return;
+
+    // 1. Update the user's self balance and recalculate their self income
+    user.currentSelfBalance += amountChange;
+    user.selfIncome = calculateSlabIncome(user.currentSelfBalance, settings.selfIncomeSlabs);
+    await user.save();
+
+    // 2. Traverse the upline
+    let currentSponsor = await User.findById(user.sponsor);
+    while (currentSponsor) {
+        // Update the sponsor's team balance
+        currentSponsor.currentTeamBalance += amountChange;
+        // Recalculate their team income based on the new team balance
+        currentSponsor.teamIncome = calculateSlabIncome(currentSponsor.currentTeamBalance, settings.teamIncomeSlabs);
+        await currentSponsor.save();
+        
+        currentSponsor = await User.findById(currentSponsor.sponsor);
     }
 };
 
@@ -144,4 +235,10 @@ module.exports = {
     getAllUsers,
     addDeposit,
     getDashboardStats,
+    getGenealogyTree,
+    updateUserStatus,
+    addWithdrawal,
+    getTransactionHistory,
+    // addDeposit,
+    // addWithdrawal,
 };

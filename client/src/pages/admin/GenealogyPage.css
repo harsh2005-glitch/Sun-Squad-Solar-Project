@@ -1,0 +1,49 @@
+.genealogy-container {
+    height: 80vh;
+    width: 100%;
+    background-color: #f8f9fa; /* Light background for the container */
+    border: 1px dashed #ccc;
+    border-radius: 8px;
+}
+
+/* Styling for the individual user cards */
+.node-card {
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    min-width: 150px;
+}
+
+.node-card img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-bottom: 8px;
+}
+
+.node-name {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #333;
+}
+
+.node-id, .node-business {
+    font-size: 0.8rem;
+    color: #777;
+}
+
+/* Style the links (paths) between nodes */
+.rd3t-link {
+    stroke: #ccc;
+    stroke-width: 2px;
+}
+
+/* Style the circle that acts as the expand/collapse button */
+.rd3t-node circle {
+    fill: #fff;
+    stroke: #ccc;
+    stroke-width: 2px;
+}

@@ -66,6 +66,10 @@ const loginUser = async (req, res) => {
 
         // 2. Check if user exists and if password matches
         if (user && (await bcrypt.compare(password, user.password))) {
+
+            if (!user.isActive) {
+                return res.status(403).json({ message: 'Your account has been deactivated. Please contact support.' }); // 403 Forbidden
+            }
             // 3. Respond with token and user status
             res.json({
                 _id: user._id,

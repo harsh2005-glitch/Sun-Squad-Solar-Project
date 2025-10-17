@@ -35,6 +35,7 @@ import IncomeDetailPage from './pages/associate/IncomeDetailPage';
 import AdminDashboardPage from './pages/admin/AdminDashboardPage';
 import ManageUsersPage from './pages/admin/ManageUsersPage';
 import ManageDepositsPage from './pages/admin/ManageDepositsPage';
+import GenealogyPage from './pages/admin/GenealogyPage';
 // --- Create a temporary Dashboard Page for now ---
 // const DashboardPage = () => <div><h1>Welcome to your Dashboard!</h1><p>This page is protected.</p></div>;
 // const AdminDashboardPage = () => <div><h1>Admin Dashboard</h1></div>;
@@ -76,6 +77,7 @@ function App() {
             <Route path="dashboard" element={<AdminDashboardPage />} />
             <Route path="users" element={<ManageUsersPage />} />
             <Route path="deposits" element={<ManageDepositsPage />} />
+            <Route path="genealogy" element={<GenealogyPage />} />
             {/* We will add the deposits page route here next */}
           </Route>
         </Route>

@@ -1,0 +1,66 @@
+problem is that when admin change or make deposite of user , then that changes is not reflet in user dashboard table  and not in payout/income table ,
+ money is not changes from user total deposite .
+
+i want that in dashborad page show total income;
+
+i want to explain entire system =
+1)deposite and withdraw system : it is done by admin , 
+            then it create new entry in Transaction History of admin pannel, that user panel(as self) and its team panel (as team);
+            and all user have a curr balance for self and team (it show on user dashboard page and also in payout/income page) , and
+            this curr balance of that user will increase or decrease on deposite and withdraw and it reflet all in team balance in their team members;
+
+            but u did very wrong that Transaction history not reflect in that users and their teammates and it didn't calulate commission or income ;
+
+2)income or commission calulation :
+        a)Self : 
+        from             till                self            
+        0                5,00,000             2%                   
+        5,00,001         15,00,000            3%                      
+        15,00,001        50lakh               4%                       
+        >50lakh          <=1cr                5%
+
+        This is table for calculation of self income on self curr balance or total self deposite;
+        let deposite is 6lakh or total curr self balance is 6 lakh, then 
+        income will equal to (5lakh* 2%  + 1lakh*3% )= 10000+3000= 13000
+
+        let deposite =1lakh; and cur self balance=10lakh 
+        then total self curr balance = 11lakh 
+        self income = 500000*2% +  600000*3% = 10000+ 18000 = 28000 /-
+
+
+
+
+        b)Team
+        from             till                team            
+        0                15,00,000             2%                   
+        15,00,001         1cr                  3%                      
+        1cr+1             3cr                  4%   
+
+        let deposite is 16lakh on their team member or total curr team  balance is 16 lakh, then 
+        team commission income will equal to (15lakh* 2%  + 1lakh*3% )= 30000+3000= 33000      
+
+        so, finally  i want to say that no need to calculate commission on all individual deposite of any type ;
+        just calculate these thing for all user's current team and self balance ;
+
+
+
+3)payout/income page : 
+        Make a three row table for income or commission details 
+            first row for self current balance(all self deposite - all self withdraw) 
+            2nd - for team current balance;
+            3rd- for adding total income from self and team , total balance etc;
+
+
+        Make Transaction History in payout/income page of users for all self and team deposite or withdraw ;
+                and also show type like team or self , deposite or withdraw etc 
+
+
+4)User dashboard page :
+        also show total curr team and self balance, total current team and self commission etc ;
+        
+
+
+
+IF U HAVE ANY KIND OF DOUBT , U CAN ASK ME;
+
+        

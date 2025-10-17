@@ -1,4 +1,3 @@
-// Verifies JWT token to protect routes 
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
@@ -7,27 +6,34 @@ const protect = async (req, res, next) => {
 
     if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
         try {
-            // Get token from header (e.g., "Bearer eyJhbGci...")
+            // Get token from header
             token = req.headers.authorization.split(' ')[1];
 
-            // Verify the token
+            // Verify token
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-            // Get user from the token's ID and attach it to the request object
+            // Get user from the token and attach to request object
+            // CRITICAL: Ensure this 'await' completes before moving on
             req.user = await User.findById(decoded.id).select('-password');
+            
+            if (!req.user) {
+                // This handles the case where the user has been deleted but the token is still valid
+                return res.status(401).json({ message: 'Not authorized, user not found' });
+            }
 
-            next(); // Proceed to the next step (the controller function)
+            next(); // Proceed to the next middleware/controller
         } catch (error) {
             console.error(error);
-            res.status(401).json({ message: 'Not authorized, token failed' });
+            return res.status(401).json({ message: 'Not authorized, token failed' });
         }
     }
 
     if (!token) {
-        res.status(401).json({ message: 'Not authorized, no token' });
+        return res.status(401).json({ message: 'Not authorized, no token' });
     }
 };
 
+// ... (the 'admin' middleware is unchanged) ...
 const admin = (req, res, next) => {
     // This middleware should run AFTER protect()
     if (req.user && req.user.role === 'admin') {

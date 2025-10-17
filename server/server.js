@@ -17,7 +17,11 @@ connectDB();
 // Initialize the app
 const app = express();
 
-const allowedOrigins = ['http://localhost:3000', 'https://sunsquadsolar.vercel.app/'];
+const allowedOrigins = [
+  'http://localhost:3000',
+  'https://sunsquadsolar.vercel.app',
+  'https://sun-squad-solar.vercel.app'
+];
 const corsOptions = {
   origin: (origin, callback) => {
     if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
@@ -26,6 +30,7 @@ const corsOptions = {
       callback(new Error('Not allowed by CORS'));
     }
   },
+  credentials: true,
   optionsSuccessStatus: 200
 };
 
@@ -40,7 +45,7 @@ app.use('/api/admin', adminRoutes);
 
 // A simple test route to make sure the server is running
 app.get('/', (req, res) => {
-    res.json({ message: "Welcome to the A.K. Infradream API!" });
+    res.json({ message: "Welcome to the Sun Squad Solar API!" });
 });
 
 // This makes the 'uploads' folder publicly accessible
@@ -49,8 +54,13 @@ app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
 // API Routes
 app.use('/api/auth', authRoutes);
 
-// Define the port and start the server
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
+// For local development
+if (process.env.NODE_ENV !== 'production') {
+    const PORT = process.env.PORT || 5000;
+    app.listen(PORT, () => {
+        console.log(`Server is running on port ${PORT}`);
+    });
+}
+
+// Export the app for Vercel
+module.exports = app;

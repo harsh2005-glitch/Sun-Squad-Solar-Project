@@ -1,8 +1,10 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import './Navbar.css'; // <-- IMPORT THE CSS
+import { Link } from 'react-router-dom';
+import { Navbar, Nav, Container, Button } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
+import logo from '../../assets/images/logo.png'; // Assuming you want to use the logo here too
 
-function Navbar() {
+const AppNavbar = () => { // Renamed to avoid confusion with the library
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -11,16 +13,26 @@ function Navbar() {
   };
 
   return (
-    <nav className="navbar">
-      <div className="nav-links">
-        <Link to="/app/dashboard">Dashboard</Link>
-        <Link to="/app/network/directs">Network</Link>
-        <Link to="/app/payout/income">Payout / Income</Link>
-        <Link to="/app/profile">My Profile</Link>
-      </div>
-      <button onClick={handleLogout} className="logout-button">Logout</button>
-    </nav>
+    <Navbar bg="light" expand="lg" sticky="top" className="shadow-sm">
+      <Container>
+        <Navbar.Brand as={Link} to="/app/dashboard">
+          <img src={logo} height="40" alt="Logo" />
+        </Navbar.Brand>
+        <Navbar.Toggle aria-controls="app-navbar-nav" />
+        <Navbar.Collapse id="app-navbar-nav">
+          <Nav className="me-auto">
+            <Nav.Link as={Link} to="/app/dashboard">Dashboard</Nav.Link>
+            <Nav.Link as={Link} to="/app/network/directs">Network</Nav.Link>
+            <Nav.Link as={Link} to="/app/payout/income">Payout / Income</Nav.Link>
+            <Nav.Link as={Link} to="/app/profile">My Profile</Nav.Link>
+          </Nav>
+          <Button variant="outline-danger" onClick={handleLogout}>
+            Logout
+          </Button>
+        </Navbar.Collapse>
+      </Container>
+    </Navbar>
   );
-}
+};
 
-export default Navbar;
+export default AppNavbar;

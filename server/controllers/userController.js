@@ -8,18 +8,11 @@ const Commission = require('../models/commission');
 
 const getDashboardData = async (req, res) => {
     try {
-        // req.user is attached by our 'protect' middleware
-        const user = await User.findById(req.user.id)
-            .select('-password') // Don't send the password hash
-            .populate('directs', 'name associateId dateOfJoining'); // Populate directs with specific fields
+        // req.user is already fetched by the 'protect' middleware. We don't need to find it again.
+        const user = req.user; 
 
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-        }
-
-        // For now, Total Team Member is just the number of directs.
-        // We will build the logic for the full downline later.
-        const totalTeamMember = user.directs.length; 
+        // Get directs with only necessary fields
+        const directs = await User.find({ sponsor: user._id }).select('name associateId dateOfJoining');
 
         res.json({
             userInfo: {
@@ -27,20 +20,23 @@ const getDashboardData = async (req, res) => {
                 associateId: user.associateId,
                 mobile: user.phone,
                 address: user.address,
-                level: user.level,
-                 profilePicture: user.profilePicture,
-                dateOfJoining: user.dateOfJoining,
             },
-            businessStats: {
-                selfBusiness: user.selfBusiness,
-                teamBusiness: user.teamBusiness,
-                totalBusiness: user.selfBusiness + user.teamBusiness, // Always calculate fresh
+            // Send the new balance and income fields
+            balanceStats: {
+                currentSelfBalance: user.currentSelfBalance,
+                currentTeamBalance: user.currentTeamBalance,
+            },
+            incomeStats: {
+                selfIncome: user.selfIncome,
+                teamIncome: user.teamIncome,
+                totalIncome: user.selfIncome + user.teamIncome,
             },
             teamStats: {
-                totalDirectTeam: user.directs.length,
-                totalTeamMember: totalTeamMember,
+                totalDirectTeam: directs.length,
+                // We will implement total team members later if needed
+                totalTeamMember: directs.length, 
             },
-            directSponsors: user.directs,
+            directSponsors: directs,
         });
 
     } catch (error) {
@@ -48,7 +44,6 @@ const getDashboardData = async (req, res) => {
         res.status(500).json({ message: 'Server Error' });
     }
 };
-
 const getDirects = async (req, res) => {
     try {
         // Find the user and populate their directs with more detailed info
@@ -162,11 +157,39 @@ const updateUserProfilePicture = async (req, res) => {
     res.status(500).json({ message: 'Server Error' });
   }
 };
+
+
+const getPayoutDetails = async (req, res) => {
+    try {
+        const user = req.user;
+        // Find all transactions where this user is the primary subject
+        const selfTransactions = await Transaction.find({ user: user._id }).sort({ createdAt: -1 });
+
+        // This is more complex: find transactions from downline members
+        // For now, we will just show self-transactions. We can add team transactions later.
+        
+        res.json({
+            balances: {
+                currentSelfBalance: user.currentSelfBalance,
+                currentTeamBalance: user.currentTeamBalance,
+            },
+            incomes: {
+                selfIncome: user.selfIncome,
+                teamIncome: user.teamIncome,
+                totalIncome: user.selfIncome + user.teamIncome,
+            },
+            transactions: selfTransactions,
+        });
+    } catch (error) {
+        res.status(500).json({ message: 'Server Error' });
+    }
+};
 module.exports = {
     getDashboardData,
     getDirects,
     getUserProfile,
     updateUserProfile,
     updateUserProfilePicture,
-    getCommissions, // <-- Add the new function to exports
+    getCommissions,
+    getPayoutDetails,
 };

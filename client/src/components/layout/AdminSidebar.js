@@ -27,7 +27,12 @@ const AdminSidebar = ({ onLinkClick }) => {
         <Nav.Item>
           <Nav.Link as={NavLink} to="/admin/deposits" onClick={onLinkClick}>Manage Deposits</Nav.Link>
         </Nav.Item>
+         <Nav.Item>
+          <Nav.Link as={NavLink} to="/admin/genealogy">Genealogy Tree</Nav.Link>
+        </Nav.Item>
+        
       </Nav>
+      
       
       <Button variant="outline-danger" onClick={handleLogout} className="mt-auto">
         Logout

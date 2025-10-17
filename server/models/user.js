@@ -16,11 +16,19 @@ const userSchema = new mongoose.Schema({
     status: { type: String, enum: ['pendingOnboarding', 'active'], default: 'pendingOnboarding' },
     directs: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     level: { type: Number, default: 7 },
-    selfBusiness: { type: Number, default: 0 },
-    teamBusiness: { type: Number, default: 0 },
-    totalBusiness: { type: Number, default: 0 },
-    commissionPercentage: { type: Number, default: 2 },
+    // selfBusiness: { type: Number, default: 0 },
+    // teamBusiness: { type: Number, default: 0 },
+    // totalBusiness: { type: Number, default: 0 },
+    // commissionPercentage: { type: Number, default: 2 },
+
+     // --- NEW FINANCIAL & INCOME FIELDS ---
+    currentSelfBalance: { type: Number, default: 0 },
+    currentTeamBalance: { type: Number, default: 0 },
+    selfIncome: { type: Number, default: 0 },
+    teamIncome: { type: Number, default: 0 },
+
     role: { type: String, enum: ['associate', 'admin'], default: 'associate' },
+    isActive: { type: Boolean, default: true },
     profilePicture: { type: String, default: '' },
     dateOfJoining: { type: Date, default: Date.now }
 }, { timestamps: true });

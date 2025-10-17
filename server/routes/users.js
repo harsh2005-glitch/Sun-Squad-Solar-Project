@@ -9,6 +9,7 @@ const {
   updateUserProfile,
   getCommissions,
   updateUserProfilePicture,
+  getPayoutDetails,
 } = require('../controllers/userController');
 const { protect } = require('../middleware/authMiddleware');
 // This route is protected. You must have a valid token to access it.
@@ -18,5 +19,8 @@ router.get('/profile', protect, getUserProfile);
 router.put('/profile', protect, updateUserProfile);
 router.put('/profile/picture', protect, upload.single('profileImage'), updateUserProfilePicture);
 router.get('/commissions', protect, getCommissions);
+router.get('/payout-details', protect, getPayoutDetails);
+
+
 
 module.exports = router;

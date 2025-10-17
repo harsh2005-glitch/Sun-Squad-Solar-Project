@@ -1,19 +1,50 @@
 import React, { useState, useEffect } from 'react';
 import userService from '../../services/userService';
-import { Container, Row, Col, Card, Table, Spinner, Alert,Image } from 'react-bootstrap';
+import { Container, Row, Col, Card, Table, Spinner, Alert, Image } from 'react-bootstrap';
 import './DashboardPage.css'; // Import our new custom styles
+
+
+// Reusable Stat Card component
+const StatCard = ({ title, value, variant, icon }) => (
+  <Card className={`text-white bg-${variant} mb-3 shadow`}>
+    <Card.Body>
+      <div className="d-flex justify-content-between align-items-center">
+        <div>
+          <Card.Title as="h5">{title}</Card.Title>
+          <Card.Text as="h3">{value}</Card.Text>
+        </div>
+        <i className={`fa-solid ${icon} fa-2x opacity-50`}></i>
+      </div>
+    </Card.Body>
+  </Card>
+);
+
 
 const DashboardPage = () => {
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
+
   useEffect(() => {
-    userService.getDashboardData()
-      .then(response => setDashboardData(response.data))
-      .catch(err => setError('Failed to fetch dashboard data.'))
-      .finally(() => setLoading(false));
+    const fetchData = async () => {
+      try {
+        const response = await userService.getDashboardData();
+        setDashboardData(response.data);
+      } catch (err) {
+        setError('Failed to fetch dashboard data.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
   }, []);
+  // useEffect(() => {
+  //   userService.getDashboardData()
+  //     .then(response => setDashboardData(response.data))
+  //     .catch(err => setError('Failed to fetch dashboard data.'))
+  //     .finally(() => setLoading(false));
+  // }, []);
 
   if (loading) {
     return <div className="text-center p-5"><Spinner animation="border" /></div>;
@@ -21,6 +52,10 @@ const DashboardPage = () => {
   if (error) {
     return <Alert variant="danger" className="m-3">{error}</Alert>;
   }
+
+
+  // --- NEW DATA DESTRUCTURING ---
+  const { userInfo, balanceStats, incomeStats, teamStats, directSponsors } = dashboardData || {};
 
   // Helper to format numbers with commas
   const formatNumber = (num) => num.toLocaleString('en-IN');
@@ -58,31 +93,17 @@ const DashboardPage = () => {
         </Col>
       </Row>
 
+
       {/* Business Stats Row */}
       <Row className="g-4 mb-4">
         <Col md={4}>
-          <Card className="dashboard-stat-card border-primary">
-            <Card.Body>
-              <Card.Title>Self Business</Card.Title>
-              <Card.Text>Rs. {formatNumber(dashboardData.businessStats.selfBusiness)}</Card.Text>
-            </Card.Body>
-          </Card>
+          <StatCard title="Current Self Balance" value={`Rs. ${balanceStats?.currentSelfBalance.toLocaleString('en-IN') || 0}`} variant="primary" icon="fa-wallet" />
         </Col>
         <Col md={4}>
-          <Card className="dashboard-stat-card border-warning">
-            <Card.Body>
-              <Card.Title>Team Business</Card.Title>
-              <Card.Text>Rs. {formatNumber(dashboardData.businessStats.teamBusiness)}</Card.Text>
-            </Card.Body>
-          </Card>
+          <StatCard title="Current Team Balance" value={`Rs. ${balanceStats?.currentTeamBalance.toLocaleString('en-IN') || 0}`} variant="warning" icon="fa-users" />
         </Col>
         <Col md={4}>
-          <Card className="dashboard-stat-card border-success">
-            <Card.Body>
-              <Card.Title>Total Business</Card.Title>
-              <Card.Text>Rs. {formatNumber(dashboardData.businessStats.totalBusiness)}</Card.Text>
-            </Card.Body>
-          </Card>
+          <StatCard title="Total Income" value={`Rs. ${incomeStats?.totalIncome.toLocaleString('en-IN') || 0}`} variant="success" icon="fa-money-bill-trend-up" />
         </Col>
       </Row>
 
