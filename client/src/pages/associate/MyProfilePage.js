@@ -57,6 +57,7 @@ const MyProfilePage = () => {
       setUploading(false);
     }
   };
+  
 
   if (loading) {
     return <div className="text-center p-5"><Spinner animation="border" /></div>;
@@ -131,7 +132,7 @@ const MyProfilePage = () => {
                 <hr />
                 <h5 className="mb-3">Bank Details</h5>
                 <Row>
-                  <Col md={6}>
+                  {/* <Col md={6}>
                     <Form.Group className="mb-3">
                       <Form.Label>Bank's Name</Form.Label>
                       <Form.Control type="text" name="bankName" value={profile.bankName || ''} onChange={handleChange} />
@@ -150,7 +151,19 @@ const MyProfilePage = () => {
                       <Form.Label>IFSC Code</Form.Label>
                       <Form.Control type="text" name="ifscCode" value={profile.ifscCode || ''} onChange={handleChange} />
                     </Form.Group>
-                  </Col>
+                  </Col> */}
+                   <Col md={6}>
+                        <Form.Group className="mb-3">
+                            <Form.Label>Aadhar Card Number</Form.Label>
+                            <Form.Control type="text" name="aadharNumber" value={profile.aadharNumber || ''} onChange={handleChange} />
+                        </Form.Group>
+                    </Col>
+                    <Col md={6}>
+                        <Form.Group className="mb-3">
+                            <Form.Label>PAN Card Number</Form.Label>
+                            <Form.Control type="text" name="panNumber" value={profile.panNumber || ''} onChange={handleChange} />
+                        </Form.Group>
+                    </Col>
                 </Row>
                 <Button type="submit" variant="success">Save Changes</Button>
                 {message && <Alert variant="info" className="mt-3 small">{message}</Alert>}

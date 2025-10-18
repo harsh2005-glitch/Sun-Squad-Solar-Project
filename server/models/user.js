@@ -10,9 +10,11 @@ const userSchema = new mongoose.Schema({
     associateId: { type: String, unique: true, sparse: true },
     sponsor: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     address: { type: String },
-    bankName: { type: String },
-    accountNumber: { type: String },
-    ifscCode: { type: String },
+    // bankName: { type: String },
+    // accountNumber: { type: String },
+    // ifscCode: { type: String },
+     aadharNumber: { type: String },
+    panNumber: { type: String },
     status: { type: String, enum: ['pendingOnboarding', 'active'], default: 'pendingOnboarding' },
     directs: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     level: { type: Number, default: 7 },
@@ -30,6 +32,10 @@ const userSchema = new mongoose.Schema({
     role: { type: String, enum: ['associate', 'admin'], default: 'associate' },
     isActive: { type: Boolean, default: true },
     profilePicture: { type: String, default: '' },
+    aadharCardUrl: { type: String, default: '' },
+    panCardUrl: { type: String, default: '' },
+    bankDocumentUrl: { type: String, default: '' },
+    status: { type: String, enum: ['pendingOnboarding', 'active'], default: 'pendingOnboarding' },
     dateOfJoining: { type: Date, default: Date.now }
 }, { timestamps: true });
 

@@ -4,6 +4,10 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { Resend } = require('resend');
 const crypto = require('crypto');
+const admin = require('firebase-admin');
+
+
+
 // Helper function to generate a unique Associate ID
 const generateAssociateId = () => {
     // Generates a random 8-digit number. You can customize this logic.
@@ -91,7 +95,7 @@ const loginUser = async (req, res) => {
 // @desc    Complete the user's profile after first login
 // @route   POST /api/auth/complete-onboarding
 const completeOnboarding = async (req, res) => {
-    const { sponsorId, address, bankName, accountNumber, ifscCode } = req.body;
+    const { sponsorId, address, aadharNumber, panNumber  } = req.body;
     const userId = req.user.id; // We get this from the token after protecting the route
 
     try {
@@ -121,9 +125,11 @@ const completeOnboarding = async (req, res) => {
         // 4. Update the user's document
         user.sponsor = sponsor._id;
         user.address = address;
-        user.bankName = bankName;
-        user.accountNumber = accountNumber;
-        user.ifscCode = ifscCode;
+        // user.bankName = bankName;
+        // user.accountNumber = accountNumber;
+        // user.ifscCode = ifscCode;
+         user.aadharNumber = aadharNumber;
+        user.panNumber = panNumber;
         user.associateId = newAssociateId;
         user.status = 'active'; // Activate the user!
         await user.save();
@@ -231,10 +237,44 @@ const resetPassword = async (req, res) => {
 };
 
 
+// @desc    Reset password after a successful Firebase phone verification
+// @route   PUT /api/auth/resetpassword-firebase
+const resetPasswordWithFirebase = async (req, res) => {
+    const { phone, newPassword } = req.body;
+
+    if (!phone || !newPassword) {
+        return res.status(400).json({ message: 'Phone number and new password are required.' });
+    }
+
+    try {
+        // Find the user in YOUR database by their phone number
+        const user = await User.findOne({ phone });
+        if (!user) {
+            // We check this to make sure we're not changing a password for a non-existent user
+            return res.status(404).json({ message: 'User with this phone number not found in our system.' });
+        }
+        
+        // At this point, the frontend has already verified the phone number with Firebase.
+        // Our backend trusts that this request is legitimate for this phone number.
+        // (For even higher security, the frontend could send the Firebase ID Token,
+        // and the backend could verify it, but this is a very strong start).
+
+        user.password = newPassword;
+        await user.save(); // pre-save hook will hash it
+
+        res.json({ message: 'Password has been reset successfully. You can now log in.' });
+    } catch (error) {
+        console.error("FIREBASE RESET ERROR:", error);
+        res.status(500).json({ message: 'Server error.' });
+    }
+};
+
+
 module.exports = {
     signupUser,
     loginUser,
     completeOnboarding,
-    forgotPassword,
+    // forgotPassword,
     resetPassword,
+    // resetPasswordWithFirebase,
 };

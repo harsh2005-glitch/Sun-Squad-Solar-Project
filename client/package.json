@@ -10,6 +10,7 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.12.2",
     "bootstrap": "^5.3.8",
+    "firebase": "^12.4.0",
     "react": "^19.2.0",
     "react-bootstrap": "^2.10.10",
     "react-d3-tree": "^3.6.6",

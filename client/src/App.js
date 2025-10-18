@@ -22,20 +22,27 @@ import LocationsPage from './pages/public/LocationsPage';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import OnboardingPage from './pages/OnboardingPage';
-import ForgotPasswordPage from './pages/ForgotPasswordPage'; 
-import ResetPasswordPage from './pages/ResetPasswordPage';   
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import ResetPasswordPage from './pages/ResetPasswordPage';
 
 // Import Associate Pages
 import DashboardPage from './pages/associate/DashboardPage';
 import MyDirectsPage from './pages/associate/MyDirectsPage';
 import MyProfilePage from './pages/associate/MyProfilePage';
 import IncomeDetailPage from './pages/associate/IncomeDetailPage';
+import AssociateGenealogyPage from './pages/associate/GenealogyPage';
+import ChangePasswordPage from './pages/associate/ChangePasswordPage';
+import UploadDocumentsPage from './pages/associate/UploadDocumentsPage';
+
 
 // Import Admin Pages
 import AdminDashboardPage from './pages/admin/AdminDashboardPage';
 import ManageUsersPage from './pages/admin/ManageUsersPage';
 import ManageDepositsPage from './pages/admin/ManageDepositsPage';
-import GenealogyPage from './pages/admin/GenealogyPage';
+import AdminGenealogyPage from './pages/admin/GenealogyPage';
+import SettingsPage from './pages/admin/SettingsPage';
+
+
 // --- Create a temporary Dashboard Page for now ---
 // const DashboardPage = () => <div><h1>Welcome to your Dashboard!</h1><p>This page is protected.</p></div>;
 // const AdminDashboardPage = () => <div><h1>Admin Dashboard</h1></div>;
@@ -59,16 +66,19 @@ function App() {
         <Route path="/forgot-password" element={<ForgotPasswordPage />} /> {/* <-- ADD ROUTE */}
         <Route path="/resetpassword/:token" element={<ResetPasswordPage />} /> {/* <-- ADD DYNAMIC ROUTE */}
         <Route path="/onboarding" element={<OnboardingPage />} />
-        
+
 
 
         <Route path="/app" element={<ProtectedRoute />}> {/* Protect the whole /app section */}
           <Route element={<MainLayout />}> {/* Wrap all associate pages in the MainLayout */}
             <Route path="dashboard" element={<DashboardPage />} />
-              <Route path="network/directs" element={<MyDirectsPage />} />
-            <Route path="profile" element={<MyProfilePage />}/>
-            <Route path="payout/income" element={<IncomeDetailPage />} /> 
-            
+            <Route path="network/directs" element={<MyDirectsPage />} />
+            <Route path="network/genealogy" element={<AssociateGenealogyPage />} />
+            <Route path="profile" element={<MyProfilePage />} />
+            <Route path="payout/income" element={<IncomeDetailPage />} />
+            <Route path="documents" element={<UploadDocumentsPage />} />
+            <Route path="profile/changepassword" element={<ChangePasswordPage />} />
+
           </Route>
         </Route>
 
@@ -77,7 +87,8 @@ function App() {
             <Route path="dashboard" element={<AdminDashboardPage />} />
             <Route path="users" element={<ManageUsersPage />} />
             <Route path="deposits" element={<ManageDepositsPage />} />
-            <Route path="genealogy" element={<GenealogyPage />} />
+            <Route path="genealogy" element={<AdminGenealogyPage />} />
+            <Route path="settings" element={<SettingsPage />} />
             {/* We will add the deposits page route here next */}
           </Route>
         </Route>

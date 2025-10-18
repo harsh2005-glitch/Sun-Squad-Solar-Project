@@ -7,9 +7,11 @@ function OnboardingPage() {
   const [formData, setFormData] = useState({
     sponsorId: '',
     address: '',
-    bankName: '',
-    accountNumber: '',
-    ifscCode: '',
+    // bankName: '',
+    // accountNumber: '',
+    // ifscCode: '',
+      aadharNumber: '',
+    panNumber: '',
   });
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
@@ -69,7 +71,7 @@ function OnboardingPage() {
             required
           />
         </div>
-         <div className="form-group">
+         {/* <div className="form-group">
           <label>Bank Name:</label>
           <input
             type="text"
@@ -98,7 +100,15 @@ function OnboardingPage() {
             onChange={handleChange}
             required
           />
-        </div>
+        </div> */}
+        <div className="form-group">
+                <label>Aadhar Card Number:</label>
+                <input type="text" name="aadharNumber" value={formData.aadharNumber} onChange={handleChange} required />
+            </div>
+            <div className="form-group">
+                <label>PAN Card Number:</label>
+                <input type="text" name="panNumber" value={formData.panNumber} onChange={handleChange} required />
+            </div>
         <button type="submit" className="auth-button">Complete Profile</button>
         {message && (
               <p className={`auth-message ${
