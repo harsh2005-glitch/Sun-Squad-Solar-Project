@@ -57,13 +57,9 @@ const corsOptions = {
   credentials: true,
 };
 
-app.use(cors({
-    origin: true,
-    credentials: true
-}));
 
 
-app.use(express.json());
+
 // Middlewares
 app.use(cors(corsOptions)); // Enable Cross-Origin Resource Sharing
 app.use(express.json()); // Allow the server to accept JSON data
