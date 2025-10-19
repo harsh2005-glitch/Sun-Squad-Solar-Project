@@ -38,29 +38,36 @@ connectDB();
 // Initialize the app
 const app = express();
 
-const allowedOrigins = [
-  'http://localhost:3000',
-  'https://sunsquadsolar.vercel.app',
-  'https://sun-squad-solar.vercel.app',
-  'https://www.sunsquadsolar.in'
-];
+const allowedOrigins = ['http://localhost:3000', 'https://sunsquadsolar.vercel.app/'];
 const corsOptions = {
   origin: (origin, callback) => {
-    // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) === -1) {
-      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
-      return callback(new Error(msg), false);
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
     }
-    return callback(null, true);
   },
-  credentials: true,
+  optionsSuccessStatus: 200
 };
+
+// const corsOptions = {
+//   origin: (origin, callback) => {
+//     // Allow requests with no origin (like mobile apps or curl requests)
+//     if (!origin) return callback(null, true);
+//     if (allowedOrigins.indexOf(origin) === -1) {
+//       const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+//       return callback(new Error(msg), false);
+//     }
+//     return callback(null, true);
+//   },
+//   credentials: true,
+// };
 
 
 
 
 // Middlewares
+app.use(cors());
 app.use(cors(corsOptions)); // Enable Cross-Origin Resource Sharing
 app.use(express.json()); // Allow the server to accept JSON data
 
