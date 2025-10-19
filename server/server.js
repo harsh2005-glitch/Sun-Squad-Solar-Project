@@ -44,6 +44,18 @@ const allowedOrigins = [
   'https://sun-squad-solar.vercel.app',
   'https://www.sunsquadsolar.in'
 ];
+const corsOptions = {
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
+  credentials: true,
+};
 
 app.use(cors({
     origin: true,
@@ -53,7 +65,7 @@ app.use(cors({
 
 app.use(express.json());
 // Middlewares
-// app.use(cors(corsOptions)); // Enable Cross-Origin Resource Sharing
+app.use(cors(corsOptions)); // Enable Cross-Origin Resource Sharing
 app.use(express.json()); // Allow the server to accept JSON data
 
 
