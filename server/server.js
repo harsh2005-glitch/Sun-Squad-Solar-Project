@@ -1,101 +1,84 @@
-// Main server entry point 
 const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const connectDB = require('./config/db');
 const path = require('path');
+const admin = require('firebase-admin');
+
+// Load environment variables at the very top
+dotenv.config();
+
+// --- Import Routes ---
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/users');
 const adminRoutes = require('./routes/admin');
-const configureCloudinary = require('./config/cloudinaryConfig'); 
 const settingsRoutes = require('./routes/settings');
 
-const admin = require('firebase-admin'); // <-- IMPORT
+// --- Initialize External Services ---
+// Firebase
 const serviceAccount = require('./config/serviceAccountKey.json');
-
-
-
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
 });
 console.log("Firebase Admin SDK Initialized.");
 
-
-// Load environment variables
-dotenv.config();
-// --- NEW: Configure Cloudinary at the start ---
+// Cloudinary
 const cloudinary = require('cloudinary').v2;
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
     api_key: process.env.CLOUDINARY_API_KEY,
     api_secret: process.env.CLOUDINARY_API_SECRET,
 });
-console.log("Cloudinary configured successfully."); // Confirmation message
+console.log("Cloudinary configured successfully.");
 
-// Connect to the database
+// --- Database Connection ---
 connectDB();
 
-// Initialize the app
+// --- Initialize Express App ---
 const app = express();
 
+// --- CORS Configuration ---
 const allowedOrigins = [
   'http://localhost:3000',
   'https://sunsquadsolar.vercel.app',
   'https://sun-squad-solar.vercel.app',
-  'https://www.sunsquadsolar.in'
+  'https://www.sunsquadsolar.in' // Your custom domain
 ];
 
 const corsOptions = {
   origin: (origin, callback) => {
-    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+      return callback(new Error(msg), false);
     }
+    return callback(null, true);
   },
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
-  optionsSuccessStatus: 200,
-  preflightContinue: false,
-  maxAge: 86400 // 24 hours
 };
-app.use(
-  cors({
-    origin: ["https://sunsquadsolar.in"], // production frontend
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true,
-  })
-);
 
-// Middlewares
-app.use(cors(corsOptions)); // Enable Cross-Origin Resource Sharing
-app.use(express.json()); // Allow the server to accept JSON data
+// --- Core Middlewares ---
+app.use(cors(corsOptions));
+app.use(express.json()); // To parse JSON bodies
 
-
-app.use('/api/auth', authRoutes); // Use the authentication routes
+// --- API Routes ---
+app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/settings', settingsRoutes);
 
-// A simple test route to make sure the server is running
+// --- Default Test Route ---
 app.get('/', (req, res) => {
     res.json({ message: "Welcome to the Sun Squad Solar API!" });
 });
 
-// This makes the 'uploads' folder publicly accessible
-app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
+// --- Server Listening ---
+// This part runs on local development but is ignored by Vercel
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});
 
-// API Routes
-app.use('/api/auth', authRoutes);
-
-// For local development
-if (process.env.NODE_ENV !== 'production') {
-    const PORT = process.env.PORT || 5000;
-    app.listen(PORT, () => {
-        console.log(`Server is running on port ${PORT}`);
-    });
-}
-
-// Export the app for Vercel
+// --- Export the app for Vercel ---
 module.exports = app;
