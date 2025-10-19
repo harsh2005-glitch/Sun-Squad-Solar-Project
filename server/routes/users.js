@@ -21,6 +21,8 @@ const {
   uploadBankDocument,
   getGenealogyTree ,
   changePassword,
+  getIncomeChartData,
+   getTeamContributionData ,
 } = require('../controllers/userController');
 
 const { protect } = require('../middleware/authMiddleware');
@@ -37,6 +39,8 @@ router.put('/profile/aadhar-card', protect, upload.single('aadharCard'), uploadA
 router.put('/profile/pan-card', protect, upload.single('panCard'), uploadPanCard);
 router.get('/genealogy', protect, getGenealogyTree);
 router.put('/profile/changepassword', protect, changePassword);
+router.get('/charts/income', protect, getIncomeChartData);
+router.get('/charts/team-contribution', protect, getTeamContributionData);
 
 
 module.exports = router;

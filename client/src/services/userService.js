@@ -117,6 +117,18 @@ const changePassword = (oldPassword, newPassword) => {
     return axios.put(`${API_BASE_URL}/users/profile/changepassword`, { oldPassword, newPassword }, config);
 };
 
+const getIncomeChartData = () => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    const config = { headers: { Authorization: `Bearer ${user.token}` } };
+    return axios.get(`${API_BASE_URL}/users/charts/income`, config);
+};
+
+const getTeamContributionData = () => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    const config = { headers: { Authorization: `Bearer ${user.token}` } };
+    return axios.get(`${API_BASE_URL}/users/charts/team-contribution`, config);
+};
+
 
 const userService = {
   getDashboardData,
@@ -131,6 +143,8 @@ const userService = {
   getGenealogyTree,
   getPayoutDetails,
   changePassword,
+   getIncomeChartData,
+  getTeamContributionData,
 };
 
 export default userService;

@@ -60,6 +60,13 @@ const corsOptions = {
   preflightContinue: false,
   maxAge: 86400 // 24 hours
 };
+app.use(
+  cors({
+    origin: ["https://sunsquadsolar.in"], // production frontend
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
 
 // Middlewares
 app.use(cors(corsOptions)); // Enable Cross-Origin Resource Sharing

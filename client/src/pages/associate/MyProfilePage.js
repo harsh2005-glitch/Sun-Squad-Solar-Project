@@ -1,21 +1,29 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import userService from '../../services/userService';
-// Import all necessary Bootstrap components
+import './MyProfilePage.css'; // <-- Import the custom CSS
 import { Container, Form, Button, Card, Alert, Row, Col, Image, Spinner } from 'react-bootstrap';
-// const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+import defaultAvatar from '../../assets/images/user-avatar.png'; // A default placeholder
+
 const MyProfilePage = () => {
   const [profile, setProfile] = useState({});
   const [loading, setLoading] = useState(true);
-  const [message, setMessage] = useState('');
-  const [imageFile, setImageFile] = useState(null);
-  const [uploadMessage, setUploadMessage] = useState('');
+  const [message, setMessage] = useState(''); // For the details form
+  const [uploadMessage, setUploadMessage] = useState(''); // For the image upload
   const [uploading, setUploading] = useState(false);
+  const [imageFile, setImageFile] = useState(null); // The selected file
+  const [preview, setPreview] = useState(null); // The temporary preview URL
 
-  useEffect(() => {
+  const fileInputRef = useRef(null); // Ref for the hidden file input
+
+  const fetchProfile = () => {
     userService.getProfile()
       .then(response => setProfile(response.data))
       .catch(error => setMessage('Failed to load profile.'))
       .finally(() => setLoading(false));
+  };
+
+  useEffect(() => {
+    fetchProfile();
   }, []);
 
   const handleChange = (e) => {
@@ -35,11 +43,14 @@ const MyProfilePage = () => {
   };
 
   const handleImageChange = (e) => {
-    setImageFile(e.target.files[0]);
+    const file = e.target.files[0];
+    if (file) {
+      setImageFile(file);
+      setPreview(URL.createObjectURL(file));
+    }
   };
 
-  const handleImageUpload = async (e) => {
-    e.preventDefault();
+  const handleImageUpload = async () => {
     if (!imageFile) {
       setUploadMessage('Please select an image first.');
       return;
@@ -51,6 +62,9 @@ const MyProfilePage = () => {
       setUploadMessage(response.data.message);
       // Update the profile state to show the new image immediately
       setProfile(prev => ({ ...prev, profilePicture: response.data.profilePicture }));
+      // Clear the inputs
+      setImageFile(null);
+      setPreview(null);
     } catch (error) {
       setUploadMessage('Upload failed. Please try again.');
     } finally {
@@ -58,7 +72,6 @@ const MyProfilePage = () => {
     }
   };
   
-
   if (loading) {
     return <div className="text-center p-5"><Spinner animation="border" /></div>;
   }
@@ -67,38 +80,52 @@ const MyProfilePage = () => {
     <Container fluid className="p-4">
       <h1 className="mb-4">My Profile</h1>
       <Row>
-        {/* --- Profile Picture Column --- */}
+        {/* --- Profile Picture Column with New UX --- */}
         <Col lg={4} className="mb-4">
           <Card className="text-center shadow-sm h-100">
             <Card.Header as="h5">Profile Picture</Card.Header>
-            <Card.Body>
-              <Image
-                 src={profile.profilePicture || 'https://...placeholder.png'}
-                roundedCircle
-                style={{ width: '150px', height: '150px', objectFit: 'cover', border: '4px solid #eee' }}
-                className="mb-3"
+            <Card.Body className="d-flex flex-column justify-content-center align-items-center">
+              
+              {/* The clickable image container */}
+              <div className="profile-picture-container mb-3" onClick={() => fileInputRef.current.click()}>
+                <Image
+                  src={preview || profile.profilePicture || defaultAvatar}
+                  className="profile-image"
+                />
+                <div className="edit-overlay">
+                  <i className="fa-solid fa-pencil"></i>
+                </div>
+              </div>
+
+              {/* The hidden file input */}
+              <input 
+                type="file" 
+                ref={fileInputRef} 
+                className="hidden-file-input" 
+                onChange={handleImageChange}
+                accept="image/*"
               />
-              <Form onSubmit={handleImageUpload}>
-                <Form.Group controlId="formFile" className="mb-3">
-                  <Form.Control type="file" onChange={handleImageChange} />
-                </Form.Group>
-                <Button variant="primary" type="submit" disabled={uploading}>
-                  {uploading ? 'Uploading...' : 'Upload Picture'}
+              
+              {/* Show the save button only when a new file is selected */}
+              {imageFile && (
+                <Button variant="primary" onClick={handleImageUpload} disabled={uploading} className="mb-3">
+                  {uploading ? 'Uploading...' : 'Save Picture'}
                 </Button>
-              </Form>
-              {uploadMessage && <Alert variant="info" className="mt-3 small">{uploadMessage}</Alert>}
+              )}
+
+              {uploadMessage && <Alert variant="info" className="small">{uploadMessage}</Alert>}
             </Card.Body>
           </Card>
         </Col>
 
-        {/* --- Profile Details Column --- */}
+        {/* --- Profile Details Column (Your code structure) --- */}
         <Col lg={8}>
           <Card className="shadow-sm">
             <Card.Header as="h5">Update Your Details</Card.Header>
             <Card.Body>
               <Form onSubmit={handleDetailsSubmit}>
                 <Row>
-                  <Col md={6}>
+                   <Col md={6}>
                     <Form.Group className="mb-3">
                       <Form.Label>Associate's ID</Form.Label>
                       <Form.Control type="text" value={profile.associateId || ''} readOnly disabled />
@@ -130,28 +157,8 @@ const MyProfilePage = () => {
                   <Form.Control as="textarea" rows={2} name="address" value={profile.address || ''} onChange={handleChange} />
                 </Form.Group>
                 <hr />
-                <h5 className="mb-3">Bank Details</h5>
+                <h5 className="mb-3">Personal Details</h5>
                 <Row>
-                  {/* <Col md={6}>
-                    <Form.Group className="mb-3">
-                      <Form.Label>Bank's Name</Form.Label>
-                      <Form.Control type="text" name="bankName" value={profile.bankName || ''} onChange={handleChange} />
-                    </Form.Group>
-                  </Col>
-                  <Col md={6}>
-                    <Form.Group className="mb-3">
-                      <Form.Label>A/c No</Form.Label>
-                      <Form.Control type="text" name="accountNumber" value={profile.accountNumber || ''} onChange={handleChange} />
-                    </Form.Group>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col md={6}>
-                    <Form.Group className="mb-3">
-                      <Form.Label>IFSC Code</Form.Label>
-                      <Form.Control type="text" name="ifscCode" value={profile.ifscCode || ''} onChange={handleChange} />
-                    </Form.Group>
-                  </Col> */}
                    <Col md={6}>
                         <Form.Group className="mb-3">
                             <Form.Label>Aadhar Card Number</Form.Label>

@@ -4,6 +4,7 @@ const Commission = require('../models/commission');
 const cloudinary = require('cloudinary').v2; // <-- THIS IS THE FIX
 const Transaction = require('../models/transaction');
 const bcrypt = require('bcryptjs');
+const { subDays, format } = require('date-fns');
 
 // @desc    Get data for the user dashboard
 // @route   GET /api/users/dashboard
@@ -349,6 +350,78 @@ const changePassword = async (req, res) => {
     }
 };
 
+// @desc    Get income data for the last 30 days for a line chart
+// @route   GET /api/users/charts/income
+// @access  Protected
+const getIncomeChartData = async (req, res) => {
+    try {
+        const today = new Date();
+        const thirtyDaysAgo = subDays(today, 30);
+
+        // 1. Aggregate commissions by date
+        const commissionsByDay = await Commission.aggregate([
+            {
+                $match: {
+                    recipient: req.user._id,
+                    createdAt: { $gte: thirtyDaysAgo },
+                },
+            },
+            {
+                $group: {
+                    _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
+                    totalIncome: { $sum: "$amount" },
+                },
+            },
+            { $sort: { _id: 1 } }, // Sort by date ascending
+        ]);
+        
+        // 2. Create a map for easy lookup
+        const incomeMap = new Map(commissionsByDay.map(item => [item._id, item.totalIncome]));
+
+        // 3. Create a complete 30-day data array, filling in days with 0 income
+        const chartData = Array.from({ length: 30 }).map((_, i) => {
+            const date = subDays(today, 29 - i);
+            const dateString = format(date, 'yyyy-MM-dd');
+            const shortDate = format(date, 'MMM d'); // e.g., "Oct 18"
+            return {
+                date: shortDate,
+                income: incomeMap.get(dateString) || 0,
+            };
+        });
+
+        res.json(chartData);
+
+    } catch (error) {
+        console.error("INCOME CHART ERROR:", error);
+        res.status(500).json({ message: 'Server Error' });
+    }
+};
+
+// @desc    Get team balance contribution from direct members for a pie chart
+// @route   GET /api/users/charts/team-contribution
+// @access  Protected
+const getTeamContributionData = async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id)
+            .populate('directs', 'name currentSelfBalance currentTeamBalance');
+
+        if (!user) return res.status(404).json({ message: 'User not found' });
+        
+        const pieChartData = user.directs.map(direct => {
+            const contribution = (direct.currentSelfBalance || 0) + (direct.currentTeamBalance || 0);
+            return {
+                name: direct.name,
+                value: contribution,
+            };
+        }).filter(item => item.value > 0); // Only include members with a contribution
+
+        res.json(pieChartData);
+    } catch (error) {
+        console.error("TEAM CHART ERROR:", error);
+        res.status(500).json({ message: 'Server Error' });
+    }
+};
+
 
 
 
@@ -365,4 +438,6 @@ module.exports = {
     getCommissions,
     getPayoutDetails,
     changePassword,
+     getIncomeChartData,
+    getTeamContributionData,
 };

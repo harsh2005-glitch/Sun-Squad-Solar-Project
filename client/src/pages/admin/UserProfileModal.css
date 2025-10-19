@@ -1,0 +1,26 @@
+.profile-modal-left {
+    border-right: 1px solid #eee;
+}
+
+.profile-modal-right h5 {
+    font-size: 1.1rem;
+    color: #333;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.profile-modal-right h5:first-child {
+    margin-top: 0;
+}
+
+/* On mobile, remove the border and add space between columns */
+@media (max-width: 767px) {
+    .profile-modal-left {
+        border-right: none;
+        margin-bottom: 2rem;
+        padding-bottom: 2rem;
+        border-bottom: 1px solid #eee;
+    }
+}

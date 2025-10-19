@@ -3,6 +3,11 @@ const Deposit = require('../models/deposit');
 const Commission = require('../models/commission');
 const Settings = require('../models/settings');
 const Transaction = require('../models/transaction');
+const jwt = require('jsonwebtoken');
+
+const generateToken = (id) => {
+    return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '30d' });
+};
 
 
 /**
@@ -105,7 +110,7 @@ const getDashboardStats = async (req, res) => {
 // @desc    Add a new deposit and trigger all updates
 // @route   POST /api/admin/deposits
 const addDeposit = async (req, res) => {
-    const { associateId, amount } = req.body;
+    const { associateId, amount , description  } = req.body;
     const adminId = req.user.id;
     const depositAmount = Number(amount);
 
@@ -121,6 +126,7 @@ const addDeposit = async (req, res) => {
             user: depositor._id,
             type: 'deposit',
             amount: depositAmount,
+            description: description,
             adminResponsible: adminId,
         });
 
@@ -140,7 +146,7 @@ const addDeposit = async (req, res) => {
 // @desc    Add a new withdrawal and trigger all updates
 // @route   POST /api/admin/withdrawals
 const addWithdrawal = async (req, res) => {
-    const { associateId, amount } = req.body;
+    const { associateId, amount , description  } = req.body;
     const adminId = req.user.id;
     const withdrawalAmount = Number(amount);
 
@@ -156,6 +162,7 @@ const addWithdrawal = async (req, res) => {
             user: user._id,
             type: 'withdrawal',
             amount: withdrawalAmount,
+             description: description,
             adminResponsible: adminId,
         });
 
@@ -231,12 +238,63 @@ const updateUserAndUpline = async (userId, amountChange, settings) => {
     }
 };
 
+// @desc    Get a single user by their ID
+// @route   GET /api/admin/users/:id
+// @access  Admin
+const getUserById = async (req, res) => {
+    try {
+        const user = await User.findById(req.params.id).select('-password').populate('sponsor', 'name associateId'); ;
+        if (user) {
+            res.json(user);
+        } else {
+            res.status(404).json({ message: 'User not found' });
+        }
+    } catch (error) {
+        console.error("GET USER BY ID ERROR:", error);
+        res.status(500).json({ message: 'Server Error' });
+    }
+};
+
+// @desc    Allow an admin to log in as another user
+// @route   POST /api/admin/impersonate/:id
+// @access  Admin
+const loginAsUser = async (req, res) => {
+    try {
+        // Find the user the admin wants to log in as
+        const targetUser = await User.findById(req.params.id);
+
+        if (!targetUser) {
+            return res.status(404).json({ message: 'Target user not found.' });
+        }
+        
+        if (targetUser.role === 'admin') {
+            return res.status(400).json({ message: 'Cannot impersonate another admin.' });
+        }
+
+        // If everything is okay, generate a token for the target user
+        res.json({
+            _id: targetUser._id,
+            name: targetUser.name,
+            email: targetUser.email,
+            role: targetUser.role,
+            onboardingRequired: targetUser.status !== 'active',
+            // This is the new token for the associate
+            token: generateToken(targetUser._id),
+        });
+    } catch (error) {
+        console.error("IMPERSONATE ERROR:", error);
+        res.status(500).json({ message: 'Server Error' });
+    }
+};
+
 module.exports = {
     getAllUsers,
     addDeposit,
     getDashboardStats,
     getGenealogyTree,
     updateUserStatus,
+    getUserById,
+    loginAsUser,
     addWithdrawal,
     getTransactionHistory,
     // addDeposit,

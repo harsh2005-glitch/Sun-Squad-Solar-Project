@@ -1,6 +1,8 @@
 
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 // Import Layouts
 import PublicLayout from './components/layout/PublicLayout';
@@ -49,6 +51,18 @@ import SettingsPage from './pages/admin/SettingsPage';
 function App() {
   return (
     <div>
+       <ToastContainer
+        position="top-right"
+        autoClose={5000} // Auto close after 5 seconds
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       <Routes>
         {/* === Public Website Routes === */}
         <Route element={<PublicLayout />}>

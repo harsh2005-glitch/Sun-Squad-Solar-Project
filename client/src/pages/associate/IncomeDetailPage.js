@@ -66,6 +66,7 @@ function IncomeDetailPage() {
                     <th>Date</th>
                     <th>Type</th>
                     <th>Amount (Rs.)</th>
+                     <th>Description</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -78,11 +79,13 @@ function IncomeDetailPage() {
                             {tx.type.charAt(0).toUpperCase() + tx.type.slice(1)}
                           </Badge>
                         </td>
+                      
                         <td>{tx.amount.toLocaleString('en-IN')}</td>
+                        <td>{tx.description || '-'}</td> 
                       </tr>
                     ))
                   ) : (
-                    <tr><td colSpan="3" className="text-center">No transactions found.</td></tr>
+                    <tr><td colSpan="4" className="text-center">No transactions found.</td></tr>
                   )}
                 </tbody>
               </Table>

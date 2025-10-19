@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import userService from '../../services/userService';
-import { Container, Card, Form, Button, Alert } from 'react-bootstrap';
+import { Container, Card, Form, Button, Alert, Row, Col } from 'react-bootstrap';
 
 const ChangePasswordPage = () => {
   const [formData, setFormData] = useState({
@@ -31,7 +31,6 @@ const ChangePasswordPage = () => {
     try {
         const response = await userService.changePassword(formData.oldPassword, formData.newPassword);
         setMessage(response.data.message);
-        // Clear the form on success
         setFormData({ oldPassword: '', newPassword: '', confirmNewPassword: '' });
     } catch (err) {
         setError(err.response?.data?.message || 'Failed to change password.');
@@ -41,54 +40,63 @@ const ChangePasswordPage = () => {
   };
 
   return (
-    <Container fluid className="p-4">
-      <h1 className="mb-4">Change Password</h1>
-      <Card className="shadow-sm" style={{ maxWidth: '600px' }}>
-        <Card.Body>
-          <Form onSubmit={handleSubmit}>
-            <Form.Group className="mb-3" controlId="oldPassword">
-              <Form.Label>Old Password</Form.Label>
-              <Form.Control
-                type="password"
-                name="oldPassword"
-                value={formData.oldPassword}
-                onChange={handleChange}
-                required
-              />
-            </Form.Group>
+    <Container fluid className="p-4" style={{ backgroundColor: '#f4f7f6', minHeight: '100vh' }}>
+      <Row className="justify-content-center">
+        <Col lg={6}>
+          <h1 className="mb-4">Change Password</h1>
+          <Card className="shadow-sm">
+            <Card.Body className="p-4">
+              <Form onSubmit={handleSubmit}>
+                <Form.Group className="mb-3" controlId="oldPassword">
+                  <Form.Label>Old Password</Form.Label>
+                  <Form.Control
+                    type="password"
+                    name="oldPassword"
+                    value={formData.oldPassword}
+                    onChange={handleChange}
+                    required
+                    placeholder="Enter your current password"
+                  />
+                </Form.Group>
 
-            <Form.Group className="mb-3" controlId="newPassword">
-              <Form.Label>New Password</Form.Label>
-              <Form.Control
-                type="password"
-                name="newPassword"
-                value={formData.newPassword}
-                onChange={handleChange}
-                required
-                minLength={6}
-              />
-            </Form.Group>
-            
-            <Form.Group className="mb-3" controlId="confirmNewPassword">
-              <Form.Label>Confirm New Password</Form.Label>
-              <Form.Control
-                type="password"
-                name="confirmNewPassword"
-                value={formData.confirmNewPassword}
-                onChange={handleChange}
-                required
-              />
-            </Form.Group>
+                <Form.Group className="mb-3" controlId="newPassword">
+                  <Form.Label>New Password</Form.Label>
+                  <Form.Control
+                    type="password"
+                    name="newPassword"
+                    value={formData.newPassword}
+                    onChange={handleChange}
+                    required
+                    minLength={6}
+                    placeholder="Enter your new password (min. 6 characters)"
+                  />
+                </Form.Group>
+                
+                <Form.Group className="mb-3" controlId="confirmNewPassword">
+                  <Form.Label>Confirm New Password</Form.Label>
+                  <Form.Control
+                    type="password"
+                    name="confirmNewPassword"
+                    value={formData.confirmNewPassword}
+                    onChange={handleChange}
+                    required
+                    placeholder="Confirm your new password"
+                  />
+                </Form.Group>
 
-            {error && <Alert variant="danger">{error}</Alert>}
-            {message && <Alert variant="success">{message}</Alert>}
+                {error && <Alert variant="danger">{error}</Alert>}
+                {message && <Alert variant="success">{message}</Alert>}
 
-            <Button variant="primary" type="submit" disabled={loading}>
-              {loading ? 'Updating...' : 'Change Password'}
-            </Button>
-          </Form>
-        </Card.Body>
-      </Card>
+                <div className="d-grid">
+                    <Button variant="primary" type="submit" disabled={loading}>
+                    {loading ? 'Updating...' : 'Change Password'}
+                    </Button>
+                </div>
+              </Form>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
     </Container>
   );
 };

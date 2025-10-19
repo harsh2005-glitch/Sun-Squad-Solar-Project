@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import userService from '../../services/userService';
 import { Container, Row, Col, Card, Table, Spinner, Alert, Image } from 'react-bootstrap';
 import './DashboardPage.css'; // Import our new custom styles
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
 
 // Reusable Stat Card component
@@ -18,10 +19,13 @@ const StatCard = ({ title, value, variant, icon }) => (
     </Card.Body>
   </Card>
 );
+const PIE_CHART_COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#AF19FF', '#FF1943'];
 
 
 const DashboardPage = () => {
   const [dashboardData, setDashboardData] = useState(null);
+   const [incomeChartData, setIncomeChartData] = useState([]);
+  const [teamChartData, setTeamChartData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -29,8 +33,16 @@ const DashboardPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await userService.getDashboardData();
-        setDashboardData(response.data);
+        // const response = await userService.getDashboardData();
+        // setDashboardData(response.data);
+         const [dashResponse, incomeResponse, teamResponse] = await Promise.all([
+            userService.getDashboardData(),
+            userService.getIncomeChartData(),
+            userService.getTeamContributionData()
+        ]);
+        setDashboardData(dashResponse.data);
+        setIncomeChartData(incomeResponse.data);
+        setTeamChartData(teamResponse.data);
       } catch (err) {
         setError('Failed to fetch dashboard data.');
       } finally {
@@ -95,37 +107,95 @@ const DashboardPage = () => {
 
 
       {/* Business Stats Row */}
-      <Row className="g-4 mb-4">
-        <Col md={4}>
-          <StatCard title="Current Self Balance" value={`Rs. ${balanceStats?.currentSelfBalance.toLocaleString('en-IN') || 0}`} variant="primary" icon="fa-wallet" />
+      <Row>
+        <Col md={4} className="mb-4">
+          <Card className="stat-card-main" style={{ backgroundColor: '#0d6efd' }}>
+            <Card.Body>
+              <div className="stat-title">Current Self Balance</div>
+              <div className="stat-value">Rs. {balanceStats?.currentSelfBalance.toLocaleString('en-IN') || 0}</div>
+              <i className="fa-solid fa-wallet stat-icon"></i>
+            </Card.Body>
+          </Card>
         </Col>
-        <Col md={4}>
-          <StatCard title="Current Team Balance" value={`Rs. ${balanceStats?.currentTeamBalance.toLocaleString('en-IN') || 0}`} variant="warning" icon="fa-users" />
+        <Col md={4} className="mb-4">
+          <Card className="stat-card-main" style={{ backgroundColor: '#ffc107' }}>
+            <Card.Body>
+              <div className="stat-title">Current Team Balance</div>
+              <div className="stat-value">Rs. {balanceStats?.currentTeamBalance.toLocaleString('en-IN') || 0}</div>
+              <i className="fa-solid fa-users stat-icon"></i>
+            </Card.Body>
+          </Card>
         </Col>
-        <Col md={4}>
-          <StatCard title="Total Income" value={`Rs. ${incomeStats?.totalIncome.toLocaleString('en-IN') || 0}`} variant="success" icon="fa-money-bill-trend-up" />
+        <Col md={4} className="mb-4">
+          <Card className="stat-card-main" style={{ backgroundColor: '#198754' }}>
+            <Card.Body>
+              <div className="stat-title">Total Income</div>
+              <div className="stat-value">Rs. {incomeStats?.totalIncome.toLocaleString('en-IN') || 0}</div>
+              <i className="fa-solid fa-money-bill-trend-up stat-icon"></i>
+            </Card.Body>
+          </Card>
         </Col>
       </Row>
 
       {/* Team Stats Row */}
-      <Row className="g-4 mb-4">
-        <Col md={6}>
-          <Card className="dashboard-stat-card border-info">
-            <Card.Body>
-              <Card.Title>Total Team Members</Card.Title>
-              <Card.Text>{dashboardData.teamStats.totalTeamMember}</Card.Text>
-            </Card.Body>
-          </Card>
+       <Row className="mb-4">
+        <Col md={6} className="mb-3">
+            <Card className="stat-card-secondary border-primary shadow-sm h-100">
+                <Card.Body>
+                    <div className="stat-title">Total Team Members</div>
+                    <div className="stat-value">{teamStats?.totalTeamMember || 0}</div>
+                </Card.Body>
+            </Card>
         </Col>
-        <Col md={6}>
-          <Card className="dashboard-stat-card border-danger">
-            <Card.Body>
-              <Card.Title>Total Direct Team</Card.Title>
-              <Card.Text>{dashboardData.teamStats.totalDirectTeam}</Card.Text>
-            </Card.Body>
-          </Card>
+         <Col md={6} className="mb-3">
+            <Card className="stat-card-secondary border-danger shadow-sm h-100">
+                <Card.Body>
+                    <div className="stat-title">Total Direct Team</div>
+                    <div className="stat-value">{teamStats?.totalDirectTeam || 0}</div>
+                </Card.Body>
+            </Card>
         </Col>
       </Row>
+
+      {/* --- NEW: Charts Section --- */}
+      <Row className="mt-4">
+        <Col lg={8} className="mb-4">
+            <Card className="shadow-sm h-100">
+                <Card.Body>
+                    <Card.Title>Last 30 Days Income</Card.Title>
+                    <ResponsiveContainer width="100%" height={300}>
+                        <LineChart data={incomeChartData}>
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis dataKey="date" />
+                            <YAxis />
+                            <Tooltip formatter={(value) => `Rs. ${value.toLocaleString('en-IN')}`} />
+                            <Legend />
+                            <Line type="monotone" dataKey="income" stroke="#8884d8" activeDot={{ r: 8 }} />
+                        </LineChart>
+                    </ResponsiveContainer>
+                </Card.Body>
+            </Card>
+        </Col>
+        <Col lg={4} className="mb-4">
+            <Card className="shadow-sm h-100">
+                <Card.Body>
+                    <Card.Title>Team Contribution</Card.Title>
+                    <ResponsiveContainer width="100%" height={300}>
+                         <PieChart>
+                            <Pie data={teamChartData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80} label>
+                                {teamChartData.map((entry, index) => (
+                                    <Cell key={`cell-${index}`} fill={PIE_CHART_COLORS[index % PIE_CHART_COLORS.length]} />
+                                ))}
+                            </Pie>
+                            <Tooltip formatter={(value) => `Rs. ${value.toLocaleString('en-IN')}`} />
+                            <Legend />
+                        </PieChart>
+                    </ResponsiveContainer>
+                </Card.Body>
+            </Card>
+        </Col>
+      </Row>
+
 
       {/* Directs Table */}
       <Row>

@@ -1,30 +1,23 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import authService from '../services/authService';
-import logo from '../assets/images/logo.png'; // Make sure your logo is in this path
+import logo from '../assets/images/logo.png';
 import '../styles/auth.css';
+import { Button } from 'react-bootstrap';
+
 const LoginPage = () => {
-  const [formData, setFormData] = useState({
-    phone: '',
-    password: '',
-  });
-  const [message, setMessage] = useState('');
+  const [formData, setFormData] = useState({ phone: '', password: '' });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // This logic remains the same
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
+    setFormData((prevState) => ({ ...prevState, [name]: value }));
   };
 
-  // This logic also remains the same
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage('');
     setLoading(true);
     try {
       const response = await authService.login(formData.phone, formData.password);
@@ -38,29 +31,20 @@ const LoginPage = () => {
         navigate('/app/dashboard');
       }
     } catch (error) {
-      setMessage(error.response?.data?.message || 'An error occurred during login.');
+      toast.error(error.response?.data?.message || 'An error occurred during login.');
     } finally {
-      setLoading(false); // <-- NEW: Set loading to false after API call finishes
+      setLoading(false);
     }
   };
 
-  // We need to add the 'auth-page' class to the body for the background
-  // This is a common React pattern for page-specific body styles
   React.useEffect(() => {
     document.body.classList.add('auth-page');
-    // Cleanup function to remove the class when the component unmounts
-    return () => {
-      document.body.classList.remove('auth-page');
-    };
-  }, []); // Empty array means this runs only once on mount
+    return () => document.body.classList.remove('auth-page');
+  }, []);
 
   return (
     <div className="auth-container">
       <div className="auth-card">
-
-        <div className="top-right-link">
-        <Link to="/signup" className="btn-register">New Registration</Link>
-      </div>
         <Link to="/" className="auth-logo-link">
           <img src={logo} alt="Sun Squad Solar" className="auth-logo" />
         </Link>
@@ -70,37 +54,23 @@ const LoginPage = () => {
         <form onSubmit={handleSubmit}>
           <div className="input-group">
             <label htmlFor="phone">User ID (Phone)</label>
-            <input
-              type="text"
-              id="phone"
-              name="phone"
-              value={formData.phone}
-              onChange={handleChange}
-              required
-            />
+            <input type="text" id="phone" name="phone" value={formData.phone} onChange={handleChange} required />
           </div>
           <div className="input-group">
             <label htmlFor="password">Password</label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-            />
+            <input type="password" id="password" name="password" value={formData.password} onChange={handleChange} required />
           </div>
-          {/* --- NEW: Button is now disabled and shows text based on loading state --- */}
-          <button type="submit" className="auth-button" disabled={loading}>
+          <Button type="submit" className="auth-button" disabled={loading}>
             {loading ? 'Logging in...' : 'Continue'}
-          </button>
+          </Button>
         </form>
-        
-        {message && <p className="auth-message error">{message}</p>}
         
         <Link to="/forgot-password" className="forgot-password">Forgot Password</Link>
       </div>
       
+      <div className="top-right-link">
+        <Link to="/signup" className="btn-register">New Registration</Link>
+      </div>
     </div>
   );
 };

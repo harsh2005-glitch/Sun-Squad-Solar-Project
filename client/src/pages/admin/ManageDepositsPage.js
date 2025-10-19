@@ -1,66 +1,62 @@
 import React, { useState, useEffect } from 'react';
 import adminService from '../../services/adminService';
-import { Form, Button, Card, Alert, Table, Tabs, Tab, InputGroup, Spinner, Badge } from 'react-bootstrap';
+// Import toast for notifications
+import { toast } from 'react-toastify';
+// Import Bootstrap components
+import { Form, Button, Card, Table, Tabs, Tab, InputGroup, Spinner, Badge } from 'react-bootstrap';
 
 const ManageDepositsPage = () => {
-  const [depositData, setDepositData] = useState({ associateId: '', amount: '' });
-  const [withdrawalData, setWithdrawalData] = useState({ associateId: '', amount: '' });
+  const [depositData, setDepositData] = useState({ associateId: '', amount: '', description: '' });
+  const [withdrawalData, setWithdrawalData] = useState({ associateId: '', amount: '', description: '' });
   const [transactions, setTransactions] = useState([]);
-  const [message, setMessage] = useState('');
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [loadingAction, setLoadingAction] = useState(false); // For deposit/withdrawal actions
   const [historyLoading, setHistoryLoading] = useState(true);
 
+  // Function to fetch the latest transaction history
   const fetchTransactions = async () => {
     setHistoryLoading(true);
     try {
       const response = await adminService.getTransactionHistory();
       setTransactions(response.data);
     } catch (err) {
-      setError('Failed to fetch transaction history.');
+      toast.error('Failed to fetch transaction history.');
     } finally {
       setHistoryLoading(false);
     }
   };
 
+  // Fetch history when the component first loads
   useEffect(() => {
     fetchTransactions();
   }, []);
 
-  const clearMessages = () => {
-    setMessage('');
-    setError('');
-  };
-
   const handleDepositSubmit = async (e) => {
     e.preventDefault();
-    clearMessages();
-    setLoading(true);
+    setLoadingAction(true);
     try {
-      const response = await adminService.addDeposit(depositData.associateId, depositData.amount);
-      setMessage(response.data.message);
-      setDepositData({ associateId: '', amount: '' }); // Clear form
+      const response = await adminService.addDeposit(depositData.associateId, depositData.amount, depositData.description);
+      toast.success(response.data.message); // Success toast
+      setDepositData({ associateId: '', amount: '', description: '' }); // Clear form
       fetchTransactions(); // Refresh the history table
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to add deposit.');
+      toast.error(err.response?.data?.message || 'Failed to add deposit.'); // Error toast
     } finally {
-      setLoading(false);
+      setLoadingAction(false);
     }
   };
 
   const handleWithdrawalSubmit = async (e) => {
     e.preventDefault();
-    clearMessages();
-    setLoading(true);
+    setLoadingAction(true);
     try {
-      const response = await adminService.addWithdrawal(withdrawalData.associateId, withdrawalData.amount);
-      setMessage(response.data.message);
-      setWithdrawalData({ associateId: '', amount: '' }); // Clear form
+      const response = await adminService.addWithdrawal(withdrawalData.associateId, withdrawalData.amount, withdrawalData.description);
+      toast.success(response.data.message); // Success toast
+      setWithdrawalData({ associateId: '', amount: '', description: '' }); // Clear form
       fetchTransactions(); // Refresh the history table
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to record withdrawal.');
+      toast.error(err.response?.data?.message || 'Failed to record withdrawal.'); // Error toast
     } finally {
-      setLoading(false);
+      setLoadingAction(false);
     }
   };
 
@@ -68,12 +64,9 @@ const ManageDepositsPage = () => {
     <>
       <h1 className="mb-4">Manage Transactions</h1>
       
-      {error && <Alert variant="danger">{error}</Alert>}
-      {message && <Alert variant="success">{message}</Alert>}
-
       <Card className="shadow-sm mb-4">
         <Card.Body>
-          <Tabs defaultActiveKey="deposit" id="transaction-actions" className="mb-3" onSelect={clearMessages}>
+          <Tabs defaultActiveKey="deposit" id="transaction-actions" className="mb-3">
             <Tab eventKey="deposit" title="Add Deposit">
               <p className="text-muted">This will update business numbers and calculate commissions.</p>
               <Form onSubmit={handleDepositSubmit}>
@@ -91,15 +84,18 @@ const ManageDepositsPage = () => {
                     <Form.Control type="number" placeholder="e.g., 50000" value={depositData.amount} onChange={(e) => setDepositData({...depositData, amount: e.target.value})} required />
                   </InputGroup>
                 </Form.Group>
-                <Button variant="primary" type="submit" disabled={loading} style={{width: '100%'}}>
-                  {loading ? 'Processing...' : 'Add Deposit'}
+                <Form.Group className="mb-3">
+                  <Form.Label>Reason for Transaction (Optional)</Form.Label>
+                  <Form.Control type="text" placeholder="e.g., Monthly Investment" value={depositData.description} onChange={(e) => setDepositData({...depositData, description: e.target.value})} />
+                </Form.Group>
+                <Button variant="primary" type="submit" disabled={loadingAction} className="w-100">
+                  {loadingAction ? 'Processing...' : 'Add Deposit'}
                 </Button>
               </Form>
             </Tab>
             <Tab eventKey="withdrawal" title="Add Withdrawal">
-              <p className="text-muted">This will record a withdrawal for an associate. It does not affect business volume.</p>
+              <p className="text-muted">This records a withdrawal. It affects balances and income calculations.</p>
               <Form onSubmit={handleWithdrawalSubmit}>
-                 {/* Withdrawal Form is identical to Deposit Form */}
                  <Form.Group className="mb-3">
                   <Form.Label>Associate ID</Form.Label>
                   <InputGroup>
@@ -114,8 +110,12 @@ const ManageDepositsPage = () => {
                     <Form.Control type="number" placeholder="e.g., 10000" value={withdrawalData.amount} onChange={(e) => setWithdrawalData({...withdrawalData, amount: e.target.value})} required />
                   </InputGroup>
                 </Form.Group>
-                <Button variant="primary" type="submit" disabled={loading} style={{width: '100%'}}>
-                  {loading ? 'Processing...' : 'Record Withdrawal'}
+                 <Form.Group className="mb-3">
+                  <Form.Label>Reason for Transaction (Optional)</Form.Label>
+                  <Form.Control type="text" placeholder="e.g., Commission Payout" value={withdrawalData.description} onChange={(e) => setWithdrawalData({...withdrawalData, description: e.target.value})} />
+                </Form.Group>
+                <Button variant="primary" type="submit" disabled={loadingAction} className="w-100">
+                  {loadingAction ? 'Processing...' : 'Record Withdrawal'}
                 </Button>
               </Form>
             </Tab>
@@ -127,7 +127,7 @@ const ManageDepositsPage = () => {
         <Card.Header as="h5">Transaction History</Card.Header>
         <Card.Body>
           {historyLoading ? (
-            <div className="text-center"><Spinner animation="border" /></div>
+            <div className="text-center p-3"><Spinner animation="border" /></div>
           ) : (
             <Table striped bordered hover responsive>
               <thead>
@@ -135,6 +135,7 @@ const ManageDepositsPage = () => {
                   <th>Date</th>
                   <th>Associate</th>
                   <th>Type</th>
+                  <th>Description</th>
                   <th>Amount (Rs.)</th>
                   <th>Processed By</th>
                 </tr>
@@ -149,6 +150,7 @@ const ManageDepositsPage = () => {
                         {tx.type.charAt(0).toUpperCase() + tx.type.slice(1)}
                       </Badge>
                     </td>
+                    <td>{tx.description || '-'}</td>
                     <td>{tx.amount.toLocaleString('en-IN')}</td>
                     <td>{tx.adminResponsible ? tx.adminResponsible.name : 'N/A'}</td>
                   </tr>
