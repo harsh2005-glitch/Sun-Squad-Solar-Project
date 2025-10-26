@@ -196,6 +196,7 @@ ul {
     position: relative;
     min-height: 85vh; /* Takes up 85% of the viewport's height */
     /* VERCEL FIX: Changed relative path to absolute path */
+    /* background-image: url('/assets/images/hero-background.jpg'); */
     background-image: url('/assets/images/hero-background.jpg');
     background-size: cover;
     background-position: center;
@@ -878,7 +879,8 @@ ul {
 /* Using a ::before pseudo-element for the decorative quotes */
 .testimonial-quote::before {
     /* VERCEL FIX: Changed relative path to absolute path */
-    content: url('/assets/images/quotes.png'); /* Path to your quote image */
+    /* content: url('/assets/images/quotes.png'); Path to your quote image */
+    content: url('/assets/images/quotes.png');
     position: absolute;
     left: -15px;
     top: -15px;
@@ -1461,7 +1463,8 @@ footer {
 body.contact-page-bg {
     position: relative; /* Required for the overlay */
     /* VERCEL FIX: Changed relative path to absolute path */
-    background-image: url('/assets/images/backgrounds/auth-bg.jpg');
+    /* background-image: url('/assets/images/backgrounds/auth-bg.jpg'); */
+     background-image: url('/assets/images/backgrounds/auth-bg.jpg');
     background-size: cover;
     background-position: center center;
     background-attachment: fixed; /* This makes the image stay in place while scrolling */
