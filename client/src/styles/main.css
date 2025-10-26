@@ -257,7 +257,7 @@ ul {
 
 .about-video iframe {
     width: 100%; /* Make the video responsive */
-    aspect-ratio: 16 / 9; /* Maintain 16:9 aspect ratio */
+    aspect-ratio: 1.77; /* Maintain 16:9 aspect ratio */
     border-radius: 8px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
