@@ -16,9 +16,17 @@ const updateSettings = (settingsData) => {
   return axios.put(`${API_BASE_URL}/settings`, settingsData, config);
 };
 
+// Function to update the notice
+const updateNotice = (noticeMessage) => {
+  const user = JSON.parse(localStorage.getItem('user'));
+  const config = { headers: { Authorization: `Bearer ${user.token}` } };
+  return axios.put(`${API_BASE_URL}/settings/notice`, { noticeMessage }, config);
+};
+
 const settingsService = {
   getSettings,
   updateSettings,
+  updateNotice,
 };
 
 export default settingsService;

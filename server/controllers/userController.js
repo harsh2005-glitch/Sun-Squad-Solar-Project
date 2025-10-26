@@ -5,6 +5,7 @@ const cloudinary = require('cloudinary').v2; // <-- THIS IS THE FIX
 const Transaction = require('../models/transaction');
 const bcrypt = require('bcryptjs');
 const { subDays, format } = require('date-fns');
+const Settings = require('../models/settings');
 
 // @desc    Get data for the user dashboard
 // @route   GET /api/users/dashboard
@@ -18,6 +19,7 @@ const getDashboardData = async (req, res) => {
 
         // Get directs with only necessary fields
         const directs = await User.find({ sponsor: user._id }).select('name associateId dateOfJoining');
+        const settings = await Settings.findOne({ singleton: 'main_settings' });
 
         res.json({
             userInfo: {
@@ -43,6 +45,7 @@ const getDashboardData = async (req, res) => {
                 totalTeamMember: directs.length, 
             },
             directSponsors: directs,
+             notice: settings ? settings.noticeMessage : ''
         });
 
     } catch (error) {

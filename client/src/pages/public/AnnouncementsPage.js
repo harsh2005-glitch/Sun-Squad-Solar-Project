@@ -1,60 +1,79 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-
-// Import the images used on this page
-import awardCeremonyImg from '../../assets/images/announcements/award-ceremony.jpg';
-import newTechPanelImg from '../../assets/images/announcements/new-tech-panel.jpg';
+// --- IMPORT our new announcementService and Bootstrap components ---
+import announcementService from '../../services/announcementService';
+import { Container, Spinner, Alert } from 'react-bootstrap';
 
 const AnnouncementsPage = () => {
+  const [announcements, setAnnouncements] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  // --- NEW: Fetch data from the API when the page loads ---
+  useEffect(() => {
+    const fetchAnnouncements = async () => {
+      try {
+        const response = await announcementService.getPublicAnnouncements();
+        setAnnouncements(response.data);
+      } catch (err) {
+        setError("Could not load announcements. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchAnnouncements();
+  }, []); // Empty array ensures this runs only once
+
+  if (loading) {
+    return (
+        <div className="text-center p-5">
+            <Spinner animation="border" variant="primary" />
+            <p className="mt-2">Loading Announcements...</p>
+        </div>
+    );
+  }
+
+  if (error) {
+    return <Alert variant="danger" className="m-3">{error}</Alert>;
+  }
+
   return (
     <main>
       <section className="announcements-section">
-        <div className="container">
+        <Container>
           <h2 className="section-title">Latest News & Announcements</h2>
           <div className="title-underline"></div>
           <p className="section-subtitle">Stay up to date with our company's latest developments, achievements, and events.</p>
 
           <div className="announcements-grid">
-            {/* Announcement Card 1 */}
-            <article className="announcement-card">
-              <div className="card-image">
-                <Link to="#"><img src={awardCeremonyImg} alt="Award Ceremony" /></Link>
-              </div>
-              <div className="card-content">
-                <div className="card-meta">
-                  <span><i className="fa-solid fa-calendar-days"></i> August 15, 2025</span>
-                  <span><i className="fa-solid fa-user"></i> By Admin</span>
-                </div>
-                <h3 className="card-title"><Link to="#">Sun Shine Solar Wins "Green Energy Innovator of the Year" Award</Link></h3>
-                <p className="card-excerpt">
-                  We are thrilled to be recognized for our commitment to renewable energy and technological advancement at the annual National Energy Summit.
-                </p>
-                <Link to="#" className="btn-read-more">Read More <i className="fa-solid fa-arrow-right"></i></Link>
-              </div>
-            </article>
-
-            {/* Announcement Card 2 */}
-            <article className="announcement-card">
-              <div className="card-image">
-                <Link to="#"><img src={newTechPanelImg} alt="New Solar Panel Technology" /></Link>
-              </div>
-              <div className="card-content">
-                <div className="card-meta">
-                  <span><i className="fa-solid fa-calendar-days"></i> July 28, 2025</span>
-                  <span><i className="fa-solid fa-user"></i> By Admin</span>
-                </div>
-                <h3 className="card-title"><Link to="#">Introducing Our New Line of High-Efficiency Solar Panels</Link></h3>
-                <p className="card-excerpt">
-                  Our new SH-500 series panels offer a 25% increase in energy conversion, providing more power and greater savings for our customers.
-                </p>
-                <Link to="#" className="btn-read-more">Read More <i className="fa-solid fa-arrow-right"></i></Link>
-              </div>
-            </article>
-
-            {/* You can add more announcement cards here by copying the structure above */}
-
+            {/* --- The grid now maps over the 'announcements' state --- */}
+            {announcements.length > 0 ? (
+              announcements.map((ann) => (
+                <article className="announcement-card" key={ann._id}>
+                  {/* Conditionally render the image only if it exists */}
+                  {ann.imageUrl && (
+                    <div className="card-image">
+                      <Link to="#"><img src={ann.imageUrl} alt={ann.title} /></Link>
+                    </div>
+                  )}
+                  <div className="card-content">
+                    <div className="card-meta">
+                      <span><i className="fa-solid fa-calendar-days"></i> {new Date(ann.createdAt).toLocaleDateString()}</span>
+                      <span><i className="fa-solid fa-user"></i> By {ann.author}</span>
+                    </div>
+                    <h3 className="card-title"><Link to="#">{ann.title}</Link></h3>
+                    <p className="card-excerpt">
+                      {ann.content}
+                    </p>
+                    <Link to="#" className="btn-read-more">Read More <i className="fa-solid fa-arrow-right"></i></Link>
+                  </div>
+                </article>
+              ))
+            ) : (
+              <p>No announcements have been posted yet. Check back soon!</p>
+            )}
           </div>
-        </div>
+        </Container>
       </section>
     </main>
   );

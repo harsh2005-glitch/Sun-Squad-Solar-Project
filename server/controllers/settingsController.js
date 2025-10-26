@@ -45,8 +45,25 @@ const updateSettings = async (req, res) => {
     }
 };
 
+// @desc    Update the notice board message
+// @route   PUT /api/settings/notice
+// @access  Admin
+const updateNotice = async (req, res) => {
+    const { noticeMessage } = req.body;
+    try {
+        const settings = await Settings.findOneAndUpdate(
+            { singleton: 'main_settings' },
+            { noticeMessage: noticeMessage },
+            { new: true, upsert: true } // 'new' returns the updated doc, 'upsert' creates it if it doesn't exist
+        );
+        res.json({ message: 'Notice updated successfully!', settings });
+    } catch (error) {
+        res.status(500).json({ message: 'Server Error' });
+    }
+};
 
 module.exports = {
     getSettings,
     updateSettings,
+    updateNotice,
 };

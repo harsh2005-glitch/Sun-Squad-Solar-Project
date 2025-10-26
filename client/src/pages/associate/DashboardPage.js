@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect  } from 'react';
 import userService from '../../services/userService';
 import { Container, Row, Col, Card, Table, Spinner, Alert, Image } from 'react-bootstrap';
 import './DashboardPage.css'; // Import our new custom styles
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+// import { ThemeContext } from '../../context/ThemeContext';
 
 
 // Reusable Stat Card component
 const StatCard = ({ title, value, variant, icon }) => (
+
   <Card className={`text-white bg-${variant} mb-3 shadow`}>
     <Card.Body>
       <div className="d-flex justify-content-between align-items-center">
@@ -14,11 +16,18 @@ const StatCard = ({ title, value, variant, icon }) => (
           <Card.Title as="h5">{title}</Card.Title>
           <Card.Text as="h3">{value}</Card.Text>
         </div>
-        <i className={`fa-solid ${icon} fa-2x opacity-50`}></i>
+         <i className={`fa-solid ${icon} fa-2x opacity-75 ${iconColorMap[variant]}`}></i>
       </div>
     </Card.Body>
   </Card>
 );
+const iconColorMap = {
+    primary: 'text-white',
+    warning: 'text-dark', // Yellow background needs dark text
+    success: 'text-white',
+    danger: 'text-white',
+    info: 'text-white',
+  };
 const PIE_CHART_COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#AF19FF', '#FF1943'];
 
 
@@ -28,8 +37,6 @@ const DashboardPage = () => {
   const [teamChartData, setTeamChartData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -51,12 +58,7 @@ const DashboardPage = () => {
     };
     fetchData();
   }, []);
-  // useEffect(() => {
-  //   userService.getDashboardData()
-  //     .then(response => setDashboardData(response.data))
-  //     .catch(err => setError('Failed to fetch dashboard data.'))
-  //     .finally(() => setLoading(false));
-  // }, []);
+ 
 
   if (loading) {
     return <div className="text-center p-5"><Spinner animation="border" /></div>;
@@ -67,14 +69,21 @@ const DashboardPage = () => {
 
 
   // --- NEW DATA DESTRUCTURING ---
-  const { userInfo, balanceStats, incomeStats, teamStats, directSponsors } = dashboardData || {};
+  const { userInfo, balanceStats, incomeStats, teamStats, directSponsors , notice  } = dashboardData || {};
 
   // Helper to format numbers with commas
   const formatNumber = (num) => num.toLocaleString('en-IN');
 
   return (
-    <Container fluid className="p-4">
+    <Container fluid className="p-4 dashboard-container">
       <h1 className="mb-4">Dashboard</h1>
+
+      {notice && (
+        <Alert variant="info" className="shadow-sm mb-4">
+            <Alert.Heading>Company Notice</Alert.Heading>
+            <p>{notice}</p>
+        </Alert>
+      )}
 
       {/* User Info & Main Stats Row */}
       <Row className="mb-4">
@@ -164,6 +173,7 @@ const DashboardPage = () => {
                 <Card.Body>
                     <Card.Title>Last 30 Days Income</Card.Title>
                     <ResponsiveContainer width="100%" height={300}>
+                        {/* --- REVERT THE CHART COMPONENTS --- */}
                         <LineChart data={incomeChartData}>
                             <CartesianGrid strokeDasharray="3 3" />
                             <XAxis dataKey="date" />
@@ -195,7 +205,6 @@ const DashboardPage = () => {
             </Card>
         </Col>
       </Row>
-
 
       {/* Directs Table */}
       <Row>

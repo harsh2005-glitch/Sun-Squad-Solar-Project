@@ -10,8 +10,11 @@ const slabSchema = new mongoose.Schema({
 const settingsSchema = new mongoose.Schema({
     singleton: { type: String, default: 'main_settings', unique: true },
     selfIncomeSlabs: [slabSchema],
-    teamIncomeSlabs: [slabSchema]
+    teamIncomeSlabs: [slabSchema] , 
+    
+    noticeMessage: { type: String, default: 'Welcome to Sun Squad Solar! Check back here for the latest news and announcements.' }
 });
+
 
 const Settings = mongoose.model('Settings', settingsSchema);
 module.exports = Settings;

@@ -53,6 +53,28 @@ ul {
     color: var(--primary-green);
 }
 
+.public-navbar {
+    background-color: transparent !important; /* Force transparent background */
+    transition: background-color 0.4s ease;
+}
+
+.public-navbar.scrolled {
+    background-color: #ffffff !important; /* Force white background on scroll */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+/* Initially, links are white */
+.public-navbar .nav-link,
+.public-navbar .navbar-brand {
+    color: white !important;
+}
+
+/* When scrolled, links become dark */
+.public-navbar.scrolled .nav-link,
+.public-navbar.scrolled .navbar-brand {
+    color: #333 !important;
+}
+
 
 /* === Header Styling - Main Navigation === */
 .main-nav {
@@ -60,9 +82,51 @@ ul {
     justify-content: space-between;
     align-items: center;
     padding: 15px 5%;
+    background-color: transparent; /* --- CHANGE: Start transparent --- */
+    box-shadow: none; /* --- CHANGE: No shadow at the top --- */
+    border-bottom: 1px solid transparent; /* --- CHANGE: Transparent border --- */
+    
+    /* --- NEW: Add position and transition --- */
+    position: fixed; /* Make it stick to the top */
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000; /* Ensure it's on top of other content */
+    transition: background-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+/* --- NEW: The 'scrolled' state --- */
+/* This class will be added via React when the user scrolls down */
+.main-nav.scrolled {
     background-color: var(--white-color);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    border-bottom: 1px solid #f0f0f0;
+}
+
+
+/* --- NEW: Adjustments for when the navbar is transparent --- */
+/* Make the links white when at the top */
+.main-nav .nav-links a,
+.main-nav .nav-buttons .btn-enquiry {
+    color: var(--white-color);
+}
+
+.main-nav .nav-buttons .btn-enquiry {
+    border-color: var(--white-color);
+}
+
+/* When scrolled, revert the colors back to what they were */
+.main-nav.scrolled .nav-links a,
+.main-nav.scrolled .nav-buttons .btn-enquiry {
+    color: var(--text-color); /* Or your default link color */
+}
+
+.main-nav.scrolled .nav-buttons .btn-enquiry {
+    border-color: var(--primary-green);
+}
+
+.main-nav.scrolled .nav-buttons .btn-enquiry:hover {
+    background-color: var(--primary-green);
+    color: var(--white-color);
 }
 
 .logo img {
@@ -144,6 +208,7 @@ ul {
     justify-content: flex-end; /* Pushes content to the right */
     align-items: center;
     padding: 0 5%;
+     padding-top: 100px;
 }
 
 .hero-content {
@@ -1520,25 +1585,55 @@ body.contact-page-bg::before {
     }
     
     /* This is the container for all links and buttons on mobile */
-    .mobile-nav-menu {
-        position: absolute;
-        top: 100%; /* Position below the header */
-        left: 0;
-        width: 100%;
-        background-color: var(--white-color);
-        
-        display: flex; /* Use flexbox to stack items */
-        flex-direction: column;
-        align-items: center;
-        
-        padding: 1rem;
-        box-shadow: 0 10px 15px rgba(0,0,0,0.1);
-        
-        /* Animate the menu sliding in and out */
-        transform: translateY(-150%);
-        transition: transform 0.3s ease-in-out;
-        z-index: 999; /* Ensure it's on top */
-    }
+    .main-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 5%;
+    background-color: transparent; /* --- CHANGE: Start transparent --- */
+    box-shadow: none; /* --- CHANGE: No shadow at the top --- */
+    border-bottom: 1px solid transparent; /* --- CHANGE: Transparent border --- */
+    
+    /* --- NEW: Add position and transition --- */
+    position: fixed; /* Make it stick to the top */
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000; /* Ensure it's on top of other content */
+    transition: background-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+/* This class will be added via React when the user scrolls down */
+.main-nav.scrolled {
+    background-color: var(--white-color);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* --- NEW: Adjustments for when the navbar is transparent --- */
+/* Make the links white when at the top */
+.main-nav .nav-links a,
+.main-nav .nav-buttons .btn-enquiry {
+    color: var(--white-color);
+}
+
+.main-nav .nav-buttons .btn-enquiry {
+    border-color: var(--white-color);
+}
+
+/* When scrolled, revert the colors back to what they were */
+.main-nav.scrolled .nav-links a,
+.main-nav.scrolled .nav-buttons .btn-enquiry {
+    color: var(--text-color); /* Or your default link color */
+}
+
+.main-nav.scrolled .nav-buttons .btn-enquiry {
+    border-color: var(--primary-green);
+}
+
+.main-nav.scrolled .nav-buttons .btn-enquiry:hover {
+    background-color: var(--primary-green);
+    color: var(--white-color);
+}
 
     .mobile-nav-menu.active {
         transform: translateY(0); /* Slide the menu into view */
@@ -1843,5 +1938,179 @@ body.contact-page-bg::before {
     
     .sidebar-overlay.active {
         display: block;
+    }
+}
+
+
+
+/* ==================================
+   Animation & Enhanced UI Styling
+===================================== */
+
+/* Light grey background for sections */
+.section-bg {
+    background-color: #e2eaf3;
+}
+
+/* Animation class: initially hidden and moved down */
+.fade-in-section {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+/* The class that gets added when the section is visible */
+.fade-in-section.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Style for the hero carousel */
+.hero-carousel .carousel-item {
+    height: 90vh;
+    min-height: 600px;
+}
+.hero-carousel .carousel-item img {
+    height: 100%;
+    object-fit: cover;
+}
+.hero-carousel .carousel-caption {
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 8px;
+    padding: 1.5rem;
+}
+.hero {
+    padding-top: 100px; /* Adjust this value to match your navbar's height */
+}
+
+/* ==================================
+   Transparent Scrolled Navbar Styling
+===================================== */
+
+/* We target our public navbar with a new class */
+.public-navbar {
+    /* Start transparent with a transition */
+    background-color: transparent !important;
+    transition: background-color 0.4s ease-in-out;
+    box-shadow: none !important; /* No shadow at the top */
+}
+
+.public-navbar.scrolled {
+    /* When scrolled, become solid white with a shadow */
+    background-color: #ffffff !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Change link colors at the top */
+.public-navbar .nav-link,
+.public-navbar .btn-outline-primary {
+    color: white !important;
+    border-color: white !important;
+}
+
+.public-navbar .btn-dark {
+    color: white !important;
+    background-color: rgba(0,0,0,0.5) !important;
+    border-color: white !important;
+}
+
+/* Change link colors on scroll */
+.public-navbar.scrolled .nav-link,
+.public-navbar.scrolled .navbar-brand {
+    color: #333 !important;
+}
+
+.public-navbar.scrolled .btn-outline-primary {
+    color: var(--bs-primary) !important;
+    border-color: var(--bs-primary) !important;
+}
+
+.public-navbar.scrolled .btn-dark {
+    color: white !important;
+    background-color: #212529 !important; /* Bootstrap's standard dark color */
+    border-color: #212529 !important;
+}
+
+/* Make the hamburger icon visible against a dark hero image */
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
+}
+
+.public-navbar.scrolled .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%280, 0, 0, 0.55%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
+}
+
+/* This class pushes the main content down to account for the fixed navbar */
+.content-beneath-navbar {
+    padding-top: 80px; /* Adjust this value to match your navbar's height */
+}
+
+
+
+
+/* ==================================
+   Testimonials Carousel Styling
+===================================== */
+
+.testimonials-carousel-section {
+    padding: 60px 5%;
+    background-color: #f8f9fa; /* Use the light grey background */
+    text-align: center;
+}
+
+/* Style the Carousel itself */
+.testimonial-carousel {
+    max-width: 800px; /* Control the max width for better readability */
+    margin: 40px auto 0;
+}
+
+.testimonial-carousel .carousel-item {
+    padding: 2rem 4rem; /* Add padding inside the carousel item for spacing */
+}
+
+/* Style for the individual testimonial card look */
+.testimonial-slide-content {
+    background: #ffffff;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    border-top: 5px solid var(--primary-green);
+}
+
+.testimonial-slide-content h4 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--dark-grey);
+}
+
+.testimonial-slide-content p {
+    font-style: italic;
+    color: #555;
+    line-height: 1.7;
+}
+
+/* Style the carousel indicators (the dots at the bottom) */
+.testimonial-carousel .carousel-indicators [data-bs-target] {
+    background-color: #ccc;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.testimonial-carousel .carousel-indicators .active {
+    background-color: var(--primary-green);
+}
+
+/* Hide the default carousel arrows */
+.testimonial-carousel .carousel-control-prev-icon,
+.testimonial-carousel .carousel-control-next-icon {
+    display: none;
+}
+
+/* On mobile, reduce the horizontal padding */
+@media (max-width: 768px) {
+    .testimonial-carousel .carousel-item {
+        padding: 1rem;
     }
 }

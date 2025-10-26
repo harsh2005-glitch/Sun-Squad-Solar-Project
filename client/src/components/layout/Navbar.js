@@ -3,6 +3,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { Navbar, Nav, Container, Button, NavDropdown ,Offcanvas } from 'react-bootstrap';
 import logo from '../../assets/images/logo.png';
 import './AppNavbar.css'; 
+// import ThemeToggleButton from '../common/ThemeToggleButton'; 
 
 const AppNavbar = () => {
   const navigate = useNavigate();
@@ -66,6 +67,8 @@ const AppNavbar = () => {
                 <NavDropdown.Item as={NavLink} to="/app/profile/changepassword" onClick={handleClose}>Change Password</NavDropdown.Item>
               </NavDropdown>
             </Nav>
+  
+
             {/* Logout button appears separately in the offcanvas body */}
             <Button variant="outline-danger" onClick={handleLogout} className="mt-3 d-lg-none">
               Logout

@@ -1,94 +1,94 @@
-import React, { useEffect } from 'react';
-// Import the Bootstrap components we need
-import { Container, Row, Col, Form, Button } from 'react-bootstrap';
+import React, { useState } from 'react';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+
+// We define the API URL directly here since it's a simple, one-off service
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
 const ContactPage = () => {
-  // Add and remove a class from the body tag to apply our background
-  useEffect(() => {
-    document.body.classList.add('contact-page-bg');
-    // Cleanup function to remove the class when the component is unmounted
-    return () => {
-      document.body.classList.remove('contact-page-bg');
+    const [formData, setFormData] = useState({
+        name: '',
+        email: '',
+        subject: '',
+        message: ''
+    });
+    const [loading, setLoading] = useState(false);
+
+    const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
     };
-  }, []); // Empty array ensures this runs only on mount and unmount
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    alert("Form submitted! (Functionality to be added)");
-  };
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        try {
+            const response = await axios.post(`${API_URL}/contact`, formData);
+            toast.success(response.data.message);
+            // Clear the form on success
+            setFormData({ name: '', email: '', subject: '', message: '' });
+        } catch (error) {
+            toast.error(error.response?.data?.message || 'Failed to send message.');
+        } finally {
+            setLoading(false);
+        }
+    };
 
-  return (
-    <main>
-      <section className="contact-section">
-        <Container>
-          <div className="text-center">
-            <h2 className="section-title">Get In Touch</h2>
-            <div className="title-underline"></div>
-            <p className="section-subtitle">Have a question? We'd love to hear from you. Contact us, and we’ll get back to you shortly.</p>
-          </div>
+    return (
+        <div className="contact-page-bg">
+            <main>
+                <section className="contact-section">
+                    <div className="container">
+                        <h2 className="section-title">Get In Touch</h2>
+                        <div className="title-underline"></div>
+                        <p className="section-subtitle">Have a question? We'd love to hear from you. Contact us, and we’ll get back to you shortly.</p>
 
-          {/* Bootstrap Grid Layout */}
-          <Row className="mt-5 align-items-center">
-            
-            {/* --- Left Column: Info Cards --- */}
-            <Col md={5} lg={4}>
-              <div className="info-card-contact">
-                <div className="info-icon"><i className="fa-solid fa-location-dot"></i></div>
-                <div className="info-text">
-                  <h3>Our Office</h3>
-                  <p>Sant Nagar Colony, Chitaipur, Varanasi, 221106</p>
-                </div>
-              </div>
-              <div className="info-card-contact">
-                <div className="info-icon"><i className="fa-solid fa-envelope"></i></div>
-                <div className="info-text">
-                  <h3>Email Us</h3>
-                  <p>sunsquadsolar4@gmail.com</p>
-                </div>
-              </div>
-              <div className="info-card-contact">
-                <div className="info-icon"><i className="fa-solid fa-phone"></i></div>
-                <div className="info-text">
-                  <h3>Call Us</h3>
-                  <p>+91 9278450045</p>
-                </div>
-              </div>
-            </Col>
-            
-            {/* --- Right Column: Contact Form --- */}
-            <Col md={7} lg={8}>
-              <Form onSubmit={handleSubmit} className="p-4 p-md-5">
-                <Row>
-                  <Col md={6}>
-                    <Form.Group className="mb-3">
-                      <Form.Control type="text" placeholder="Your Name" required />
-                    </Form.Group>
-                  </Col>
-                  <Col md={6}>
-                    <Form.Group className="mb-3">
-                      <Form.Control type="email" placeholder="Your Email" required />
-                    </Form.Group>
-                  </Col>
-                </Row>
-                <Form.Group className="mb-3">
-                  <Form.Control type="text" placeholder="Subject" required />
-                </Form.Group>
-                <Form.Group className="mb-4">
-                  <Form.Control as="textarea" rows={6} placeholder="Your Message" required />
-                </Form.Group>
-                <Button type="submit" className="btn-submit-green">
-                  Send Message
-                </Button>
-              </Form>
-            </Col>
+                        <div className="contact-content-wrapper">
+                            <div className="contact-info-block">
+                                <div className="info-card">
+                                    <i className="fa-solid fa-location-dot"></i>
+                                    <div>
+                                        <h3>Our Office</h3>
+                                        <p>Sant Nagar Colony, Baraipur, Chitaipur<br />Varanasi, 221106</p>
+                                    </div>
+                                </div>
+                                <div className="info-card">
+                                    <i className="fa-solid fa-envelope"></i>
+                                    <div>
+                                        <h3>Email Us</h3>
+                                        <p>sunsquadsolar4@gmail.com</p>
+                                    </div>
+                                </div>
+                                <div className="info-card">
+                                    <i className="fa-solid fa-phone"></i>
+                                    <div>
+                                        <h3>Call Us</h3>
+                                        <p>+91 9278450045</p>
+                                    </div>
+                                </div>
+                            </div>
 
-          </Row>
-        </Container>
-      </section>
-      
-      {/* The Map Section is now completely removed */}
-    </main>
-  );
+                            <div className="contact-form-block">
+                                <form onSubmit={handleSubmit}>
+                                    <div className="form-row">
+                                        <input type="text" name="name" placeholder="Your Name" value={formData.name} onChange={handleChange} required />
+                                        <input type="email" name="email" placeholder="Your Email" value={formData.email} onChange={handleChange} required />
+                                    </div>
+                                    <input type="text" name="subject" placeholder="Subject" value={formData.subject} onChange={handleChange} required />
+                                    <textarea name="message" rows="6" placeholder="Your Message" value={formData.message} onChange={handleChange} required></textarea>
+                                    <button type="submit" className="btn-submit-form" disabled={loading}>
+                                        {loading ? 'Sending...' : 'Send Message'}
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                {/* <section className="map-section">
+                    <iframe src="https://www.google.com/maps/embed?pb=..." width="100%" height="450" style={{ border: 0 }} allowFullScreen="" loading="lazy" referrerPolicy="no-referrer-when-downgrade"></iframe>
+                </section> */}
+            </main>
+        </div>
+    );
 };
 
 export default ContactPage;

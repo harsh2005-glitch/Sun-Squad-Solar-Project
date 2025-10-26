@@ -1,34 +1,53 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
+// --- IMPORT our new galleryService ---
+import galleryService from '../../services/galleryService';
+// Import Bootstrap components for a better loading/error state
+import { Spinner, Alert } from 'react-bootstrap';
 
-// Import all your gallery images
-import res1 from '../../assets/images/gallery/residential-home-1.jpg';
-import res2 from '../../assets/images/gallery/residential-home-2.jpg';
-import res3 from '../../assets/images/gallery/residential-home-3.jpg';
-// ... import all other residential images (res4 to res10)
-import com1 from '../../assets/images/gallery/commercial-roof-1.jpg';
-import ind1 from '../../assets/images/gallery/industrial-plant-1.jpg';
-
-
-// Create an array of all gallery items to make them easier to manage
-const allGalleryItems = [
-  { src: res1, category: 'residential', title: 'Modern Residential Rooftop Installation' },
-  { src: res2, category: 'residential', title: 'Suburban Home Solar Solution' },
-  { src: res3, category: 'residential', title: 'Eco-Friendly Housing Project' },
-  // ... add all other residential items here
-  { src: com1, category: 'commercial', title: 'Large Commercial Business Complex' },
-  { src: ind1, category: 'industrial', title: 'Industrial Factory Power Solution' },
-];
 
 const GalleryPage = () => {
+  const [allItems, setAllItems] = useState([]); // <-- State to hold items from the API
   const [activeCategory, setActiveCategory] = useState('all');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
-  // useMemo will re-calculate the filtered items only when the activeCategory changes
+  // --- NEW: Fetch data from the API when the page loads ---
+  useEffect(() => {
+    const fetchGallery = async () => {
+        try {
+            const response = await galleryService.getPublicGallery();
+            setAllItems(response.data);
+        } catch (err) {
+            setError("Could not load gallery images. Please try again later.");
+        } finally {
+            setLoading(false);
+        }
+    };
+    fetchGallery();
+  }, []); // Empty array ensures this runs only once
+
+
+  // This filtering logic now works on the state fetched from the API
   const filteredItems = useMemo(() => {
     if (activeCategory === 'all') {
-      return allGalleryItems;
+      return allItems;
     }
-    return allGalleryItems.filter(item => item.category === activeCategory);
-  }, [activeCategory]);
+    return allItems.filter(item => item.category === activeCategory);
+  }, [activeCategory, allItems]);
+
+  if (loading) {
+    return (
+        <div className="text-center p-5">
+            <Spinner animation="border" variant="primary" />
+            <p className="mt-2">Loading Gallery...</p>
+        </div>
+    );
+  }
+
+  if (error) {
+    return <Alert variant="danger" className="m-3">{error}</Alert>;
+  }
+
 
   return (
     <main>
@@ -36,7 +55,6 @@ const GalleryPage = () => {
         <h2 className="section-title">Our Project Gallery</h2>
         <div className="title-underline"></div>
 
-        {/* Filter Buttons with React onClick handlers */}
         <div className="gallery-filter">
           <button
             className={`filter-btn ${activeCategory === 'all' ? 'active' : ''}`}
@@ -64,19 +82,24 @@ const GalleryPage = () => {
           </button>
         </div>
 
-        {/* Image Grid rendered from our filtered state */}
         <div className="gallery-grid">
-          {filteredItems.map((item, index) => (
-            <div key={index} className="gallery-item" data-category={item.category}>
-              {/* NOTE: Lightbox functionality would require a React-specific library. 
-                  This basic link will just open the image. */}
-              <a href={item.src} target="_blank" rel="noopener noreferrer">
-                <img src={item.src} alt={item.title} />
-                <div className="overlay"><span>{item.title}</span></div>
+          {/* The grid now maps over the 'filteredItems' state */}
+          {filteredItems.map((item) => (
+            <div key={item._id} className="gallery-item" data-category={item.category}>
+              {/* The href now points to the imageUrl from the database */}
+              <a href={item.imageUrl} data-lightbox="project-gallery" data-title={item.title}>
+                <img src={item.imageUrl} alt={item.title || item.category} />
+                <div className="overlay"><span>{item.title || 'View Project'}</span></div>
               </a>
             </div>
           ))}
         </div>
+        
+        {/* Show a message if no items are found */}
+        {filteredItems.length === 0 && (
+            <p className="mt-5">No projects found in this category.</p>
+        )}
+
       </section>
     </main>
   );

@@ -1,7 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-// Import all the Bootstrap components we will use throughout the page
 import { Carousel, Container, Row, Col, Card, Button } from 'react-bootstrap';
+
+// --- NEW IMPORTS for animations ---
+import CountUp from 'react-countup';
+import AnimatedSection from '../../components/common/AnimatedSection';
 
 // --- Import your images ---
 import sliderImg1 from '../../assets/images/hero-slider-1.jpg';
@@ -13,11 +16,11 @@ import teamShivam from '../../assets/images/team-shivam.jpg';
 const HomePage = () => {
   return (
     <>
-      {/* === Carousel Section (Already Responsive) === */}
-      <Carousel fade>
+      {/* === Carousel Section (No scroll animation needed here) === */}
+      <Carousel fade className="content-beneath-navbar">
         <Carousel.Item interval={3000}>
           <img className="d-block w-100" src={sliderImg1} alt="First slide" style={{ height: '85vh', objectFit: 'cover' }} />
-          <Carousel.Caption className="d-none d-md-block"> {/* Hide caption on small screens */}
+          <Carousel.Caption className="d-none d-md-block">
             <h3>Powerful Solar Solutions</h3>
             <p>Harness the power of the sun for a brighter future.</p>
           </Carousel.Caption>
@@ -38,8 +41,8 @@ const HomePage = () => {
         </Carousel.Item>
       </Carousel>
 
-      {/* === About Us Section === */}
-      <section className="about-us py-5 bg-light">
+      {/* === About Us Section (Wrapped for animation) === */}
+      <AnimatedSection className="about-us py-5 section-bg">
         <Container>
           <Row className="align-items-center g-lg-5">
             <Col lg={6}>
@@ -52,25 +55,23 @@ const HomePage = () => {
             <Col lg={6}>
               <div className="about-content mt-4 mt-lg-0">
                 <h2 className="section-title">About Us</h2>
-               <p>
-              Sun Squad Solar is a leading renewable energy company in India. We provide system integration support for turn-key projects. We assist in building customised systems from multiple sources which have been garnered from our expertise. As our firm name suggests, our priority relies in providing alternate power solutions at affordable prices.
-            </p>
+                <p>Sun Squad Solar is a leading renewable energy company in India. We provide system integration support for turn-key projects. We assist in building customised systems from multiple sources which have been garnered from our expertise. As our firm name suggests, our priority relies in providing alternate power solutions at affordable prices.</p>
                 <p>* On-time at services<br />* Verified professionals</p>
                 <Button as={Link} to="/about" variant="success" size="lg">Learn More</Button>
               </div>
             </Col>
           </Row>
         </Container>
-      </section>
+      </AnimatedSection>
 
-      {/* === Customer Priority Section === */}
-      <section className="priority-section py-5">
+      {/* === Customer Priority Section (Wrapped for animation) === */}
+      <AnimatedSection className="priority-section py-5">
         <Container>
           <Row className="align-items-center g-lg-5">
             <Col lg={6} className="mb-4 mb-lg-0">
               <div className="priority-content">
                 <h2 className="section-title">WE ALWAYS PROVIDE PRIORITY TO OUR CUSTOMER</h2>
-                <p>The reason why Sun Squad Solar has been able to achieve such steep success...</p>
+                <p>The reason why Sun Squad Solar has been able to achieve such steep success is due to our diligence toward ensuring customer satisfaction in every way possible. Right from the selection of solar for our projects to our vast and growing network, we always ensure that the process is transparent and customer friendly.</p>
               </div>
             </Col>
             <Col lg={6}>
@@ -82,10 +83,10 @@ const HomePage = () => {
             </Col>
           </Row>
         </Container>
-      </section>
+      </AnimatedSection>
 
-      {/* === Values & Vision Section === */}
-      <section className="values-section py-5 bg-light">
+      {/* === Values & Vision Section (Wrapped for animation) === */}
+      <AnimatedSection className="values-section py-5 section-bg">
         <Container>
             <Row className="g-4">
                 <Col xs={12} lg={3}><Card className="h-100 text-white" style={{ backgroundColor: '#33A1E0' }}><Card.Body className="d-flex flex-column"><Card.Title as="h3">Why Choose Us</Card.Title><Card.Text>Sun Squad Solar. We use a combination of both online and offline marketing...</Card.Text><Button as={Link} to="/about" variant="outline-light" className="mt-auto">Learn More</Button></Card.Body></Card></Col>
@@ -94,10 +95,10 @@ const HomePage = () => {
                 <Col xs={12} md={4} lg={3}><Card className="h-100 text-center shadow-sm"><Card.Body className="d-flex flex-column"><div className="value-icon"><i className="fa-solid fa-people-group"></i></div><Card.Title as="h3">Our Strategy</Card.Title><Card.Text>Manufacturing specialized solar accessories like brackets and junction boxes...</Card.Text><Button as={Link} to="/about" variant="outline-primary" className="mt-auto">Learn More</Button></Card.Body></Card></Col>
             </Row>
         </Container>
-      </section>
+      </AnimatedSection>
 
-      {/* === Team Member Section === */}
-      <section className="team-section py-5">
+      {/* === Team Member Section (Wrapped for animation) === */}
+      <AnimatedSection className="team-section py-5">
         <Container className="text-center">
           <h2 className="section-title">Our Team Member</h2>
           <div className="title-underline"></div>
@@ -110,21 +111,36 @@ const HomePage = () => {
             </Col>
           </Row>
         </Container>
-      </section>
+      </AnimatedSection>
 
-      {/* === Statistics Section === */}
-      <section className="stats-section py-5 bg-light">
+      {/* === Statistics Section (Wrapped and with CountUp) === */}
+      <AnimatedSection className="stats-section py-5 section-bg">
           <Container>
               <Row className="g-4 text-center">
-                  <Col md={4}><div className="stat-card p-4"><div className="stat-icon"><i className="fa-regular fa-user"></i></div><span className="stat-number">1000+</span><p className="stat-label">Our Customer</p></div></Col>
-                  <Col md={4}><div className="stat-card p-4"><div className="stat-icon"><i className="fa-solid fa-warehouse"></i></div><span className="stat-number">2+</span><p className="stat-label">Our Branch</p></div></Col>
-                  <Col md={4}><div className="stat-card p-4"><div className="stat-icon"><i className="fa-solid fa-people-roof"></i></div><span className="stat-number">100+</span><p className="stat-label">Our Agent</p></div></Col>
+                  <Col md={4}><div className="stat-card p-4"><div className="stat-icon"><i className="fa-regular fa-user"></i></div>
+                    <span className="stat-number">
+                        <CountUp end={1000} duration={3} enableScrollSpy />+
+                    </span>
+                    <p className="stat-label">Our Customer</p>
+                  </div></Col>
+                  <Col md={4}><div className="stat-card p-4"><div className="stat-icon"><i className="fa-solid fa-warehouse"></i></div>
+                    <span className="stat-number">
+                        <CountUp end={2} duration={3} enableScrollSpy />+
+                    </span>
+                    <p className="stat-label">Our Branch</p>
+                  </div></Col>
+                  <Col md={4}><div className="stat-card p-4"><div className="stat-icon"><i className="fa-solid fa-people-roof"></i></div>
+                    <span className="stat-number">
+                        <CountUp end={100} duration={3} enableScrollSpy />+
+                    </span>
+                    <p className="stat-label">Our Agent</p>
+                  </div></Col>
               </Row>
           </Container>
-      </section>
+      </AnimatedSection>
 
-      {/* === Amenities Section === */}
-      <section className="amenities-section py-5">
+      {/* === Amenities Section (Wrapped for animation) === */}
+      <AnimatedSection className="amenities-section py-5">
           <Container className="text-center">
               <h2 className="section-title amenities-title"><span>Exclusivity</span> | <span>High Quality</span> | <span>Amenities</span></h2>
               <div className="title-underline"></div>
@@ -137,23 +153,48 @@ const HomePage = () => {
                   <Col xs={6} sm={4} lg={2}><div className="amenity-card"><div className="amenity-icon"><i className="fa-solid fa-bullseye"></i></div><h4>Government Project</h4></div></Col>
               </Row>
           </Container>
-      </section>
+      </AnimatedSection>
 
-      {/* === Testimonials Section === */}
-      <section className="testimonials-section py-5 bg-light">
-          <Container className="text-center">
-              <h2 className="section-title">What Our Customer Says</h2>
-              <div className="title-underline"></div>
-              <Row className="justify-content-center g-4 mt-3">
-                  <Col lg={5}>
-                      <Card className="testimonial-card shadow-sm"><Card.Body><Card.Title as="h4">Mr. Jatin Singh</Card.Title><Card.Text className="testimonial-quote">Ever since I got the solar installed, the tension regarding the electricity bill has ended...</Card.Text></Card.Body></Card>
-                  </Col>
-                  <Col lg={5}>
-                      <Card className="testimonial-card shadow-sm"><Card.Body><Card.Title as="h4">Mr. Suresh</Card.Title><Card.Text className="testimonial-quote">From the initial installation to the final installation, the staff was extremely helpful and professional...</Card.Text></Card.Body></Card>
-                  </Col>
-              </Row>
-          </Container>
-      </section>
+      {/* === Testimonials Section (Now a Carousel) === */}
+<AnimatedSection className="testimonials-carousel-section">
+  <Container>
+    <h2 className="section-title">What Our Customer Says</h2>
+    <div className="title-underline"></div>
+
+    <Carousel indicators={true} controls={false} className="testimonial-carousel">
+      {/* Testimonial 1 */}
+      <Carousel.Item interval={2000}>
+        <div className="testimonial-slide-content">
+          <h4>Mr. Jatin Singh</h4>
+          <p className="testimonial-quote">
+            "Ever since I got the solar installed, the tension regarding the electricity bill has ended. We are living happily without any tension. The worker installed the connection successfully without any fault. Everything was completed on time."
+          </p>
+        </div>
+      </Carousel.Item>
+
+      {/* Testimonial 2 */}
+      <Carousel.Item interval={2000}>
+        <div className="testimonial-slide-content">
+          <h4>Mr. Suresh</h4>
+          <p className="testimonial-quote">
+            "From the initial installation to the final installation, the staff was extremely helpful and professional. They explained everything clearly and answered all our questions without a high-pressure sales pitch."
+          </p>
+        </div>
+      </Carousel.Item>
+      
+      {/* --- ADD A NEW TESTIMONIAL HERE --- */}
+      <Carousel.Item interval={3000}>
+        <div className="testimonial-slide-content">
+          <h4>Priya Sharma</h4>
+          <p className="testimonial-quote">
+            "The quality of the panels and the installation work is top-notch. My energy savings have been significant, and I highly recommend Sun Squad Solar to anyone considering the switch to renewable energy."
+          </p>
+        </div>
+      </Carousel.Item>
+      
+    </Carousel>
+  </Container>
+</AnimatedSection>
     </>
   );
 };

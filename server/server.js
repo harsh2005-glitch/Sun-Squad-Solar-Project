@@ -9,16 +9,20 @@ const userRoutes = require('./routes/users');
 const adminRoutes = require('./routes/admin');
 const configureCloudinary = require('./config/cloudinaryConfig'); 
 const settingsRoutes = require('./routes/settings');
+const galleryRoutes = require('./routes/gallery');
+const publicGalleryRoutes = require('./routes/publicGallery');
+const contactRoutes = require('./routes/contact');
+const publicAnnouncementsRoutes = require('./routes/publicAnnouncements'); 
 
 const admin = require('firebase-admin'); // <-- IMPORT
 const serviceAccount = require('./config/serviceAccountKey.json');
 
 
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
-});
-console.log("Firebase Admin SDK Initialized.");
+// admin.initializeApp({
+//   credential: admin.credential.cert(serviceAccount)
+// });
+// console.log("Firebase Admin SDK Initialized.");
 
 
 // Load environment variables
@@ -38,7 +42,13 @@ connectDB();
 // Initialize the app
 const app = express();
 
-const allowedOrigins = ['http://localhost:3000', 'https://sunsquadsolar.vercel.app/'];
+const allowedOrigins = [
+  'http://localhost:3000',
+  'https://sunsquadsolar.vercel.app',
+  'https://sun-squad-solar.vercel.app',
+  'https://www.sunsquadsolar.in'
+];
+
 const corsOptions = {
   origin: (origin, callback) => {
     if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
@@ -47,27 +57,19 @@ const corsOptions = {
       callback(new Error('Not allowed by CORS'));
     }
   },
-  optionsSuccessStatus: 200
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
+  optionsSuccessStatus: 200,
+  preflightContinue: false,
+  maxAge: 86400 // 24 hours
 };
-
-// const corsOptions = {
-//   origin: (origin, callback) => {
-//     // Allow requests with no origin (like mobile apps or curl requests)
-//     if (!origin) return callback(null, true);
-//     if (allowedOrigins.indexOf(origin) === -1) {
-//       const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
-//       return callback(new Error(msg), false);
-//     }
-//     return callback(null, true);
-//   },
-//   credentials: true,
-// };
 
 
 
 
 // Middlewares
-app.use(cors());
+// app.use(cors());
 app.use(cors(corsOptions)); // Enable Cross-Origin Resource Sharing
 app.use(express.json()); // Allow the server to accept JSON data
 
@@ -76,6 +78,10 @@ app.use('/api/auth', authRoutes); // Use the authentication routes
 app.use('/api/users', userRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/settings', settingsRoutes);
+app.use('/api/gallery', galleryRoutes);
+app.use('/api/gallery', publicGalleryRoutes); 
+app.use('/api/contact', contactRoutes);
+app.use('/api/announcements', publicAnnouncementsRoutes);
 
 // A simple test route to make sure the server is running
 app.get('/', (req, res) => {

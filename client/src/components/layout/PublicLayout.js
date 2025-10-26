@@ -20,7 +20,7 @@ const PublicLayout = () => {
       {/* The header receives the function to open the modal */}
       <PublicHeader onEnquiryClick={handleEnquiryClick} />
       
-      <main>
+      <main className="content-beneath-navbar">
         <Outlet />
       </main>
       

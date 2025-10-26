@@ -7,14 +7,16 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 
 import './index.css';
 import './styles/main.css';
-// import './styles/auth.css';
 import App from './App';
+// import { ThemeProvider } from './context/ThemeContext'; 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <BrowserRouter>
+   
       <App />
+      
     </BrowserRouter>
   </React.StrictMode>
 );

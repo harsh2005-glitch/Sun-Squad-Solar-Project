@@ -33,6 +33,12 @@ const AdminSidebar = ({ onLinkClick }) => {
           <Nav.Item>
           <Nav.Link as={NavLink} to="/admin/settings">System Settings</Nav.Link>
         </Nav.Item>
+         <Nav.Item>
+          <Nav.Link as={NavLink} to="/admin/gallery">Manage Gallery</Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
+          <Nav.Link as={NavLink} to="/admin/announcements">Manage Announcements</Nav.Link>
+        </Nav.Item>
         
       </Nav>
       

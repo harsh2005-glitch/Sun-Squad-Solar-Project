@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import settingsService from '../../services/settingsService';
 import { Form, Button, Card, Alert, Table, Row, Col, InputGroup } from 'react-bootstrap';
 import { Spinner } from 'react-bootstrap';
+import { toast } from 'react-toastify';
 
 // A reusable component for rendering one of the slab tables
 const SlabTable = ({ title, slabs, setSlabs }) => {
@@ -63,6 +64,8 @@ const SettingsPage = () => {
     const [saving, setSaving] = useState(false);
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');
+     const [notice, setNotice] = useState('');
+     const [noticeSaving, setNoticeSaving] = useState(false);
 
     useEffect(() => {
         const fetchSettings = async () => {
@@ -70,6 +73,7 @@ const SettingsPage = () => {
                 const response = await settingsService.getSettings();
                 setSelfSlabs(response.data.selfIncomeSlabs);
                 setTeamSlabs(response.data.teamIncomeSlabs);
+                 setNotice(response.data.noticeMessage || '');
             } catch (err) {
                 setError('Failed to load settings.');
             } finally {
@@ -96,6 +100,20 @@ const SettingsPage = () => {
         }
     };
 
+     // --- NEW: Handler for saving the notice ---
+    const handleNoticeSave = async () => {
+        setNoticeSaving(true);
+        try {
+            await settingsService.updateNotice(notice);
+            toast.success("Notice updated successfully!");
+        } catch (error) {
+            toast.error("Failed to update notice.");
+        } finally {
+            setNoticeSaving(false);
+        }
+    };
+
+
     if (loading) return <Spinner animation="border" />;
     
     return (
@@ -103,6 +121,24 @@ const SettingsPage = () => {
             <h1 className="mb-4">System Settings</h1>
             {error && <Alert variant="danger">{error}</Alert>}
             {message && <Alert variant="success">{message}</Alert>}
+
+             <Card className="shadow-sm mb-4">
+                <Card.Header as="h5">Notice Board Message</Card.Header>
+                <Card.Body>
+                    <Form.Group className="mb-3">
+                        <Form.Label>This message will appear on every user's dashboard.</Form.Label>
+                        <Form.Control 
+                            as="textarea" 
+                            rows={3}
+                            value={notice}
+                            onChange={(e) => setNotice(e.target.value)}
+                        />
+                    </Form.Group>
+                    <Button variant="info" onClick={handleNoticeSave} disabled={noticeSaving}>
+                        {noticeSaving ? 'Saving...' : 'Save Notice'}
+                    </Button>
+                </Card.Body>
+            </Card>
             
             <SlabTable title="Self Income Commission Slabs" slabs={selfSlabs} setSlabs={setSelfSlabs} />
             <SlabTable title="Team Income Commission Slabs" slabs={teamSlabs} setSlabs={setTeamSlabs} />
