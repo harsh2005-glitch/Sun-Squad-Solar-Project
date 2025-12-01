@@ -34,7 +34,12 @@ if (process.env.CLOUDINARY_CLOUD_NAME) {
 if (!process.env.MONGO_URI) {
     console.error("FATAL ERROR: MONGO_URI is not defined.");
 }
-connectDB();
+// Wrap connectDB in a try-catch to prevent startup crash
+try {
+    connectDB();
+} catch (err) {
+    console.error("Failed to initiate DB connection:", err);
+}
 
 // Initialize the app
 const app = express();
@@ -48,11 +53,26 @@ const allowedOrigins = [
 
 const corsOptions = {
   origin: (origin, callback) => {
-    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    // Check if the origin is in the allowed list
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      return callback(null, true);
     }
+    
+    // Allow any Vercel preview/production deployment
+    if (origin.endsWith('.vercel.app')) {
+        return callback(null, true);
+    }
+
+    // Allow localhost for development
+    if (origin.startsWith('http://localhost:')) {
+        return callback(null, true);
+    }
+
+    const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+    return callback(new Error(msg), false);
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -66,8 +86,10 @@ const corsOptions = {
 
 
 // Middlewares
-app.use(cors());
+// app.use(cors()); // Remove duplicate call
 app.use(cors(corsOptions)); // Enable Cross-Origin Resource Sharing
+app.options('*', cors(corsOptions)); // Enable pre-flight for all routes
+
 app.use(express.json()); // Allow the server to accept JSON data
 
 
