@@ -39,20 +39,12 @@ const resetPassword = (token, password) => {
 };
 // We create an object to export all our functions
 
-
-const resetPasswordWithFirebase = (phone, newPassword) => {
-  // This is a public route, no token needed
-  return axios.put(`${API_BASE_URL}/auth/resetpassword-firebase`, { phone, newPassword });
-};
-
 const authService = {
   signup,
   login,
   completeOnboarding,
    forgotPassword, // <-- Add this
   resetPassword,  // <-- Add this
-  resetPasswordWithFirebase,
-
 };
 
 export default authService;

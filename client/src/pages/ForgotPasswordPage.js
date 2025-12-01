@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-// Import the Firebase auth instance and the specific function we need
-import { auth } from '../firebase/config';
-import { sendPasswordResetEmail } from "firebase/auth";
+// Firebase removed
+// import { auth } from '../firebase/config';
+// import { sendPasswordResetEmail } from "firebase/auth";
 
 import logo from '../assets/images/logo.png';
 import '../styles/auth.css';
@@ -20,18 +20,20 @@ const ForgotPasswordPage = () => {
     setError('');
     setLoading(true);
     try {
-      // --- THIS IS THE CORE FIREBASE LOGIC ---
-      await sendPasswordResetEmail(auth, email);
+      // --- FIREBASE REMOVED ---
+      // await sendPasswordResetEmail(auth, email);
       
-      setMessage('A password reset link has been sent to your email address. Please check your inbox (and spam folder).');
+      // setMessage('A password reset link has been sent to your email address. Please check your inbox (and spam folder).');
+      setError('Password reset functionality is currently disabled.');
     } catch (err) {
       // Handle common Firebase errors
-      if (err.code === 'auth/user-not-found') {
-        setError('No account found with this email address.');
-      } else {
-        setError('Failed to send reset email. Please try again.');
-      }
-      console.error("Firebase Password Reset Error:", err);
+      // if (err.code === 'auth/user-not-found') {
+      //   setError('No account found with this email address.');
+      // } else {
+      //   setError('Failed to send reset email. Please try again.');
+      // }
+      console.error("Password Reset Error:", err);
+      setError('An error occurred.');
     } finally {
       setLoading(false);
     }

@@ -14,29 +14,26 @@ const publicGalleryRoutes = require('./routes/publicGallery');
 const contactRoutes = require('./routes/contact');
 const publicAnnouncementsRoutes = require('./routes/publicAnnouncements'); 
 
-const admin = require('firebase-admin'); // <-- IMPORT
-// const serviceAccount = require('./config/serviceAccountKey.json');
-
-
-
-// admin.initializeApp({
-//   credential: admin.credential.cert(serviceAccount)
-// });
-// console.log("Firebase Admin SDK Initialized.");
-
-
 // Load environment variables
 dotenv.config();
-// --- NEW: Configure Cloudinary at the start ---
+
+// --- Configure Cloudinary at the start ---
 const cloudinary = require('cloudinary').v2;
-cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-    api_key: process.env.CLOUDINARY_API_KEY,
-    api_secret: process.env.CLOUDINARY_API_SECRET,
-});
-console.log("Cloudinary configured successfully."); // Confirmation message
+if (process.env.CLOUDINARY_CLOUD_NAME) {
+    cloudinary.config({
+        cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+        api_key: process.env.CLOUDINARY_API_KEY,
+        api_secret: process.env.CLOUDINARY_API_SECRET,
+    });
+    console.log("Cloudinary configured successfully."); 
+} else {
+    console.warn("Cloudinary credentials missing.");
+}
 
 // Connect to the database
+if (!process.env.MONGO_URI) {
+    console.error("FATAL ERROR: MONGO_URI is not defined.");
+}
 connectDB();
 
 // Initialize the app
