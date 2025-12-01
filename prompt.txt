@@ -14,9 +14,9 @@ i want to explain entire system =
 2)income or commission calulation :
         a)Self : 
         from             till                self            
-        0                5,00,000             2%                   
-        5,00,001         15,00,000            3%                      
-        15,00,001        50lakh               4%                       
+        0                5,00,000             3%                   
+        5,00,001         15,00,000            4%                      
+        15,00,001        50lakh               5%                       
         >50lakh          <=1cr                5%
 
         This is table for calculation of self income on self curr balance or total self deposite;

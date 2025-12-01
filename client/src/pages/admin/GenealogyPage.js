@@ -17,7 +17,7 @@ const buildTreeData = (users) => {
             name: user.name,
             attributes: { // Attributes are passed down to the node renderer
                 associateId: user.associateId,
-                totalBusiness: (user.selfBusiness || 0) + (user.teamBusiness || 0),
+                totalBusiness: (user.currentSelfBalance || 0) + (user.currentTeamBalance || 0),
             },
             children: []
         };

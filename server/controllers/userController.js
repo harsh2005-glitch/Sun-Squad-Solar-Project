@@ -261,7 +261,7 @@ const uploadPanCard = async (req, res) => {
 const getDownline = async (userId) => {
     // Find all users who have this userId as their sponsor
     const directs = await User.find({ sponsor: userId })
-        .select('name associateId selfBusiness teamBusiness sponsor')
+        .select('name associateId currentSelfBalance currentTeamBalance sponsor')
         .lean();
 
     // If a user has no directs, return an empty array
@@ -275,7 +275,7 @@ const getDownline = async (userId) => {
             name: direct.name,
             attributes: {
                 associateId: direct.associateId,
-                totalBusiness: (direct.selfBusiness || 0) + (direct.teamBusiness || 0),
+                totalBusiness: (direct.currentSelfBalance || 0) + (direct.currentTeamBalance || 0),
             },
             // This is the recursive call
             children: await getDownline(direct._id),

@@ -65,7 +65,7 @@ const getGenealogyTree = async (req, res) => {
     try {
         // --- ADD selfBusiness and teamBusiness to the select() ---
         const users = await User.find({})
-            .select('name associateId sponsor directs selfBusiness teamBusiness')
+            .select('name associateId sponsor directs currentSelfBalance currentTeamBalance')
             .lean();
 
         res.json(users);
@@ -192,7 +192,7 @@ const getTransactionHistory = async (req, res) => {
 
 
 
-// --- NEW: The Slab Calculation Engine ---
+// --- NEW: The Slab Calculation Engine (For Self Income - Progressive) ---
 const calculateSlabIncome = (balance, slabs) => {
     let income = 0;
     let remainingBalance = balance;
@@ -214,24 +214,98 @@ const calculateSlabIncome = (balance, slabs) => {
     return income;
 };
 
+// --- NEW: Helper to get Percentage Level (For Team Income - Differential) ---
+const getPercentageLevel = (amount, slabs) => {
+    if (amount <= 0) return 0; // FIX: Return 0% if business is 0
+
+    // Find the slab that the total amount falls into
+    // We assume slabs cover the entire range. If amount > max slab, use the highest.
+    const sortedSlabs = [...slabs].sort((a, b) => a.from - b.from);
+    let applicablePercentage = 0;
+
+    for (const slab of sortedSlabs) {
+        if (amount >= slab.from) {
+            applicablePercentage = slab.percentage;
+        }
+    }
+    return applicablePercentage;
+};
+
 
 // --- NEW: The Master Update Function ---
 const updateUserAndUpline = async (userId, amountChange, settings) => {
     const user = await User.findById(userId);
     if (!user) return;
 
-    // 1. Update the user's self balance and recalculate their self income
-    user.currentSelfBalance += amountChange;
+    // Ensure amountChange is a number
+    const change = Number(amountChange);
+    if (isNaN(change)) return;
+
+    // 1. Update the user's self balance and recalculate their self income (Progressive)
+    const oldSelfIncome = user.selfIncome || 0;
+    user.currentSelfBalance += change;
     user.selfIncome = calculateSlabIncome(user.currentSelfBalance, settings.selfIncomeSlabs);
+    
+    // Record Self Income Commission
+    const selfIncomeEarned = user.selfIncome - oldSelfIncome;
+    if (selfIncomeEarned > 0) {
+        await Commission.create({
+            recipient: user._id,
+            amount: selfIncomeEarned,
+            commissionType: 'self_business',
+            description: 'Income from Self Business',
+            sourceUser: user._id
+        });
+    }
+
+    // Determine the user's current level based ONLY on Team Business
+    // For the depositor, this is their existing Team Business (excluding their own new deposit)
+    const userTeamBusiness = user.currentTeamBalance;
+    let lastProcessedPercentage = getPercentageLevel(userTeamBusiness, settings.teamIncomeSlabs);
+    
     await user.save();
 
-    // 2. Traverse the upline
+    // 2. Traverse the upline for Differential Team Income
     let currentSponsor = await User.findById(user.sponsor);
+    
     while (currentSponsor) {
         // Update the sponsor's team balance
-        currentSponsor.currentTeamBalance += amountChange;
-        // Recalculate their team income based on the new team balance
-        currentSponsor.teamIncome = calculateSlabIncome(currentSponsor.currentTeamBalance, settings.teamIncomeSlabs);
+        currentSponsor.currentTeamBalance += change;
+        
+        // Determine Sponsor's Level based ONLY on their NEW Team Business
+        const sponsorTeamBusiness = currentSponsor.currentTeamBalance;
+        const sponsorPercentage = getPercentageLevel(sponsorTeamBusiness, settings.teamIncomeSlabs);
+        
+        // Calculate Gap Commission
+        // Profit = (Sponsor% - Downline%) * NewDepositAmount
+        const gap = sponsorPercentage - lastProcessedPercentage;
+        
+        if (gap > 0) {
+            const commission = change * (gap / 100);
+            
+            // Safeguard: Ensure commission is positive before adding
+            if (commission > 0) {
+                currentSponsor.teamIncome += commission;
+                
+                // Record Team Commission
+                await Commission.create({
+                    recipient: currentSponsor._id,
+                    amount: commission,
+                    commissionType: 'team_business',
+                    sourceUser: user._id, // The depositor
+                    description: `Team Commission from ${user.name} (${gap}%)`,
+                    percentageEarned: gap
+                });
+            }
+
+            // The sponsor now becomes the new "floor" for the next upline
+            lastProcessedPercentage = sponsorPercentage;
+        } else {
+            // If Sponsor% <= Downline%, they get 0.
+            // The "floor" for the next upline is the max of the two.
+            lastProcessedPercentage = Math.max(lastProcessedPercentage, sponsorPercentage);
+        }
+
         await currentSponsor.save();
         
         currentSponsor = await User.findById(currentSponsor.sponsor);
