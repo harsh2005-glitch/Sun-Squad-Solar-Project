@@ -15,7 +15,7 @@ const contactRoutes = require('./routes/contact');
 const publicAnnouncementsRoutes = require('./routes/publicAnnouncements'); 
 
 const admin = require('firebase-admin'); // <-- IMPORT
-const serviceAccount = require('./config/serviceAccountKey.json');
+// const serviceAccount = require('./config/serviceAccountKey.json');
 
 
 
