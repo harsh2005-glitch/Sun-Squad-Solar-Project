@@ -88,7 +88,7 @@ const corsOptions = {
 // Middlewares
 // app.use(cors()); // Remove duplicate call
 app.use(cors(corsOptions)); // Enable Cross-Origin Resource Sharing
-app.options('*', cors(corsOptions)); // Enable pre-flight for all routes
+// app.options('/*', cors(corsOptions)); // Enable pre-flight for all routes
 
 app.use(express.json()); // Allow the server to accept JSON data
 

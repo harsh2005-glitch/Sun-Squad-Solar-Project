@@ -22,7 +22,8 @@ const {
     deleteAnnouncement
 } = require('../controllers/announcementController');
 
-const upload = multer({ dest: path.join(__dirname, '..', 'uploads') });
+// Use the configured upload middleware (Cloudinary) instead of local storage
+const upload = require('../middleware/uploadMiddleware');
 
 // We chain the middleware. First 'protect' checks for a valid token,
 // then 'admin' checks if the user from that token is an admin.
