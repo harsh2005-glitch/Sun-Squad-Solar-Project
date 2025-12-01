@@ -287,6 +287,35 @@ const loginAsUser = async (req, res) => {
     }
 };
 
+// @desc    Reset a user's password to their phone number (Admin only)
+// @route   PUT /api/admin/users/:id/reset-password
+// @access  Admin
+const resetUserPassword = async (req, res) => {
+    try {
+        const user = await User.findById(req.params.id);
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Set password to the user's phone number
+        user.password = user.phone;
+        // Set the flag so they are forced to change it on next login
+        user.isPasswordResetRequired = true;
+        // Clear the request flag since the admin has handled it
+        user.passwordResetRequested = false;
+
+        // The pre-save hook in the User model will hash this new password
+        await user.save();
+
+        res.json({ message: `Password reset to user's phone number (${user.phone}). User will be prompted to change it on next login.` });
+
+    } catch (error) {
+        console.error("ADMIN RESET PASSWORD ERROR:", error);
+        res.status(500).json({ message: 'Server Error' });
+    }
+};
+
 module.exports = {
     getAllUsers,
     addDeposit,
@@ -297,6 +326,7 @@ module.exports = {
     loginAsUser,
     addWithdrawal,
     getTransactionHistory,
+    resetUserPassword,
     // addDeposit,
     // addWithdrawal,
 };

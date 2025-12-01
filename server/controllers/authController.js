@@ -78,6 +78,7 @@ const loginUser = async (req, res) => {
                 email: user.email,
                 token: generateToken(user._id),
                 onboardingRequired: user.status === 'pendingOnboarding',
+                resetRequired: user.isPasswordResetRequired, // Flag for frontend redirection
                 role: user.role // <-- MAKE SURE THIS LINE IS HERE
             });
         } else {
@@ -233,6 +234,56 @@ const resetPassword = async (req, res) => {
     }
 };
 
+// @desc    Set a new password (forced after admin reset)
+// @route   PUT /api/auth/set-new-password
+// @access  Protected
+const setNewPassword = async (req, res) => {
+    const { newPassword } = req.body;
+    const userId = req.user.id;
+
+    if (!newPassword || newPassword.length < 6) {
+        return res.status(400).json({ message: 'Password must be at least 6 characters long.' });
+    }
+
+    try {
+        const user = await User.findById(userId);
+        
+        user.password = newPassword;
+        user.isPasswordResetRequired = false; // Clear the flag
+        
+        await user.save();
+
+        res.json({ message: 'Password updated successfully. You can now use your account.' });
+
+    } catch (error) {
+        console.error("SET NEW PASSWORD ERROR:", error);
+        res.status(500).json({ message: 'Server Error' });
+    }
+};
+
+
+// @desc    Request a password reset (User action)
+// @route   POST /api/auth/request-password-reset
+const requestPasswordReset = async (req, res) => {
+    const { associateId, phone } = req.body;
+
+    try {
+        const user = await User.findOne({ associateId, phone });
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found with these details.' });
+        }
+
+        user.passwordResetRequested = true;
+        await user.save();
+
+        res.json({ message: 'Password reset request sent to admin successfully.' });
+
+    } catch (error) {
+        console.error("REQUEST PASSWORD RESET ERROR:", error);
+        res.status(500).json({ message: 'Server Error' });
+    }
+};
 
 module.exports = {
     signupUser,
@@ -240,4 +291,6 @@ module.exports = {
     completeOnboarding,
     // forgotPassword,
     resetPassword,
+    setNewPassword,
+    requestPasswordReset,
 };

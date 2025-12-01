@@ -71,6 +71,12 @@ const impersonateUser = (userId) => {
   return axios.post(`${API_BASE_URL}/admin/impersonate/${userId}`, null, config);
 };
 
+const resetUserPassword = (userId) => {
+  const user = JSON.parse(localStorage.getItem('user'));
+  const config = { headers: { Authorization: `Bearer ${user.token}` } };
+  return axios.put(`${API_BASE_URL}/admin/users/${userId}/reset-password`, null, config);
+};
+
 
 const adminService = {
   getAllUsers,
@@ -82,6 +88,7 @@ const adminService = {
   getTransactionHistory,
   getUserById,
   impersonateUser,
+  resetUserPassword,
 };
 
 

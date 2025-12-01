@@ -1,15 +1,13 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-// Firebase removed
-// import { auth } from '../firebase/config';
-// import { sendPasswordResetEmail } from "firebase/auth";
-
+import authService from '../services/authService';
 import logo from '../assets/images/logo.png';
 import '../styles/auth.css';
 import { Alert } from 'react-bootstrap';
 
 const ForgotPasswordPage = () => {
-  const [email, setEmail] = useState('');
+  const [associateId, setAssociateId] = useState('');
+  const [phone, setPhone] = useState('');
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -20,20 +18,10 @@ const ForgotPasswordPage = () => {
     setError('');
     setLoading(true);
     try {
-      // --- FIREBASE REMOVED ---
-      // await sendPasswordResetEmail(auth, email);
-      
-      // setMessage('A password reset link has been sent to your email address. Please check your inbox (and spam folder).');
-      setError('Password reset functionality is currently disabled.');
+      await authService.requestPasswordReset(associateId, phone);
+      setMessage('Your request has been sent to the admin. Please wait for approval.');
     } catch (err) {
-      // Handle common Firebase errors
-      // if (err.code === 'auth/user-not-found') {
-      //   setError('No account found with this email address.');
-      // } else {
-      //   setError('Failed to send reset email. Please try again.');
-      // }
-      console.error("Password Reset Error:", err);
-      setError('An error occurred.');
+      setError(err.response?.data?.message || 'Failed to send request. Please check your details.');
     } finally {
       setLoading(false);
     }
@@ -49,15 +37,33 @@ const ForgotPasswordPage = () => {
     <div className="auth-container">
       <div className="auth-card">
         <Link to="/" className="auth-logo-link"><img src={logo} alt="Logo" className="auth-logo" /></Link>
-        <h2>Forgot Password</h2>
-        <p className="auth-subtitle">Enter your registered email address to receive a reset link.</p>
+        <h2>Request Password Reset</h2>
+        <p className="auth-subtitle">Enter your Associate ID and Phone Number to request a password reset from the admin.</p>
         <form onSubmit={handleSubmit}>
           <div className="input-group">
-            <label htmlFor="email">Email Address</label>
-            <input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+            <label htmlFor="associateId">Associate ID</label>
+            <input 
+              type="text" 
+              id="associateId" 
+              value={associateId} 
+              onChange={(e) => setAssociateId(e.target.value)} 
+              required 
+              placeholder="Enter your Associate ID"
+            />
+          </div>
+          <div className="input-group">
+            <label htmlFor="phone">Phone Number</label>
+            <input 
+              type="text" 
+              id="phone" 
+              value={phone} 
+              onChange={(e) => setPhone(e.target.value)} 
+              required 
+              placeholder="Enter your registered phone number"
+            />
           </div>
           <button type="submit" className="auth-button" disabled={loading}>
-            {loading ? 'Sending...' : 'Send Reset Link'}
+            {loading ? 'Sending Request...' : 'Send Request'}
           </button>
         </form>
         {message && <Alert variant="success" className="mt-3">{message}</Alert>}

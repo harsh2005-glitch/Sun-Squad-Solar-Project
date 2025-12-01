@@ -6,7 +6,7 @@ const path = require('path');
 const { protect, admin } = require('../middleware/authMiddleware');
 const { getAllUsers, addDeposit,getDashboardStats, 
     getGenealogyTree , updateUserStatus , addWithdrawal,
-    getTransactionHistory ,getUserById ,loginAsUser  } = require('../controllers/adminController');
+    getTransactionHistory ,getUserById ,loginAsUser, resetUserPassword } = require('../controllers/adminController');
 
 const { 
     getAdminGallery, 
@@ -36,6 +36,7 @@ router.post('/withdrawals', protect, admin, addWithdrawal);
 router.get('/transactions', protect, admin, getTransactionHistory);
 router.get('/users/:id', protect, admin, getUserById);
 router.post('/impersonate/:id', protect, admin, loginAsUser);
+router.put('/users/:id/reset-password', protect, admin, resetUserPassword);
 
 router.route('/gallery')
     .get(protect, admin, getAdminGallery)

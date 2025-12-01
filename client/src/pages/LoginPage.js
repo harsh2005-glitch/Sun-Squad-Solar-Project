@@ -25,6 +25,8 @@ const LoginPage = () => {
       
       if (response.data.role === 'admin') {
         navigate('/admin/dashboard');
+      } else if (response.data.resetRequired) { // Check for forced password reset
+        navigate('/set-new-password');
       } else if (response.data.onboardingRequired) {
         navigate('/onboarding');
       } else {

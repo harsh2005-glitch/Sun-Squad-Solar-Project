@@ -37,6 +37,21 @@ const forgotPassword = (email) => {
 const resetPassword = (token, password) => {
   return axios.put(`${API_BASE_URL}/auth/resetpassword/${token}`, { password });
 };
+
+// Function to set a new password (when forced by admin reset)
+const setNewPassword = (newPassword) => {
+  const user = JSON.parse(localStorage.getItem('user'));
+  const config = {
+    headers: { Authorization: `Bearer ${user.token}` },
+  };
+  return axios.put(`${API_BASE_URL}/auth/set-new-password`, { newPassword }, config);
+};
+
+// Function to request a password reset (User -> Admin)
+const requestPasswordReset = (associateId, phone) => {
+  return axios.post(`${API_BASE_URL}/auth/request-password-reset`, { associateId, phone });
+};
+
 // We create an object to export all our functions
 
 const authService = {
@@ -45,6 +60,8 @@ const authService = {
   completeOnboarding,
    forgotPassword, // <-- Add this
   resetPassword,  // <-- Add this
+  setNewPassword, // <-- Add this
+  requestPasswordReset, // <-- Add this
 };
 
 export default authService;

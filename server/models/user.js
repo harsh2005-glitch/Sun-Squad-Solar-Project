@@ -31,6 +31,8 @@ const userSchema = new mongoose.Schema({
 
     role: { type: String, enum: ['associate', 'admin'], default: 'associate' },
     isActive: { type: Boolean, default: true },
+    isPasswordResetRequired: { type: Boolean, default: false }, // Flag for admin reset workflow
+    passwordResetRequested: { type: Boolean, default: false }, // Flag for user request
     profilePicture: { type: String, default: '' },
     aadharCardUrl: { type: String, default: '' },
     panCardUrl: { type: String, default: '' },

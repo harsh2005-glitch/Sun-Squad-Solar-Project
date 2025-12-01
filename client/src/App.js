@@ -26,6 +26,7 @@ import SignupPage from './pages/SignupPage';
 import OnboardingPage from './pages/OnboardingPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
+import SetNewPasswordPage from './pages/SetNewPasswordPage';
 
 // Import Associate Pages
 import DashboardPage from './pages/associate/DashboardPage';
@@ -81,6 +82,7 @@ function App() {
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} /> {/* <-- ADD ROUTE */}
         <Route path="/resetpassword/:token" element={<ResetPasswordPage />} /> {/* <-- ADD DYNAMIC ROUTE */}
+        <Route path="/set-new-password" element={<SetNewPasswordPage />} />
         <Route path="/onboarding" element={<OnboardingPage />} />
 
 

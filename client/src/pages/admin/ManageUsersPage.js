@@ -98,6 +98,17 @@ const ManageUsersPage = () => {
       }
   };
 
+  const handleResetPassword = async (userId) => {
+    if (!window.confirm("Are you sure? This will reset the user's password to their phone number.")) return;
+    
+    try {
+        const response = await adminService.resetUserPassword(userId);
+        toast.success(response.data.message);
+    } catch (error) {
+        toast.error(error.response?.data?.message || "Failed to reset password.");
+    }
+  };
+
 
   const handleCloseModal = () => {
     setShowModal(false);
@@ -149,6 +160,11 @@ const ManageUsersPage = () => {
                   <td>
                     {user.name}
                     <small className="d-block text-muted">{user.email}</small>
+                    {user.passwordResetRequested && (
+                        <Badge bg="warning" text="dark" className="mt-1">
+                            <i className="fa-solid fa-key me-1"></i> Reset Requested
+                        </Badge>
+                    )}
                   </td>
                   <td>{user.associateId || 'N/A'}</td>
                   <td>{user.phone}</td>
@@ -182,6 +198,16 @@ const ManageUsersPage = () => {
                         Login As
                     </Button>
                 )}
+                {/* --- NEW: Reset Password Button --- */}
+                <Button 
+                    variant="dark" 
+                    size="sm" 
+                    className="ms-2"
+                    onClick={() => handleResetPassword(user._id)}
+                    title="Reset Password to Phone Number"
+                >
+                    <i className="fa-solid fa-key"></i>
+                </Button>
                   </td>
                 </tr>
               ))}
