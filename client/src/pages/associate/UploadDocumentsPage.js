@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import userService from '../../services/userService';
 import { Container, Card, Form, Button, Alert, Image, Spinner, Row, Col, Tabs, Tab } from 'react-bootstrap';
+import './UserShared.css';
 
 // A single, powerful, reusable component for each document type
 const DocumentUploader = ({ docType, title, description, onUpload, onUpdate, existingDocUrl }) => {
@@ -40,18 +41,18 @@ const DocumentUploader = ({ docType, title, description, onUpload, onUpdate, exi
     };
 
     return (
-        <div className="mb-4">
-            <h5>{title}</h5>
-            <p className="text-muted">{description}</p>
+        <div className="mb-4 p-3 border rounded bg-light">
+            <h5 className="text-primary">{title}</h5>
+            <p className="text-muted small">{description}</p>
             <Form.Group controlId={`formFile-${docType}`} className="mb-3">
-                <Form.Control type="file" accept="image/*" onChange={handleFileChange} />
+                <Form.Control type="file" accept="image/*" onChange={handleFileChange} className="modern-form-control" />
             </Form.Group>
             
-            {preview && <Image src={preview} fluid thumbnail className="mb-3" style={{maxHeight: '200px'}} />}
-            {error && <Alert variant="danger">{error}</Alert>}
-            {message && <Alert variant="success">{message}</Alert>}
+            {preview && <Image src={preview} fluid thumbnail className="mb-3 shadow-sm" style={{maxHeight: '200px', borderRadius: '10px'}} />}
+            {error && <Alert variant="danger" className="small">{error}</Alert>}
+            {message && <Alert variant="success" className="small">{message}</Alert>}
 
-            <Button variant="primary" onClick={handleUpload} disabled={!file || loading}>
+            <Button variant="primary" onClick={handleUpload} disabled={!file || loading} className="modern-btn modern-btn-primary w-100">
                 {loading ? 'Uploading...' : `Upload ${title}`}
             </Button>
         </div>
@@ -84,18 +85,18 @@ const UploadDocumentsPage = () => {
         fetchProfile();
     };
 
-    if (loading) return <Spinner animation="border" />;
+    if (loading) return <Spinner animation="border" className="d-block mx-auto mt-5" />;
 
     return (
-        <Container fluid className="p-4">
-            <h1 className="mb-4">Upload Identity & Bank Documents</h1>
+        <Container fluid className="p-4 user-page-container">
+            <h1 className="page-header-title">Upload Documents</h1>
             
             <Row>
                 {/* Left Column: Upload Forms */}
                 <Col lg={7}>
-                    <Card className="shadow-sm">
+                    <Card className="modern-card">
                         <Card.Body>
-                            <Tabs defaultActiveKey="aadhar" id="document-upload-tabs" className="mb-3">
+                            <Tabs defaultActiveKey="aadhar" id="document-upload-tabs" className="mb-3 nav-pills nav-fill">
                                 <Tab eventKey="aadhar" title="Aadhar Card">
                                     <DocumentUploader 
                                         docType="aadhar"
@@ -130,22 +131,26 @@ const UploadDocumentsPage = () => {
                 
                 {/* Right Column: Currently Uploaded Documents */}
                 <Col lg={5}>
-                    <Card className="shadow-sm">
-                        <Card.Header as="h5">Your Uploaded Documents</Card.Header>
+                    <Card className="modern-card">
+                        <Card.Header>Your Uploaded Documents</Card.Header>
                         <Card.Body>
-                            <div className="mb-3">
-                                <h6>Aadhar Card</h6>
-                                <Image src={profile?.aadharCardUrl || "https://via.placeholder.com/400x250.png?text=Not+Uploaded"} fluid thumbnail />
+                            <div className="mb-4">
+                                <h6 className="text-muted text-uppercase small fw-bold mb-2">Aadhar Card</h6>
+                                <div className="p-2 border rounded bg-light text-center">
+                                    <Image src={profile?.aadharCardUrl || "https://via.placeholder.com/400x250.png?text=Not+Uploaded"} fluid className="rounded shadow-sm" style={{maxHeight: '150px'}} />
+                                </div>
                             </div>
-                            <hr />
-                            <div className="mb-3">
-                                <h6>PAN Card</h6>
-                                <Image src={profile?.panCardUrl || "https://via.placeholder.com/400x250.png?text=Not+Uploaded"} fluid thumbnail />
+                            <div className="mb-4">
+                                <h6 className="text-muted text-uppercase small fw-bold mb-2">PAN Card</h6>
+                                <div className="p-2 border rounded bg-light text-center">
+                                    <Image src={profile?.panCardUrl || "https://via.placeholder.com/400x250.png?text=Not+Uploaded"} fluid className="rounded shadow-sm" style={{maxHeight: '150px'}} />
+                                </div>
                             </div>
-                            <hr />
                             <div>
-                                <h6>Bank Document</h6>
-                                <Image src={profile?.bankDocumentUrl || "https://via.placeholder.com/400x250.png?text=Not+Uploaded"} fluid thumbnail />
+                                <h6 className="text-muted text-uppercase small fw-bold mb-2">Bank Document</h6>
+                                <div className="p-2 border rounded bg-light text-center">
+                                    <Image src={profile?.bankDocumentUrl || "https://via.placeholder.com/400x250.png?text=Not+Uploaded"} fluid className="rounded shadow-sm" style={{maxHeight: '150px'}} />
+                                </div>
                             </div>
                         </Card.Body>
                     </Card>

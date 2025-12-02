@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import userService from '../../services/userService';
 import { Container, Row, Col, Card, Table, Spinner, Alert, Badge } from 'react-bootstrap';
+import './UserShared.css';
 
 function IncomeDetailPage() {
   const [payoutData, setPayoutData] = useState(null);
@@ -28,44 +29,57 @@ function IncomeDetailPage() {
   const { balances, incomes, transactions } = payoutData || {};
 
   return (
-    <Container fluid className="p-4" style={{ backgroundColor: '#f4f7f6', minHeight: '100vh' }}>
-      <h1 className="mb-4">Payout / Income</h1>
+    <Container fluid className="p-4 user-page-container">
+      <h1 className="page-header-title">Payout / Income</h1>
       
       <Row className="mb-4">
-        <Col>
-          <Card className="shadow-sm">
-            <Card.Header as="h5">Account Summary</Card.Header>
-            <Table striped bordered className="mb-0">
-              <tbody>
-                <tr>
-                  <td>Current Self Balance</td>
-                  <td><strong>Rs. {balances?.currentSelfBalance.toLocaleString('en-IN') || 0}</strong></td>
-                </tr>
-                <tr>
-                  <td>Current Team Balance</td>
-                  <td><strong>Rs. {balances?.currentTeamBalance.toLocaleString('en-IN') || 0}</strong></td>
-                </tr>
-                <tr>
-                  <td>Total Income Earned (Self + Team)</td>
-                  <td><strong>Rs. {incomes?.totalIncome.toLocaleString('en-IN') || 0}</strong></td>
-                </tr>
-              </tbody>
-            </Table>
+        <Col lg={6}>
+          <Card className="modern-card h-100">
+            <Card.Header>
+                <i className="fas fa-wallet me-2 text-primary"></i>
+                Account Summary
+            </Card.Header>
+            <Card.Body>
+                <div className="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+                    <span className="text-muted">Current Self Balance</span>
+                    <span className="fs-5 fw-bold text-dark">₹{(balances?.currentSelfBalance || 0).toLocaleString('en-IN')}</span>
+                </div>
+                <div className="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+                    <span className="text-muted">Current Team Balance</span>
+                    <span className="fs-5 fw-bold text-dark">₹{(balances?.currentTeamBalance || 0).toLocaleString('en-IN')}</span>
+                </div>
+                <div className="d-flex justify-content-between align-items-center">
+                    <span className="text-muted">Total Income Earned</span>
+                    <span className="fs-4 fw-bold text-success">₹{(incomes?.totalIncome || 0).toLocaleString('en-IN')}</span>
+                </div>
+            </Card.Body>
           </Card>
+        </Col>
+        <Col lg={6}>
+             {/* Placeholder for future charts or more stats */}
+             <Card className="modern-card h-100 d-flex align-items-center justify-content-center bg-light">
+                <div className="text-center text-muted p-4">
+                    <i className="fas fa-chart-pie fa-3x mb-3 opacity-50"></i>
+                    <p>Income Analysis Chart Coming Soon</p>
+                </div>
+             </Card>
         </Col>
       </Row>
 
       <Row>
         <Col>
-          <Card className="shadow-sm">
-            <Card.Header as="h5">Transaction History (Self)</Card.Header>
-            <Card.Body>
-              <Table striped bordered hover responsive>
+          <Card className="modern-card">
+            <Card.Header>
+                <i className="fas fa-history me-2 text-primary"></i>
+                Transaction History (Self)
+            </Card.Header>
+            <div className="modern-table-container">
+              <Table hover className="modern-table mb-0" responsive>
                 <thead>
                   <tr>
                     <th>Date</th>
                     <th>Type</th>
-                    <th>Amount (Rs.)</th>
+                    <th>Amount</th>
                      <th>Description</th>
                   </tr>
                 </thead>
@@ -75,21 +89,23 @@ function IncomeDetailPage() {
                       <tr key={tx._id}>
                         <td>{new Date(tx.createdAt).toLocaleString()}</td>
                         <td>
-                          <Badge bg={tx.type === 'deposit' ? 'success' : 'danger'}>
+                          <Badge bg={tx.type === 'deposit' ? 'success' : 'danger'} className="status-badge">
                             {tx.type.charAt(0).toUpperCase() + tx.type.slice(1)}
                           </Badge>
                         </td>
                       
-                        <td>{tx.amount.toLocaleString('en-IN')}</td>
+                        <td className={tx.type === 'deposit' ? 'text-success fw-bold' : 'text-danger fw-bold'}>
+                            {tx.type === 'deposit' ? '+' : '-'} ₹{(tx.amount || 0).toLocaleString('en-IN')}
+                        </td>
                         <td>{tx.description || '-'}</td> 
                       </tr>
                     ))
                   ) : (
-                    <tr><td colSpan="4" className="text-center">No transactions found.</td></tr>
+                    <tr><td colSpan="4" className="text-center py-4 text-muted">No transactions found.</td></tr>
                   )}
                 </tbody>
               </Table>
-            </Card.Body>
+            </div>
           </Card>
         </Col>
       </Row>

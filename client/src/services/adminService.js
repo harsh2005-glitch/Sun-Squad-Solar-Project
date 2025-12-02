@@ -77,6 +77,18 @@ const resetUserPassword = (userId) => {
   return axios.put(`${API_BASE_URL}/admin/users/${userId}/reset-password`, null, config);
 };
 
+const resetSystemFinancials = () => {
+  const user = JSON.parse(localStorage.getItem('user'));
+  const config = { headers: { Authorization: `Bearer ${user.token}` } };
+  return axios.post(`${API_BASE_URL}/admin/reset-financials`, null, config);
+};
+
+const deleteUser = (userId) => {
+  const user = JSON.parse(localStorage.getItem('user'));
+  const config = { headers: { Authorization: `Bearer ${user.token}` } };
+  return axios.delete(`${API_BASE_URL}/admin/users/${userId}`, config);
+};
+
 
 const adminService = {
   getAllUsers,
@@ -89,6 +101,8 @@ const adminService = {
   getUserById,
   impersonateUser,
   resetUserPassword,
+  resetSystemFinancials,
+  deleteUser,
 };
 
 

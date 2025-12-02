@@ -1,59 +1,224 @@
 .app-navbar {
-  background-color: #ffffff;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  padding: 0.8rem 0;
+  transition: all 0.3s ease;
+}
+
+.app-navbar .navbar-brand img {
+  transition: transform 0.3s ease;
+}
+
+.app-navbar .navbar-brand:hover img {
+  transform: scale(1.05);
 }
 
 /* Style for the navigation links */
 .app-navbar .nav-link {
-  font-weight: 500;
-  color: #555;
-  position: relative;
-  padding: 0.5rem 1rem !important;
-  transition: color 0.3s ease;
-}
-
-/* Underline effect for hover */
-.app-navbar .nav-link::after {
-  content: '';
-  position: absolute;
-  bottom: -2px;
-  left: 1rem;
-  right: 1rem;
-  height: 3px;
-  background-color: var(--bs-primary); /* Use Bootstrap's primary color */
-  transform: scaleX(0);
-  transition: transform 0.3s ease-out;
-}
-
-.app-navbar .nav-link:hover::after {
-  transform: scaleX(1);
-}
-
-/* Style for the currently active link */
-.app-navbar .nav-link.active {
-  color: var(--bs-primary) !important; /* Force the color */
   font-weight: 600;
+  color: #4a5568 !important;
+  position: relative;
+  padding: 0.5rem 1.2rem !important;
+  transition: all 0.3s ease;
+  border-radius: 8px;
+  margin: 0 4px;
 }
 
-.app-navbar .nav-link.active::after {
-  transform: scaleX(1); /* Show the underline for the active link */
+.app-navbar .nav-link:hover {
+  color: var(--bs-primary) !important;
+  background-color: rgba(13, 110, 253, 0.05);
 }
 
-/* Style for dropdown items */
+/* Active Link Style */
+.app-navbar .nav-link.active {
+  color: var(--bs-primary) !important;
+  background-color: rgba(13, 110, 253, 0.1);
+}
+
+/* Dropdown Styling */
+.app-navbar .dropdown-menu {
+  border: none;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  padding: 0.5rem;
+  margin-top: 10px; /* Spacing for animation */
+  animation: slideUp 0.3s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+  background: rgba(255, 255, 255, 0.98); /* Slightly more opaque */
+  backdrop-filter: blur(20px);
+}
+
+/* Desktop Hover Behavior */
+@media (min-width: 992px) {
+  .app-navbar .nav-item.dropdown:hover .dropdown-menu {
+    display: block;
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  /* Fix for the gap so mouse doesn't lose focus */
+  .app-navbar .nav-item.dropdown .dropdown-menu {
+    margin-top: 0; 
+    display: none; /* Hidden by default */
+  }
+  
+  /* Invisible bridge to prevent closing when moving mouse from link to menu */
+  .app-navbar .nav-item.dropdown::after {
+    content: '';
+    position: absolute;
+    bottom: -10px; /* Extend hit area downwards */
+    left: 0;
+    width: 100%;
+    height: 20px;
+    background: transparent;
+  }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.app-navbar .dropdown-item {
+  padding: 0.7rem 1rem;
+  border-radius: 8px;
+  font-weight: 500;
+  color: #4a5568;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+.app-navbar .dropdown-item:hover {
+  background-color: rgba(102, 126, 234, 0.08); /* Light primary tint */
+  color: var(--bs-primary);
+  padding-left: 1.5rem; /* Slide text effect */
+}
+
 .app-navbar .dropdown-item.active {
-  background-color: var(--bs-primary);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white !important;
+  box-shadow: 0 4px 10px rgba(118, 75, 162, 0.3);
 }
 
-/* Style the hamburger icon */
+/* Navbar Toggler */
 .navbar-toggler {
-    border: none;
-}
-.navbar-toggler:focus {
-    box-shadow: none;
+  border: none;
+  padding: 0.5rem;
+  border-radius: 8px;
+  transition: background-color 0.3s;
 }
 
-/* Off-canvas menu styling */
+.navbar-toggler:focus {
+  box-shadow: none;
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Offcanvas Styling */
 .navbar-offcanvas {
-    border-left: 1px solid #dee2e6;
+  border: none;
+  box-shadow: -5px 0 30px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-offcanvas .offcanvas-header {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #eee;
+}
+
+.navbar-offcanvas .offcanvas-title {
+  font-weight: 700;
+  color: var(--bs-primary);
+}
+
+/* User Profile Dropdown in Navbar */
+.user-nav-profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 16px 6px 6px;
+  border-radius: 50px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  background: rgba(247, 250, 252, 0.8);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+.user-nav-profile:hover {
+  background: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transform: translateY(-1px);
+  border-color: #cbd5e0;
+}
+
+.user-nav-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.user-nav-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #2d3748;
+  letter-spacing: 0.3px;
+}
+
+/* Fix for unwanted underline on dropdowns to match dashboard hover */
+.app-navbar .nav-item.dropdown .nav-link,
+.app-navbar .nav-item.dropdown .nav-link:hover,
+.app-navbar .nav-item.dropdown .nav-link:focus,
+.app-navbar .nav-item.dropdown .nav-link:active,
+.app-navbar .nav-item.dropdown.show .nav-link {
+    border: none !important;
+    border-bottom: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    text-decoration: none !important;
+}
+
+/* Ensure dropdown toggle hover matches standard link hover (pill style) */
+.app-navbar .nav-item.dropdown .nav-link:hover,
+.app-navbar .nav-item.dropdown .nav-link:focus,
+.app-navbar .nav-item.dropdown.show .nav-link {
+    color: var(--bs-primary) !important;
+    background-color: rgba(13, 110, 253, 0.05);
+    border-radius: 8px;
+}
+
+/* Active state for dropdown parent should also be pill style, not underline */
+.app-navbar .nav-item.dropdown .nav-link.active {
+    color: var(--bs-primary) !important;
+    background-color: rgba(13, 110, 253, 0.1);
+    border-bottom: none !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+/* Add a subtle indicator arrow for dropdowns */
+.nav-item.dropdown > .nav-link::after {
+    display: inline-block;
+    margin-left: 0.4em;
+    vertical-align: 0.255em;
+    content: "";
+    border-top: 0.3em solid;
+    border-right: 0.3em solid transparent;
+    border-bottom: 0;
+    border-left: 0.3em solid transparent;
+    transition: transform 0.3s ease;
+    opacity: 0.6;
+}
+
+.nav-item.dropdown:hover > .nav-link::after {
+    transform: rotate(180deg);
+    opacity: 1;
+}
+
+/* Hide the default bootstrap caret if we are adding our own or styling it */
+.nav-link.dropdown-toggle::after {
+    /* We can keep the default but style it above */
 }

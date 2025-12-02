@@ -1,14 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { Navbar, Nav, Container, Button, NavDropdown ,Offcanvas } from 'react-bootstrap';
+import { Navbar, Nav, Container, Button, NavDropdown, Offcanvas, Image } from 'react-bootstrap';
 import logo from '../../assets/images/logo.png';
 import './AppNavbar.css'; 
-// import ThemeToggleButton from '../common/ThemeToggleButton'; 
 
 const AppNavbar = () => {
   const navigate = useNavigate();
   const [expanded, setExpanded] = useState(false);
-   const [showOffcanvas, setShowOffcanvas] = useState(false);
+  const [showOffcanvas, setShowOffcanvas] = useState(false);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
 
   const handleLogout = () => {
     setShowOffcanvas(false);
@@ -16,68 +23,100 @@ const AppNavbar = () => {
     navigate('/login');
   };
 
-  // --- THIS IS THE FIX ---
-  // A simple function to explicitly close the menu.
-  const handleNavCollapse = () => {
-    setExpanded(false);
-  };
-
   const handleClose = () => setShowOffcanvas(false);
   const handleShow = () => setShowOffcanvas(true);
 
   return (
-    <Navbar bg="light" expand="lg" className="app-navbar shadow-sm" sticky="top">
-      <Container fluid>
-        <Navbar.Brand as={NavLink} to="/app/dashboard">
-          <img src={logo} height="40" alt="Logo" />
+    <Navbar bg="white" expand="lg" className="app-navbar sticky-top">
+      <Container>
+        <Navbar.Brand as={NavLink} to="/app/dashboard" className="d-flex align-items-center">
+          <img src={logo} height="45" alt="Sun Squad Solar" />
         </Navbar.Brand>
 
-        {/* Hamburger Menu Toggle (will control the Offcanvas) */}
-        <Navbar.Toggle aria-controls="offcanvas-navbar-nav" onClick={handleShow} />
+        <Navbar.Toggle aria-controls="offcanvas-navbar-nav" onClick={handleShow} className="ms-auto" />
 
-        {/* Offcanvas Component: The slide-out menu for mobile */}
         <Navbar.Offcanvas
           id="offcanvas-navbar-nav"
           aria-labelledby="offcanvas-navbar-label"
-          placement="end" // Slides in from the right
+          placement="end"
           className="navbar-offcanvas"
-           show={showOffcanvas}
-           onHide={handleClose} 
+          show={showOffcanvas}
+          onHide={handleClose}
         >
           <Offcanvas.Header closeButton>
-            <Offcanvas.Title id="offcanvas-navbar-label">Menu</Offcanvas.Title>
+            <Offcanvas.Title id="offcanvas-navbar-label" className="fw-bold text-primary">
+              Menu
+            </Offcanvas.Title>
           </Offcanvas.Header>
 
           <Offcanvas.Body>
-            {/* `ms-auto` pushes nav to the right on desktop, `me-auto` is the default */}
-            {/* On mobile (in offcanvas), it will be a vertical list */}
-            <Nav className="mx-auto flex-grow-1 pe-3">
-              <Nav.Link as={NavLink} to="/app/dashboard" onClick={handleClose}>Dashboard</Nav.Link>
+            <Nav className="mx-auto align-items-lg-center">
+              <Nav.Link as={NavLink} to="/app/dashboard" onClick={handleClose}>
+                <i className="fa-solid fa-house me-2 d-lg-none"></i>Dashboard
+              </Nav.Link>
 
-              <NavDropdown title="Network" id="network-dropdown">
-                <NavDropdown.Item as={NavLink} to="/app/network/directs" onClick={handleClose}>My Directs</NavDropdown.Item>
-                <NavDropdown.Item as={NavLink} to="/app/network/genealogy" onClick={handleClose}>Genealogy Tree</NavDropdown.Item>
+              <NavDropdown 
+                title={
+                    <span>
+                        <i className="fa-solid fa-network-wired me-2 text-primary"></i>
+                        Network
+                    </span>
+                } 
+                id="network-dropdown"
+                className="mx-2"
+              >
+                <NavDropdown.Item as={NavLink} to="/app/network/directs" onClick={handleClose}>
+                    <i className="fa-solid fa-users me-2 text-muted"></i>My Directs
+                </NavDropdown.Item>
+                <NavDropdown.Item as={NavLink} to="/app/network/genealogy" onClick={handleClose}>
+                    <i className="fa-solid fa-sitemap me-2 text-muted"></i>Genealogy Tree
+                </NavDropdown.Item>
               </NavDropdown>
 
-              <Nav.Link as={NavLink} to="/app/payout/income" onClick={handleClose}>Payout / Income</Nav.Link>
-              <Nav.Link as={NavLink} to="/app/documents" onClick={handleClose}>Upload Documents</Nav.Link>
-              
-               <NavDropdown title="My Profile" id="profile-dropdown">
-                <NavDropdown.Item as={NavLink} to="/app/profile" onClick={handleClose}>Update Profile</NavDropdown.Item>
-                <NavDropdown.Item as={NavLink} to="/app/profile/changepassword" onClick={handleClose}>Change Password</NavDropdown.Item>
-              </NavDropdown>
+              <Nav.Link as={NavLink} to="/app/payout/income" onClick={handleClose} className="mx-2">
+                <i className="fa-solid fa-wallet me-2 text-success"></i>Payout / Income
+              </Nav.Link>
+              <Nav.Link as={NavLink} to="/app/documents" onClick={handleClose} className="mx-2">
+                <i className="fa-solid fa-file-upload me-2 text-info"></i>Upload Documents
+              </Nav.Link>
             </Nav>
-  
 
-            {/* Logout button appears separately in the offcanvas body */}
-            <Button variant="outline-danger" onClick={handleLogout} className="mt-3 d-lg-none">
-              Logout
-            </Button>
-            {/* A separate logout button for desktop view */}
-            <Button variant="outline-danger" onClick={handleLogout} className="d-none d-lg-block">
-              Logout
-            </Button>
-
+            {/* User Profile Section (Desktop) */}
+            <Nav className="align-items-lg-center ms-lg-3">
+              {user && (
+                <NavDropdown 
+                  title={
+                    <div className="user-nav-profile">
+                      <Image 
+                        src={user.profilePicture || 'https://www.pngfind.com/pngs/m/610-6104451_image-placeholder-png-user-profile-placeholder-image-png.png'} 
+                        className="user-nav-avatar" 
+                        roundedCircle 
+                      />
+                      <span className="user-nav-name d-none d-lg-block">{user.name?.split(' ')[0]}</span>
+                    </div>
+                  } 
+                  id="profile-dropdown" 
+                  align="end"
+                  className="profile-dropdown-container"
+                >
+                  <div className="px-3 py-2 d-none d-lg-block border-bottom mb-2">
+                    <small className="text-muted d-block text-uppercase" style={{fontSize: '0.7rem', letterSpacing: '1px'}}>Signed in as</small>
+                    <div className="fw-bold text-dark text-truncate" style={{maxWidth: '200px'}}>{user.name}</div>
+                  </div>
+                  
+                  <NavDropdown.Item as={NavLink} to="/app/profile" onClick={handleClose}>
+                    <i className="fa-solid fa-user-gear me-2 text-primary"></i>Update Profile
+                  </NavDropdown.Item>
+                  <NavDropdown.Item as={NavLink} to="/app/profile/changepassword" onClick={handleClose}>
+                    <i className="fa-solid fa-key me-2 text-warning"></i>Change Password
+                  </NavDropdown.Item>
+                  <NavDropdown.Divider />
+                  <NavDropdown.Item onClick={handleLogout} className="text-danger fw-bold">
+                    <i className="fa-solid fa-right-from-bracket me-2"></i>Logout
+                  </NavDropdown.Item>
+                </NavDropdown>
+              )}
+            </Nav>
           </Offcanvas.Body>
         </Navbar.Offcanvas>
       </Container>

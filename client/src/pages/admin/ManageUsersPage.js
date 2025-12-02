@@ -109,6 +109,18 @@ const ManageUsersPage = () => {
     }
   };
 
+  const handleDeleteUser = async (userId) => {
+    if (!window.confirm("CRITICAL WARNING: Are you sure you want to DELETE this user? This action CANNOT be undone. All transactions, deposits, and commissions related to this user will be permanently removed.")) return;
+    
+    try {
+        const response = await adminService.deleteUser(userId);
+        toast.success(response.data.message);
+        fetchUsers(); // Refresh list
+    } catch (error) {
+        toast.error(error.response?.data?.message || "Failed to delete user.");
+    }
+  };
+
 
   const handleCloseModal = () => {
     setShowModal(false);
@@ -208,6 +220,18 @@ const ManageUsersPage = () => {
                 >
                     <i className="fa-solid fa-key"></i>
                 </Button>
+                {/* --- NEW: Delete User Button --- */}
+                {user.role !== 'admin' && (
+                    <Button 
+                        variant="danger" 
+                        size="sm" 
+                        className="ms-2"
+                        onClick={() => handleDeleteUser(user._id)}
+                        title="Delete User"
+                    >
+                        <i className="fa-solid fa-trash"></i>
+                    </Button>
+                )}
                   </td>
                 </tr>
               ))}

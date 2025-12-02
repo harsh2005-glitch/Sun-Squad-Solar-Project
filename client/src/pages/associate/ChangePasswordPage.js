@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import userService from '../../services/userService';
 import { Container, Card, Form, Button, Alert, Row, Col } from 'react-bootstrap';
+import './UserShared.css';
 
 const ChangePasswordPage = () => {
   const [formData, setFormData] = useState({
@@ -40,16 +41,20 @@ const ChangePasswordPage = () => {
   };
 
   return (
-    <Container fluid className="p-4" style={{ backgroundColor: '#f4f7f6', minHeight: '100vh' }}>
-      <Row className="justify-content-center">
-        <Col lg={6}>
-          <h1 className="mb-4">Change Password</h1>
-          <Card className="shadow-sm">
+    <Container fluid className="p-4 user-page-container d-flex align-items-center justify-content-center">
+      <Row className="w-100 justify-content-center">
+        <Col lg={5} md={8}>
+          <div className="text-center mb-4">
+            <h1 className="page-header-title border-0 mb-0">Change Password</h1>
+            <p className="text-muted">Secure your account with a new password</p>
+          </div>
+          <Card className="modern-card">
             <Card.Body className="p-4">
               <Form onSubmit={handleSubmit}>
                 <Form.Group className="mb-3" controlId="oldPassword">
-                  <Form.Label>Old Password</Form.Label>
+                  <Form.Label className="text-muted small fw-bold text-uppercase">Old Password</Form.Label>
                   <Form.Control
+                    className="modern-form-control"
                     type="password"
                     name="oldPassword"
                     value={formData.oldPassword}
@@ -60,8 +65,9 @@ const ChangePasswordPage = () => {
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="newPassword">
-                  <Form.Label>New Password</Form.Label>
+                  <Form.Label className="text-muted small fw-bold text-uppercase">New Password</Form.Label>
                   <Form.Control
+                    className="modern-form-control"
                     type="password"
                     name="newPassword"
                     value={formData.newPassword}
@@ -72,9 +78,10 @@ const ChangePasswordPage = () => {
                   />
                 </Form.Group>
                 
-                <Form.Group className="mb-3" controlId="confirmNewPassword">
-                  <Form.Label>Confirm New Password</Form.Label>
+                <Form.Group className="mb-4" controlId="confirmNewPassword">
+                  <Form.Label className="text-muted small fw-bold text-uppercase">Confirm New Password</Form.Label>
                   <Form.Control
+                    className="modern-form-control"
                     type="password"
                     name="confirmNewPassword"
                     value={formData.confirmNewPassword}
@@ -84,11 +91,11 @@ const ChangePasswordPage = () => {
                   />
                 </Form.Group>
 
-                {error && <Alert variant="danger">{error}</Alert>}
-                {message && <Alert variant="success">{message}</Alert>}
+                {error && <Alert variant="danger" className="small">{error}</Alert>}
+                {message && <Alert variant="success" className="small">{message}</Alert>}
 
                 <div className="d-grid">
-                    <Button variant="primary" type="submit" disabled={loading}>
+                    <Button variant="primary" type="submit" disabled={loading} className="modern-btn modern-btn-primary">
                     {loading ? 'Updating...' : 'Change Password'}
                     </Button>
                 </div>

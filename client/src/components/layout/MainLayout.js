@@ -33,11 +33,11 @@ const ImpersonationBanner = () => {
 
 function MainLayout() {
   return (
-    <div>
+    <div className="d-flex flex-column min-vh-100 bg-light">
       {/* The banner will appear at the very top */}
       <ImpersonationBanner /> 
       <AppNavbar />
-      <main style={{ padding: '1rem' }}>
+      <main className="flex-grow-1">
         <Outlet />
       </main>
     </div>

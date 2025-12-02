@@ -1,23 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import Tree from 'react-d3-tree';
 import userService from '../../services/userService';
-import { Container, Spinner, Alert } from 'react-bootstrap';
-import '../../styles/PageLayout.css'; // Re-use our styles
-import '../../pages/admin/GenealogyPage.css'; // Re-use the tree styles
+import { Container, Spinner, Alert, Button } from 'react-bootstrap';
+import './UserShared.css'; // Import shared modern styles
 import defaultAvatar from '../../assets/images/user-avatar.png';
 
-// We can reuse the same custom node component from the admin page
+// Custom node component
 const renderForeignObjectNode = ({ nodeDatum, toggleNode, foreignObjectProps }) => (
     <g>
-        <circle r={15} onClick={toggleNode}></circle>
+        <circle r={0}></circle> {/* Hidden circle to keep connection point */}
         <foreignObject {...foreignObjectProps}>
-            <div className="node-card">
+            <div className="node-card" onClick={toggleNode}>
                 <img src={defaultAvatar} alt="User Avatar" />
-                <div className="node-id">{nodeDatum.attributes?.associateId || 'N/A'}</div>
                 <div className="node-name">{nodeDatum.name}</div>
+                <div className="node-id">{nodeDatum.attributes?.associateId || 'N/A'}</div>
                 <div className="node-business">
-                    {/* Check if totalBusiness exists before formatting */}
-                    {nodeDatum.attributes?.totalBusiness?.toLocaleString('en-IN') || 0}
+                    Biz: ₹{nodeDatum.attributes?.totalBusiness?.toLocaleString('en-IN') || 0}
                 </div>
             </div>
         </foreignObject>
@@ -28,11 +26,12 @@ const GenealogyPage = () => {
     const [treeData, setTreeData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    const [translate, setTranslate] = useState({ x: 0, y: 0 });
+    const containerRef = React.useRef();
 
     useEffect(() => {
         const fetchTree = async () => {
             try {
-                // The API now returns the data in the correct format, so no transformation is needed
                 const response = await userService.getGenealogyTree();
                 setTreeData(response.data);
             } catch (err) {
@@ -44,31 +43,46 @@ const GenealogyPage = () => {
         fetchTree();
     }, []);
 
-    const nodeSize = { x: 200, y: 150 };
-    const foreignObjectProps = { width: nodeSize.x, height: nodeSize.y, x: -100, y: -60 };
+    useEffect(() => {
+        if (containerRef.current) {
+            const { width, height } = containerRef.current.getBoundingClientRect();
+            setTranslate({ x: width / 2, y: 100 });
+        }
+    }, [loading]);
+
+    const nodeSize = { x: 220, y: 180 };
+    const foreignObjectProps = { width: 200, height: 200, x: -100, y: -50 };
 
     if (loading) return <Spinner animation="border" className="d-block mx-auto mt-5" />;
     if (error) return <Alert variant="danger" className="m-3">{error}</Alert>;
 
     return (
-        <Container fluid className="p-4">
-            <h1 className="page-header mb-4">My Genealogy Tree</h1>
-            <div className="content-box genealogy-container">
+        <Container fluid className="p-4 user-page-container">
+            <h1 className="page-header-title">My Genealogy Tree</h1>
+            <div className="genealogy-container" ref={containerRef}>
                 {treeData ? (
                      <Tree
                         data={treeData}
                         orientation="vertical"
                         pathFunc="step"
-                        translate={{ x: 300, y: 100 }}
+                        translate={translate}
                         nodeSize={nodeSize}
                         separation={{ siblings: 1.2, nonSiblings: 1.5 }}
                         renderCustomNodeElement={(rd3tProps) =>
                             renderForeignObjectNode({ ...rd3tProps, foreignObjectProps })
                         }
+                        enableLegacyTransitions={true}
+                        transitionDuration={800}
                      />
                 ) : (
-                    <p>You have no downline to display.</p>
+                    <div className="d-flex justify-content-center align-items-center h-100">
+                        <p className="text-muted">You have no downline to display.</p>
+                    </div>
                 )}
+            </div>
+            <div className="mt-3 text-muted small">
+                <i className="fas fa-info-circle me-1"></i>
+                Click on a node to expand/collapse. Drag to pan. Scroll to zoom.
             </div>
         </Container>
     );

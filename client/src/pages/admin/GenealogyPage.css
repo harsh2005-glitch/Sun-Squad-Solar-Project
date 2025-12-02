@@ -1,49 +1,100 @@
 .genealogy-container {
-    height: 80vh;
     width: 100%;
-    background-color: #f8f9fa; /* Light background for the container */
-    border: 1px dashed #ccc;
-    border-radius: 8px;
+    height: 80vh;
+    background-color: #f8f9fa;
+    border-radius: 12px;
+    border: 1px solid #e9ecef;
+    overflow: hidden;
+    position: relative;
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.05);
 }
 
-/* Styling for the individual user cards */
+/* Custom Node Styling */
+.node__root > circle {
+    fill: #0d6efd;
+    stroke: #fff;
+    stroke-width: 3px;
+}
+
+.node__branch > circle {
+    fill: #198754;
+    stroke: #fff;
+    stroke-width: 2px;
+}
+
+.node__leaf > circle {
+    fill: #6c757d;
+    stroke: #fff;
+    stroke-width: 1px;
+}
+
+/* Text Styling */
+.rd3t-label__title {
+    fill: #333;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.rd3t-label__attributes {
+    fill: #666;
+    font-size: 12px;
+}
+
+/* Link Styling */
+.rd3t-link {
+    stroke: #adb5bd !important;
+    stroke-width: 1.5px !important;
+}
+
+/* Custom Node Card for ForeignObject */
 .node-card {
-    background-color: #ffffff;
-    border: 1px solid #e0e0e0;
+    background: white;
     border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     padding: 10px;
     text-align: center;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    min-width: 150px;
+    border: 1px solid #eee;
+    transition: transform 0.2s;
+    width: 180px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
-.node-card img {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    margin-bottom: 8px;
+.node-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
 }
 
-.node-name {
-    font-weight: 600;
-    font-size: 0.9rem;
-    color: #333;
+.node-header {
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 5px;
+    font-size: 14px;
 }
 
-.node-id, .node-business {
-    font-size: 0.8rem;
-    color: #777;
+.node-sub {
+    font-size: 12px;
+    color: #7f8c8d;
 }
 
-/* Style the links (paths) between nodes */
-.rd3t-link {
-    stroke: #ccc;
-    stroke-width: 2px;
+.node-badge {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: bold;
+    margin-top: 5px;
+    align-self: center;
 }
 
-/* Style the circle that acts as the expand/collapse button */
-.rd3t-node circle {
-    fill: #fff;
-    stroke: #ccc;
-    stroke-width: 2px;
+.badge-active {
+    background-color: #d1e7dd;
+    color: #0f5132;
+}
+
+.badge-inactive {
+    background-color: #f8d7da;
+    color: #842029;
 }

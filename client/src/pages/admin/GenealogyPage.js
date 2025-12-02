@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Tree from 'react-d3-tree';
 import adminService from '../../services/adminService';
-import { Spinner, Alert } from 'react-bootstrap';
-import '../../styles/PageLayout.css'; // Re-use our styles
+import { Spinner, Alert, Card, Badge } from 'react-bootstrap';
 import './GenealogyPage.css';
 import defaultAvatar from '../../assets/images/user-avatar.png';
 
@@ -18,6 +17,8 @@ const buildTreeData = (users) => {
             attributes: { // Attributes are passed down to the node renderer
                 associateId: user.associateId,
                 totalBusiness: (user.currentSelfBalance || 0) + (user.currentTeamBalance || 0),
+                status: user.status || 'active', // Assuming status field exists
+                rank: user.rank || 'Member'
             },
             children: []
         };
@@ -40,37 +41,42 @@ const buildTreeData = (users) => {
     return {
         name: "Sun Squad Solar Network",
         children: roots,
+        isRoot: true
     };
 };
 
 const renderForeignObjectNode = ({ nodeDatum, toggleNode, foreignObjectProps }) => {
-    // --- THIS IS THE FIX ---
-    // First, check if attributes exist. If they don't, it's our dummy root node, so we show a simpler card.
-    if (!nodeDatum.attributes) {
+    // Check if it's our dummy root node
+    if (nodeDatum.isRoot) {
         return (
             <g>
-                <circle r={15} onClick={toggleNode}></circle>
-                <foreignObject {...foreignObjectProps}>
-                    <div className="node-card" style={{ backgroundColor: '#e9ecef' }}>
-                         {/* A simpler card for the main root */}
-                        <div className="node-name" style={{ fontSize: '1rem' }}>{nodeDatum.name}</div>
+                <circle r={15} onClick={toggleNode} fill="#0d6efd" stroke="#fff" strokeWidth="3"></circle>
+                <foreignObject {...foreignObjectProps} x="-75" y="-40" width="150" height="80">
+                    <div className="node-card bg-primary text-white border-0 shadow">
+                        <div className="fw-bold">{nodeDatum.name}</div>
+                        <div className="small opacity-75">Root Node</div>
                     </div>
                 </foreignObject>
             </g>
         );
     }
 
-    // If attributes DO exist, render the full user card like before.
+    // Render the full user card
     return (
         <g>
-            <circle r={15} onClick={toggleNode}></circle>
+            <circle r={15} onClick={toggleNode} fill={nodeDatum.children && nodeDatum.children.length > 0 ? "#198754" : "#6c757d"} stroke="#fff" strokeWidth="2"></circle>
             <foreignObject {...foreignObjectProps}>
                 <div className="node-card">
-                    <img src={defaultAvatar} alt="User Avatar" />
-                    <div className="node-id">{nodeDatum.attributes.associateId || 'N/A'}</div>
-                    <div className="node-name">{nodeDatum.name}</div>
-                    <div className="node-business">
-                        {nodeDatum.attributes.totalBusiness.toLocaleString('en-IN')}
+                    <div className="d-flex align-items-center justify-content-center mb-2">
+                        <img src={defaultAvatar} alt="User" className="rounded-circle border" width="40" height="40" />
+                    </div>
+                    <div className="node-header text-truncate" title={nodeDatum.name}>{nodeDatum.name}</div>
+                    <div className="node-sub mb-1">{nodeDatum.attributes.associateId || 'N/A'}</div>
+                    <div className="node-sub fw-bold text-primary">
+                        ₹{nodeDatum.attributes.totalBusiness.toLocaleString('en-IN')}
+                    </div>
+                    <div className={`node-badge ${nodeDatum.attributes.status === 'active' ? 'badge-active' : 'badge-inactive'}`}>
+                        {nodeDatum.attributes.status.toUpperCase()}
                     </div>
                 </div>
             </foreignObject>
@@ -78,26 +84,11 @@ const renderForeignObjectNode = ({ nodeDatum, toggleNode, foreignObjectProps }) 
     );
 };
 
-// This is a custom component to render each node in the tree
-// const renderCustomNode = ({ nodeDatum, toggleNode }) => (
-//     <g>
-//         <circle r={15} fill={nodeDatum.children ? "#5cb85c" : "#f0ad4e"} onClick={toggleNode} />
-//         <text fill="black" x="20" dy=".35em">
-//             {nodeDatum.name}
-//         </text>
-//         {nodeDatum.attributes?.associateId && (
-//             <text fill="grey" x="20" y="20" dy=".35em">
-//                 ID: {nodeDatum.attributes.associateId}
-//             </text>
-//         )}
-//     </g>
-// );
-
-
 const GenealogyPage = () => {
     const [treeData, setTreeData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    const [translate, setTranslate] = useState({ x: 0, y: 0 });
 
     useEffect(() => {
         const fetchTree = async () => {
@@ -114,42 +105,50 @@ const GenealogyPage = () => {
         fetchTree();
     }, []);
 
-    // use a callback to center the tree
-    const treeContainerRef = useCallback(node => {
-        if (node !== null) {
-            // You can add logic here to programmatically center the tree if needed
+    // Center the tree on load
+    const treeContainerRef = useCallback(containerElem => {
+        if (containerElem !== null) {
+            const { width, height } = containerElem.getBoundingClientRect();
+            setTranslate({ x: width / 2, y: 100 });
         }
     }, []);
 
-        // Define the size of the foreign object (our card)
-    const nodeSize = { x: 200, y: 150 };
-    const foreignObjectProps = { width: nodeSize.x, height: nodeSize.y, x: -100, y: -60 };
+    const nodeSize = { x: 220, y: 200 };
+    const foreignObjectProps = { width: 180, height: 180, x: -90, y: -10 };
 
-    if (loading) return <Spinner animation="border" />;
+    if (loading) return <div className="text-center p-5"><Spinner animation="border" variant="primary" /></div>;
     if (error) return <Alert variant="danger">{error}</Alert>;
 
     return (
-        <div className="page-container">
-            <h1 className="page-header">Genealogy Tree</h1>
-            <div className="content-box" ref={treeContainerRef} style={{ height: '80vh', width: '100%' }}>
-                {treeData ? (
-                    <Tree
-                        data={treeData}
-                        orientation="vertical"
-                        pathFunc="step"
-                        translate={{ x: 300, y: 100 }} // Adjust initial centering
-                        nodeSize={nodeSize}
-                        separation={{ siblings: 1.2, nonSiblings: 1.5 }}
-                        // --- USE THE NEW RENDERER ---
-                        renderCustomNodeElement={(rd3tProps) =>
-                            renderForeignObjectNode({ ...rd3tProps, foreignObjectProps })
-                        }
-                    />
-                ) : (
-                    <p>No user data available to build the tree.</p>
-                )}
-            </div>
-        </div>
+        <>
+            <h1 className="mb-4 fw-bold text-primary">Genealogy Tree</h1>
+            <Card className="shadow-sm border-0">
+                <Card.Body className="p-0">
+                    <div className="genealogy-container" ref={treeContainerRef}>
+                        {treeData ? (
+                            <Tree
+                                data={treeData}
+                                orientation="vertical"
+                                pathFunc="step"
+                                translate={translate}
+                                nodeSize={nodeSize}
+                                separation={{ siblings: 1.2, nonSiblings: 1.5 }}
+                                renderCustomNodeElement={(rd3tProps) =>
+                                    renderForeignObjectNode({ ...rd3tProps, foreignObjectProps })
+                                }
+                                enableLegacyTransitions={true}
+                                transitionDuration={800}
+                            />
+                        ) : (
+                            <div className="text-center p-5 text-muted">
+                                <i className="fa-solid fa-sitemap fa-3x mb-3"></i>
+                                <p>No user data available to build the tree.</p>
+                            </div>
+                        )}
+                    </div>
+                </Card.Body>
+            </Card>
+        </>
     );
 };
 

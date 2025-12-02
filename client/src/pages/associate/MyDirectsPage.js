@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import userService from '../../services/userService';
-import '../../styles/PageLayout.css'; // <-- IMPORT THE NEW STYLES
+import { Container, Spinner, Alert, Badge } from 'react-bootstrap';
+import './UserShared.css'; // Import shared modern styles
 
 function MyDirectsPage() {
   const [directs, setDirects] = useState([]);
@@ -21,14 +22,15 @@ function MyDirectsPage() {
     fetchDirects();
   }, []);
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div style={{ color: 'red' }}>{error}</div>;
+  if (loading) return <Spinner animation="border" className="d-block mx-auto mt-5" />;
+  if (error) return <Alert variant="danger" className="m-3">{error}</Alert>;
 
   return (
-    <div className="page-container">
-      <h1 className="page-header">My Direct Team</h1>
-      <div className="content-box">
-        <table>
+    <Container fluid className="p-4 user-page-container">
+      <h1 className="page-header-title">My Direct Team</h1>
+      
+      <div className="modern-table-container">
+        <table className="table modern-table table-hover">
           <thead>
             <tr>
               <th>#</th>
@@ -45,23 +47,33 @@ function MyDirectsPage() {
               directs.map((direct, index) => (
                 <tr key={direct._id}>
                   <td>{index + 1}</td>
-                  <td>{direct.name}</td>
-                  <td>{direct.associateId}</td>
+                  <td>
+                    <div className="d-flex align-items-center">
+                        <div className="bg-light rounded-circle p-2 me-2 text-primary fw-bold" style={{width: '35px', height: '35px', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                            {direct.name.charAt(0)}
+                        </div>
+                        {direct.name}
+                    </div>
+                  </td>
+                  <td><Badge bg="light" text="dark" className="border">{direct.associateId}</Badge></td>
                   <td>{new Date(direct.dateOfJoining).toLocaleDateString()}</td>
-                  <td>Rs. {direct.selfBusiness}</td>
-                  <td>Rs. {direct.teamBusiness}</td>
-                  <td>Rs. {direct.totalBusiness}</td>
+                  <td>₹{(direct.selfBusiness || 0).toLocaleString('en-IN')}</td>
+                  <td>₹{(direct.teamBusiness || 0).toLocaleString('en-IN')}</td>
+                  <td className="fw-bold text-success">₹{(direct.totalBusiness || 0).toLocaleString('en-IN')}</td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan="7" style={{ textAlign: 'center' }}>You have no direct associates yet.</td>
+                <td colSpan="7" className="text-center py-5 text-muted">
+                    <i className="fas fa-users fa-3x mb-3 d-block"></i>
+                    You have no direct associates yet.
+                </td>
               </tr>
             )}
           </tbody>
         </table>
       </div>
-    </div>
+    </Container>
   );
 }
 
