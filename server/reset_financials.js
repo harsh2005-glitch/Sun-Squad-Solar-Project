@@ -12,7 +12,7 @@ const resetFinancials = async () => {
         await mongoose.connect(process.env.MONGO_URI);
         console.log('MongoDB Connected');
 
-        // 1. Reset User Balances
+        // 1. Reset User Balances=
         console.log('Resetting User Balances...');
         await User.updateMany({}, {
             $set: {

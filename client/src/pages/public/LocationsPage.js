@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import varanasiBg from '../../assets/images/locations-bg/varanasi-bg.jpg';
 import mirzapurBg from '../../assets/images/locations-bg/mirzapur-bg.jpg';
 import bhadohiBg from '../../assets/images/locations-bg/bhadohi-bg.jpg';
+// import MugalSaraiBg from '../../assets/images/locations-bg/MugalSarai-bg.png';
 
 const LocationsPage = () => {
   return (
@@ -45,6 +46,8 @@ const LocationsPage = () => {
                 <span>View Projects <i className="fa-solid fa-arrow-right"></i></span>
               </div>
             </Link>
+
+          
 
             {/* You can add more location cards here */}
           </div>

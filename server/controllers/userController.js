@@ -7,6 +7,22 @@ const bcrypt = require('bcryptjs');
 const { subDays, format } = require('date-fns');
 const Settings = require('../models/settings');
 
+// Helper to get Percentage Level (Same as in adminController)
+const getPercentageLevel = (amount, slabs) => {
+    if (!slabs || slabs.length === 0) return 0;
+    if (amount <= 0) return 0;
+
+    const sortedSlabs = [...slabs].sort((a, b) => a.from - b.from);
+    let applicablePercentage = 0;
+
+    for (const slab of sortedSlabs) {
+        if (amount >= slab.from) {
+            applicablePercentage = slab.percentage;
+        }
+    }
+    return applicablePercentage;
+};
+
 // @desc    Get data for the user dashboard
 // @route   GET /api/users/dashboard
 // @access  Protected
@@ -21,6 +37,12 @@ const getDashboardData = async (req, res) => {
         const directs = await User.find({ sponsor: user._id }).select('name associateId dateOfJoining');
         const settings = await Settings.findOne({ singleton: 'main_settings' });
 
+        // Calculate dynamic level based on Team Balance
+        let currentLevel = 0;
+        if (settings && settings.teamIncomeSlabs) {
+            currentLevel = getPercentageLevel(user.currentTeamBalance, settings.teamIncomeSlabs);
+        }
+
         res.json({
             userInfo: {
                 name: user.name,
@@ -28,6 +50,7 @@ const getDashboardData = async (req, res) => {
                 mobile: user.phone,
                 address: user.address,
                 profilePicture: user.profilePicture,
+                level: currentLevel, // Send the calculated level
             },
             // Send the new balance and income fields
             balanceStats: {
