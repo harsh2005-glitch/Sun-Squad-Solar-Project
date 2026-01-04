@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, NavLink } from 'react-router-dom'; // Use NavLink for active styles
+import { Link, NavLink, useLocation } from 'react-router-dom'; // Use NavLink for active styles
 import { Navbar, Nav, Container, Button } from 'react-bootstrap';
 import logo from '../../assets/images/logo.png';
 // import ThemeToggleButton from '../common/ThemeToggleButton'; 
@@ -7,6 +7,7 @@ import logo from '../../assets/images/logo.png';
 const PublicHeader = ({ onEnquiryClick }) => {
   const [expanded, setExpanded] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const location = useLocation();
 
   // Effect to handle scroll detection
   useEffect(() => {
@@ -28,13 +29,21 @@ const PublicHeader = ({ onEnquiryClick }) => {
     handleNavCollapse();
   };
 
+  // Determine if navbar should be solid (white background)
+  // It should be solid if scrolled OR if we are on the home page (as per user request)
+  // Actually, user said "instead of transparent navbar i want solid white navbar on home page"
+  // This implies Home Page should ALWAYS be solid.
+  // For other pages, we keep the scroll behavior (transparent at top, solid when scrolled).
+  const isHomePage = location.pathname === '/';
+  const shouldBeSolid = isScrolled || isHomePage;
+
   return (
-    // Add 'public-navbar' and the conditional 'scrolled' class
+    // Add 'public-navbar' and the conditional 'navbar-scrolled' class
     <Navbar
-      variant={isScrolled ? 'light' : 'dark'} // Helps with text color inversion
+      variant={shouldBeSolid ? 'light' : 'dark'} // Helps with text color inversion
       expand="lg"
       fixed="top" // Changed from sticky to fixed for better transparency effect
-      className={`public-navbar ${isScrolled ? 'scrolled' : ''}`}
+      className={`public-navbar ${shouldBeSolid ? 'navbar-scrolled' : ''}`}
       expanded={expanded}
       onToggle={() => setExpanded(!expanded)}
     >

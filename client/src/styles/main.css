@@ -1,11 +1,12 @@
 /* main styles */ 
 /* === CSS Variables (Root) === */
 :root {
-    --primary-green: #41bb6a;
-    --dark-grey: #527292;
+    --primary-green: #164626;
+    --dark-grey: #0e2c0e;
     --white-color: #ffffff;
+    --medium-green-bg :#164626;
     --light-grey: #f8f9fa;
-    --text-color: #555;
+    --text-color: #fdf3f3;
     --font-family: 'Poppins', sans-serif; /* A nice, modern font */
 }
 
@@ -826,81 +827,165 @@ ul {
 
 
 /* ==================================
-   Footer Section Styling
+   Map & Contact Section
 ===================================== */
-footer {
-    background-color: var(--dark-grey);
-    color: #ccc; /* A lighter grey for readability */
-    padding: 60px 5% 0; /* No padding at the bottom */
+.map-contact-section {
+    position: relative;
+    background-color: #14532d; /* Match the deep green theme */
+    padding-bottom: 60px;
 }
 
-.footer-main {
+.map-container {
+    position: relative;
+    width: 100%;
+}
+
+.contact-overlay-container {
+    position: relative;
+    margin-top: -80px; /* Pull buttons up over the map */
+    z-index: 10;
+}
+
+.contact-action-card {
     display: flex;
-    justify-content: space-between;
-    gap: 40px;
-    flex-wrap: wrap; /* Allow columns to wrap */
-    padding-bottom: 40px;
-    border-bottom: 1px solid #555;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.15); /* Glassmorphism effect */
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    padding: 30px;
+    text-align: center;
+    color: white;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    height: 100%;
 }
 
-.footer-column {
-    flex: 1;
-    min-width: 280px; /* Minimum width before wrapping */
+.contact-action-card:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: translateY(-10px);
+    color: white;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.2);
 }
 
-.footer-column h3 {
-    color: var(--white-color);
-    font-size: 1.3rem;
-    margin-bottom: 20px;
-}
-
-.about-column p {
-    line-height: 1.7;
+.contact-action-card .icon-box {
+    width: 60px;
+    height: 60px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
     margin-bottom: 15px;
+    transition: transform 0.3s ease;
 }
 
-.links-column ul li {
+.contact-action-card:hover .icon-box {
+    transform: scale(1.1) rotate(10deg);
+    background-color: #fff;
+    color: #14532d;
+}
+
+.contact-action-card h3 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.contact-action-card p {
+    font-size: 0.9rem;
+    opacity: 0.8;
+    margin-bottom: 0;
+}
+
+
+/* ==================================
+   NEW Dark Footer Styling
+===================================== */
+.new-footer {
+    background-color: #0f172a; /* Dark Navy/Black */
+    color: #94a3b8; /* Muted text color */
+    padding-top: 80px;
+    font-size: 0.95rem;
+}
+
+.footer-top {
+    padding-bottom: 40px;
+    border-bottom: 1px solid #1e293b;
+}
+
+.footer-title {
+    color: #fff;
+    font-weight: 600;
+    margin-bottom: 25px;
+    font-size: 1.1rem;
+}
+
+.footer-links, .footer-contact {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-links li {
     margin-bottom: 12px;
 }
 
-.links-column ul li a {
-    color: #ccc;
-    transition: color 0.3s ease, padding-left 0.3s ease;
-}
-
-.links-column ul li a:hover {
-    color: var(--primary-green);
-    padding-left: 5px; /* Indent on hover */
-}
-
-.map-column iframe {
-    border-radius: 8px;
-}
-
-/* Sub-Footer */
-.footer-sub {
+.footer-links a {
+    color: #94a3b8;
+    text-decoration: none;
+    transition: all 0.3s ease;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    padding: 20px 0;
 }
 
-.footer-socials a {
-    display: inline-block;
-    width: 35px;
-    height: 35px;
-    line-height: 35px;
+.footer-links a:hover {
+    color: #22c55e; /* Green hover */
+    padding-left: 5px;
+}
+
+.footer-contact li {
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.footer-contact i {
+    width: 20px;
     text-align: center;
-    background-color: #555;
-    color: var(--white-color);
-    border-radius: 50%;
-    margin-left: 10px;
-    transition: background-color 0.3s ease;
 }
 
-.footer-socials a:hover {
-    background-color: var(--primary-green);
+.social-links {
+    display: flex;
+    gap: 15px;
 }
+
+.social-links a {
+    width: 40px;
+    height: 40px;
+    background-color: #1e293b;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.social-links a:hover {
+    background-color: #22c55e;
+    transform: translateY(-3px);
+}
+
+.footer-bottom {
+    padding: 25px 0;
+    background-color: #020617; /* Even darker for bottom bar */
+}
+
 
 
 
@@ -1844,4 +1929,240 @@ body.contact-page-bg::before {
     .sidebar-overlay.active {
         display: block;
     }
+}
+
+/* ==========================================================================
+   GREEN THEME OVERRIDES (HOME PAGE ENHANCEMENTS)
+   ========================================================================== */
+
+:root {
+    --light-green-bg: #f0fdf4; /* Very light mint green */
+    --medium-green-bg: #dcfce7; /* Slightly darker mint */
+    --green-shadow: rgba(65, 187, 106, 0.2);
+}
+
+/* 1. Hero Section Overlay - Adds a subtle green tint over the slider images */
+.carousel-item {
+    position: relative;
+}
+.carousel-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* Gradient from slight green at top to transparent */
+    background: linear-gradient(180deg, rgba(65, 187, 106, 0.25) 0%, rgba(0,0,0,0) 60%);
+    z-index: 1;
+    pointer-events: none;
+}
+/* Ensure caption stays above the overlay */
+.carousel-caption {
+    z-index: 2;
+}
+
+/* 2. Section Backgrounds - Replacing Light Grey with Light Green Tint */
+.about-us,
+.values-section,
+.team-section,
+.amenities-section,
+.stats-section,
+.testimonials-section,
+.locations-section {
+    background-color: var(--light-green-bg) !important;
+}
+
+/* 3. Alternating Sections - Keep white but add green borders for separation */
+.priority-section,
+.announcement-section {
+    background-color: #ffffff !important;
+    border-top: 1px solid var(--medium-green-bg);
+    border-bottom: 1px solid var(--medium-green-bg);
+}
+
+/* 4. Card Hover Effects - Green Glow & Lift */
+.value-card,
+.team-card,
+.stat-card,
+.amenity-card,
+.testimonial-card,
+.feature-item,
+.announcement-card,
+.location-card {
+    transition: all 0.3s ease;
+    border: 1px solid transparent; /* Prevent layout shift */
+}
+
+.value-card:hover,
+.team-card:hover,
+.stat-card:hover,
+.amenity-card:hover,
+.testimonial-card:hover,
+.announcement-card:hover,
+.location-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px var(--green-shadow) !important;
+    border-color: var(--medium-green-bg);
+}
+
+/* 5. Feature Icons in Priority Section - Green Theme */
+.feature-icon {
+    background-color: rgba(65, 187, 106, 0.1) !important; /* Light green background */
+    color: var(--primary-green) !important;
+    border: 1px solid var(--primary-green);
+}
+
+/* 6. Stats Section - Enhanced Green Styling */
+.stat-card {
+    background-color: var(--primary-green) !important;
+    border: 1px solid var(--medium-green-bg);
+    color: var(--white-color);
+}
+.stat-icon {
+    background-color: var(--white-color) !important;
+    color: var(--primary-green) !important;
+}
+.stat-number {
+    color: var(--white-color) !important;
+}
+.stat-label {
+    color: var(--white-color) !important;
+}
+
+/* 7. Amenities Icons - Solid Green Pop */
+.amenity-card {
+    background-color: var(--primary-green) !important;
+    color: var(--white-color);
+}
+.amenity-card h4 {
+    color: var(--white-color) !important;
+}
+.amenity-icon {
+    background-color: var(--white-color) !important;
+    color: var(--primary-green) !important;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* 8. Section Titles & Underlines */
+.title-underline {
+    background-color: var(--primary-green) !important;
+    height: 4px;
+    border-radius: 2px;
+}
+
+/* 9. Buttons - Green Outline Style */
+.btn-read-more, .btn-learn-more {
+    background-color: transparent;
+    border: 1px solid var(--primary-green);
+    color: var(--primary-green);
+}
+.btn-read-more:hover, .btn-learn-more:hover {
+    background-color: var(--primary-green);
+    color: #fff;
+    box-shadow: 0 5px 15px rgba(65, 187, 106, 0.3);
+}
+
+/* 10. Testimonial Quotes */
+.testimonial-quote::before {
+    filter: hue-rotate(280deg) saturate(3); /* Shift the quote image color to green if possible, or just rely on opacity */
+    opacity: 0.2;
+}
+
+/* ==================================
+   Expert Consultation Section
+===================================== */
+.expert-consultation-section {
+    background-color: #14532d !important; /* Deep Green */
+    position: relative;
+    overflow: hidden;
+    border-radius: 20px; /* Optional: if you want the section itself to be rounded like the image */
+    margin: 40px 5%; /* Add some margin to separate it from full width if desired, or keep full width */
+}
+
+/* If you want it full width, remove border-radius and margin above and use this: */
+/* 
+.expert-consultation-section {
+    background-color: #14532d !important;
+    padding: 80px 0;
+}
+*/
+
+.consultation-image-container {
+    position: relative;
+}
+
+.consultation-image-container img {
+    width: 100%;
+    border-radius: 20px;
+    border: 4px solid rgba(255, 255, 255, 0.1);
+}
+
+.badge-expert {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: white;
+    padding: 8px 16px;
+    border-radius: 50px;
+    font-weight: 600;
+    color: #333;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.badge-expert .dot {
+    width: 10px;
+    height: 10px;
+    background-color: #22c55e;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.badge-support {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    background: white;
+    padding: 10px 15px;
+    border-radius: 12px;
+    text-align: center;
+    line-height: 1.2;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.badge-support strong {
+    font-size: 1.4rem;
+    color: #14532d;
+}
+
+.guidance-pill {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+    padding: 6px 16px;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.feature-check {
+    width: 24px;
+    height: 24px;
+    background-color: #f59e0b; /* Amber/Orange */
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    color: white;
+}
+
+.text-warning {
+    color: #f59e0b !important; /* Ensure the orange pops */
 }
