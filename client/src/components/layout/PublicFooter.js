@@ -14,10 +14,10 @@ const PublicFooter = () => {
                         <img src={logo} alt="Sun Squad Solar" className="footer-logo me-2" style={{height: '50px'}} />
                         <div>
                             <h4 className="text-white mb-0 fw-bold">Sun Squad Solar</h4>
-                            <small className="text-muted">Energy Solutions</small>
+                            <small className="text-white">Energy Solutions</small>
                         </div>
                     </div>
-                    <p className="text-muted mb-4">
+                    <p className="text-white mb-4">
                         Premium solar solutions for a sustainable future. Transforming India with clean, reliable energy.
                     </p>
                     <div className="social-links">
@@ -68,10 +68,10 @@ const PublicFooter = () => {
         <div className="container">
             <div className="row align-items-center">
                 <div className="col-md-6 text-center text-md-start">
-                    <p className="mb-0 text-muted">&copy; 2025 Sun Squad Solar. All rights reserved.</p>
+                    <p className="mb-0 text-white">&copy; 2025 Sun Squad Solar. All rights reserved.</p>
                 </div>
                 <div className="col-md-6 text-center text-md-end">
-                    <p className="mb-0 text-muted">Crafted with <i className="fa-solid fa-heart text-danger"></i> by Quinn</p>
+                    <p className="mb-0 text-white">Crafted with <i className="fa-solid fa-heart text-danger"></i> by Quinn</p>
                 </div>
             </div>
         </div>
