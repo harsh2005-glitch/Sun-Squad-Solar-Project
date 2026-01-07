@@ -47,6 +47,8 @@ import AdminGenealogyPage from './pages/admin/GenealogyPage';
 import SettingsPage from './pages/admin/SettingsPage';
 import ManageGalleryPage from './pages/admin/ManageGalleryPage';
 import ManageAnnouncementsPage from './pages/admin/ManageAnnouncementsPage';
+import ManageTeamPage from './pages/admin/ManageTeamPage';
+
 
 
 // --- Create a temporary Dashboard Page for now ---
@@ -111,6 +113,7 @@ function App() {
             <Route path="settings" element={<SettingsPage />} />
              <Route path="gallery" element={<ManageGalleryPage />} />
               <Route path="announcements" element={<ManageAnnouncementsPage />} />
+              <Route path="team" element={<ManageTeamPage />} />
             {/* We will add the deposits page route here next */}
           </Route>
         </Route>

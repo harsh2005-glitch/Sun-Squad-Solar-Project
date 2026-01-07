@@ -1,0 +1,90 @@
+/* HomePage.css - Additional Styles for Map Section */
+
+/* Location & Connect Section Wrapper */
+.location-connect-section {
+    background-color: #1e5631; /* Forest Green Background */
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+}
+
+/* Map Styling */
+.map-frame-wrapper {
+    background: #ffffff;
+    padding: 10px;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+}
+
+.map-frame-wrapper iframe {
+    border-radius: 12px;
+    display: block;
+    filter: grayscale(100%); /* Optional: To match the clean look */
+}
+
+/* Action Cards */
+.contact-action-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    background: rgba(255, 255, 255, 0.1); /* Glassy Effect */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 24px; /* Rounded corners like the image */
+    padding: 2.5rem 1.5rem;
+    color: #ffffff;
+    transition: all 0.3s ease;
+    height: 100%;
+    backdrop-filter: blur(5px);
+}
+
+.contact-action-card:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-5px);
+    color: #ffffff;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+}
+
+.action-icon-box {
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 16px; /* Squircle shape */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: #fff;
+    transition: transform 0.3s ease;
+}
+
+.contact-action-card:hover .action-icon-box {
+    transform: scale(1.1);
+    background: #fff;
+    color: #1e5631; /* Icon turns green on hover */
+}
+
+.contact-action-card h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.contact-action-card p {
+    font-size: 0.9rem;
+    margin: 0;
+    opacity: 0.8;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .map-frame-wrapper {
+        padding: 5px;
+    }
+    
+    .contact-action-card {
+        padding: 1.5rem;
+    }
+}

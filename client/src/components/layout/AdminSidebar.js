@@ -37,7 +37,10 @@ const AdminSidebar = ({ onLinkClick }) => {
           <Nav.Link as={NavLink} to="/admin/gallery">Manage Gallery</Nav.Link>
         </Nav.Item>
         <Nav.Item>
-          <Nav.Link as={NavLink} to="/admin/announcements">Manage Announcements</Nav.Link>
+          <Nav.Link as={NavLink} to="/admin/announcements" onClick={onLinkClick}>Manage Announcements</Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
+          <Nav.Link as={NavLink} to="/admin/team" onClick={onLinkClick}>Manage Team</Nav.Link>
         </Nav.Item>
         
       </Nav>

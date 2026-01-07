@@ -1,0 +1,188 @@
+/* AnnouncementsPage.css */
+
+.announcements-section {
+    padding: 100px 0 60px; /* Top padding increased to avoid navbar overlap */
+    background-color: #f8f9fa;
+    min-height: 100vh;
+}
+
+.section-title {
+    text-align: center;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 10px;
+    font-size: 2.5rem;
+}
+
+.title-underline {
+    width: 60px;
+    height: 4px;
+    background-color: #f39c12; /* Brand Orange */
+    margin: 0 auto 20px;
+    border-radius: 2px;
+}
+
+.section-subtitle {
+    text-align: center;
+    color: #7f8c8d;
+    margin-bottom: 50px;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.announcements-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 30px;
+}
+
+.announcement-card {
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.announcement-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+}
+
+.card-image {
+    position: relative;
+    overflow: hidden;
+    height: 220px;
+    cursor: pointer;
+}
+
+.card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.card-image:hover img {
+    transform: scale(1.05);
+}
+
+.card-content {
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.card-meta {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+    font-size: 0.85rem;
+    color: #95a5a6;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+}
+
+.card-meta span {
+    display: flex;
+    align-items: center;
+}
+
+.card-meta i {
+    margin-right: 6px;
+    color: #f39c12;
+}
+
+.card-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    line-height: 1.4;
+}
+
+.card-title a {
+    color: #2c3e50;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.card-title a:hover {
+    color: #f39c12;
+}
+
+.card-excerpt {
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    flex-grow: 1;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+}
+
+.btn-read-more {
+    color: #f39c12;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    align-self: flex-start;
+    padding: 5px 0;
+    transition: all 0.3s ease;
+}
+
+.btn-read-more i {
+    margin-left: 8px;
+    transition: transform 0.3s ease;
+}
+
+.btn-read-more:hover {
+    color: #d35400;
+}
+
+.btn-read-more:hover i {
+    transform: translateX(4px);
+}
+
+/* Modal Customization */
+.announcement-modal .modal-content {
+    border: none;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.announcement-modal .modal-header {
+    border-bottom: none;
+    padding: 20px 25px 0;
+}
+
+.announcement-modal .modal-body {
+    padding: 25px;
+}
+
+.full-image-wrapper {
+    width: 100%;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    overflow: hidden;
+    text-align: center;
+}
+
+.full-image-wrapper img {
+    max-width: 100%;
+    height: auto;
+    max-height: 500px;
+    object-fit: contain;
+}
+
+@media (max-width: 768px) {
+    .announcements-grid {
+        grid-template-columns: 1fr;
+    }
+}

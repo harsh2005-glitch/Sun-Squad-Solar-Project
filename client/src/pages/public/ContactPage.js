@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import contactHeroImg from '../../assets/images/hero-image.jpg';
+import contactHeroImg from '../../assets/images/contactpage-image.jpg';
 import './ContactPage.css';
 
 // We define the API URL directly here since it's a simple, one-off service
@@ -11,28 +11,33 @@ const ContactPage = () => {
     const [formData, setFormData] = useState({
         name: '',
         email: '',
-        subject: '',
+        phone: '',
+        city: '',
         message: ''
     });
-    const [loading, setLoading] = useState(false);
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
-        setLoading(true);
-        try {
-            const response = await axios.post(`${API_URL}/contact`, formData);
-            toast.success(response.data.message);
-            // Clear the form on success
-            setFormData({ name: '', email: '', subject: '', message: '' });
-        } catch (error) {
-            toast.error(error.response?.data?.message || 'Failed to send message.');
-        } finally {
-            setLoading(false);
-        }
+        
+        const companyWhatsAppNumber = '919278450045';
+        const message = `*New Contact Enquiry*
+---------------------
+*Name:* ${formData.name}
+*Email:* ${formData.email}
+*Phone:* ${formData.phone}
+*City:* ${formData.city}
+*Message:* ${formData.message}`;
+
+        const encodedMessage = encodeURIComponent(message);
+        const whatsappURL = `https://api.whatsapp.com/send?phone=${companyWhatsAppNumber}&text=${encodedMessage}`;
+        
+        window.open(whatsappURL, '_blank');
+        
+        setFormData({ name: '', email: '', phone: '', city: '', message: '' });
     };
 
     return (
@@ -45,7 +50,7 @@ const ContactPage = () => {
                                 <span className="contact-badge">Get In Touch</span>
                                 <h1 className="contact-hero-title display-4 fw-bold">
                                     Contact <br />
-                                    <span className="text-sun">Sun</span><span className="text-square">Square</span>
+                                    <span className="text-sun">Sun</span><span className="text-square">Squad Solar</span>
                                 </h1>
                                 <p className="contact-hero-description">
                                     Ready to transform your energy future? Get in touch for a free consultation, site assessment, or any questions about our premium solar solutions.
@@ -95,7 +100,7 @@ const ContactPage = () => {
 
                 <section className="contact-section">
                     <div className="container">
-                        <h2 className="section-title">Get In Touch</h2>
+                        <h2 className="section-title">Send Us a Message</h2>
                         <div className="title-underline"></div>
                         <p className="section-subtitle">Have a question? We'd love to hear from you. Contact us, and we’ll get back to you shortly.</p>
 
@@ -125,15 +130,33 @@ const ContactPage = () => {
                             </div>
 
                             <div className="contact-form-block">
-                                <form onSubmit={handleSubmit}>
-                                    <div className="form-row">
-                                        <input type="text" name="name" placeholder="Your Name" value={formData.name} onChange={handleChange} required />
-                                        <input type="email" name="email" placeholder="Your Email" value={formData.email} onChange={handleChange} required />
+                                <form onSubmit={handleSubmit} className="p-4 bg-white rounded-4 shadow-sm">
+                                    <div className="row mb-3">
+                                        <div className="col-md-6 mb-3 mb-md-0">
+                                            <label className="form-label fw-bold small text-success"><i className="fa-regular fa-user me-2"></i>Full Name</label>
+                                            <input type="text" name="name" className="form-control form-control-lg bg-light border-0" placeholder="Enter your full name" value={formData.name} onChange={handleChange} required />
+                                        </div>
+                                        <div className="col-md-6">
+                                            <label className="form-label fw-bold small text-success"><i className="fa-regular fa-envelope me-2"></i>Email Address</label>
+                                            <input type="email" name="email" className="form-control form-control-lg bg-light border-0" placeholder="your.email@example.com" value={formData.email} onChange={handleChange} required />
+                                        </div>
                                     </div>
-                                    <input type="text" name="subject" placeholder="Subject" value={formData.subject} onChange={handleChange} required />
-                                    <textarea name="message" rows="6" placeholder="Your Message" value={formData.message} onChange={handleChange} required></textarea>
-                                    <button type="submit" className="btn-submit-form" disabled={loading}>
-                                        {loading ? 'Sending...' : 'Send Message'}
+                                    <div className="row mb-3">
+                                        <div className="col-md-6 mb-3 mb-md-0">
+                                            <label className="form-label fw-bold small text-success"><i className="fa-solid fa-phone me-2"></i>Phone Number</label>
+                                            <input type="tel" name="phone" className="form-control form-control-lg bg-light border-0" placeholder="+91 98765 43210" value={formData.phone} onChange={handleChange} required />
+                                        </div>
+                                        <div className="col-md-6">
+                                            <label className="form-label fw-bold small text-success"><i className="fa-solid fa-location-dot me-2"></i>City</label>
+                                            <input type="text" name="city" className="form-control form-control-lg bg-light border-0" placeholder="Your city" value={formData.city} onChange={handleChange} required />
+                                        </div>
+                                    </div>
+                                    <div className="mb-4">
+                                        <label className="form-label fw-bold small text-success"><i className="fa-regular fa-comment-dots me-2"></i>Your Message</label>
+                                        <textarea name="message" className="form-control form-control-lg bg-light border-0" rows="5" placeholder="Tell us about your property, energy needs..." value={formData.message} onChange={handleChange} required></textarea>
+                                    </div>
+                                    <button type="submit" className="btn btn-success w-100 py-3 fw-bold rounded-3">
+                                        <i className="fa-regular fa-paper-plane me-2"></i> Send Message & Get Free Quote
                                     </button>
                                 </form>
                             </div>

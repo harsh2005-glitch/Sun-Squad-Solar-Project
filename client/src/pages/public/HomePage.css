@@ -1,0 +1,228 @@
+/* HomePage.css */
+
+/* === GLOBAL BACKGROUND OVERRIDE FOR SECTIONS === */
+.power-future-section,
+.about-us,
+.priority-section,
+.values-section,
+.premium-services-section,
+.team-section,
+.stats-section,
+.amenities-section,
+.testimonials-section-new {
+    background-color: #effcf4 !important; /* The uploaded very light green color */
+}
+
+
+/* Premium Services Section */
+.premium-services-section {
+    position: relative;
+    overflow: hidden;
+}
+
+.premium-service-card {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 2.5rem 2rem;
+    height: 100%;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: 1px solid rgba(0,0,0,0.04);
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+}
+
+/* Glossy/Glassy shine effect */
+.premium-service-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 100%);
+    z-index: -1;
+    opacity: 0.5;
+}
+
+/* Hover Effect - Primary Green */
+.premium-service-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px -5px rgba(16, 185, 129, 0.15); /* Green shadow */
+    border-bottom: 5px solid #10b981;
+}
+
+.service-icon-wrapper {
+    width: 70px;
+    height: 70px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    transition: transform 0.3s ease;
+}
+
+/* Icon colors specific to cards */
+.icon-success {
+    background-color: #10b981;
+    color: white;
+    box-shadow: 0 8px 16px rgba(16, 185, 129, 0.2);
+}
+
+.icon-warning {
+    background-color: #f59e0b;
+    color: white;
+    box-shadow: 0 8px 16px rgba(245, 158, 11, 0.2);
+}
+
+.premium-service-card:hover .service-icon-wrapper {
+    transform: scale(1.1) rotate(5deg);
+}
+
+.service-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 1rem;
+}
+
+.service-description {
+    color: #6b7280;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+}
+
+.service-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.service-list li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    color: #4b5563;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.service-list li i {
+    color: #10b981;
+    margin-right: 10px;
+    background: #ecfdf5;
+    padding: 4px;
+    border-radius: 50%;
+    font-size: 0.7rem;
+}
+
+/* Section Typography overrides */
+.text-highlight-green {
+    color: #10b981;
+    position: relative;
+    display: inline-block;
+}
+
+.text-highlight-green::after {
+    content: '';
+    position: absolute;
+    bottom: 2px;
+    left: 0;
+    width: 100%;
+    height: 8px;
+    background-color: rgba(16, 185, 129, 0.1);
+    z-index: -1;
+}
+
+/* Team Section Styles */
+.team-card {
+    background: #10b981; /* Primary Green */
+    border-radius: 20px;
+    overflow: hidden;
+    transition: all 0.4s ease;
+    border: none;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+    position: relative;
+    height: 100%;
+    padding: 15px; /* Margin from border for the internal elements */
+}
+
+.team-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(16, 185, 129, 0.4);
+}
+
+.team-img-wrapper {
+    height: 320px;
+    overflow: hidden;
+    position: relative;
+    border-radius: 15px; /* Rectangle shape with slight rounded corners */
+    background: #fff;
+    margin-bottom: 0;
+}
+
+.team-img-wrapper img {
+    transition: transform 0.5s ease;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+}
+
+.team-card:hover .team-img-wrapper img {
+    transform: scale(1.05);
+}
+
+/* Glossy Overlay on Image */
+.team-img-wrapper::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to top, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0) 60%);
+    pointer-events: none;
+}
+
+.team-content {
+    padding: 1.5rem 0.5rem 0.5rem;
+    text-align: center;
+    position: relative;
+    color: white;
+}
+
+.team-role-badge {
+    background: #ffffff;
+    color: #10b981;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    display: inline-block;
+    margin-bottom: 12px;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.team-name {
+    font-weight: 800;
+    margin-bottom: 8px;
+    color: #ffffff;
+    font-size: 1.25rem;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.team-bio {
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.9);
+    margin-bottom: 0;
+    line-height: 1.5;
+    padding-bottom: 5px;
+}
+

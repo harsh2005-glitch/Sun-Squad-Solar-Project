@@ -71,7 +71,7 @@ const PublicFooter = () => {
                     <p className="mb-0 text-white">&copy; 2025 Sun Squad Solar. All rights reserved.</p>
                 </div>
                 <div className="col-md-6 text-center text-md-end">
-                    <p className="mb-0 text-white">Crafted with <i className="fa-solid fa-heart text-danger"></i> by Quinn</p>
+                    <p className="mb-0 text-white">Crafted with <i className="fa-solid fa-heart text-danger"></i> by Harshit</p>
                 </div>
             </div>
         </div>

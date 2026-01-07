@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Carousel, Container, Row, Col, Card, Button } from 'react-bootstrap';
+import './HomePage.css'; // Importing custom styles
+import './HomePageMap.css'; // Importing map section styles
 
 // --- NEW IMPORTS for animations ---
 import CountUp from 'react-countup';
@@ -8,6 +10,8 @@ import AnimatedSection from '../../components/common/AnimatedSection';
 import PowerFutureSection from '../../components/home/PowerFutureSection';
 import PrioritySection from '../../components/home/PrioritySection';
 import TestimonialsSection from '../../components/home/TestimonialsSection';
+import teamService from '../../services/teamService';
+
 
 // --- Import your images ---
 import sliderImg1 from '../../assets/images/gallery/industrial-plant-1.jpg';
@@ -17,6 +21,20 @@ import teamAbhishek from '../../assets/images/team-abhishek.jpg';
 import teamShivam from '../../assets/images/team-shivam.jpg';
 
 const HomePage = () => {
+    const [teamMembers, setTeamMembers] = useState([]);
+
+    useEffect(() => {
+        const fetchTeam = async () => {
+            try {
+                const data = await teamService.getTeamMembers();
+                setTeamMembers(data);
+            } catch (error) {
+                console.error("Failed to load team members", error);
+            }
+        };
+        fetchTeam();
+    }, []);
+
   return (
     <>
       {/* === Carousel Section (No scroll animation needed here) === */}
@@ -155,19 +173,120 @@ const HomePage = () => {
         </Container>
       </AnimatedSection>
 
-      {/* === Team Member Section (Wrapped for animation) === */}
+      {/* === Premium Services Section (NEW) === */}
+      <AnimatedSection className="premium-services-section py-5">
+        <Container>
+            <div className="text-center mb-5">
+                <h2 className="section-title display-5 fw-bold mb-3">Premium Solar <span className="text-highlight-green">Services</span></h2>
+                <p className="text-muted fs-5 mx-auto" style={{maxWidth: '800px'}}>
+                    Comprehensive solar solutions designed for maximum efficiency, reliability, and long-term performance across India.
+                </p>
+            </div>
+            
+            <Row className="g-4">
+                {/* Service 1 */}
+                <Col lg={4} md={6}>
+                    <div className="premium-service-card">
+                        <div className="service-icon-wrapper icon-success">
+                            <i className="fa-regular fa-sun"></i>
+                        </div>
+                        <h3 className="service-title">Solar Panel Installation</h3>
+                        <p className="service-description">
+                            Custom rooftop and ground-mount systems optimized for peak performance and longevity with premium-grade panels.
+                        </p>
+                        <ul className="service-list">
+                            <li><i className="fa-solid fa-check"></i> Premium Tier-1 panels</li>
+                            <li><i className="fa-solid fa-check"></i> 25-year warranty</li>
+                        </ul>
+                    </div>
+                </Col>
+
+                {/* Service 2 */}
+                <Col lg={4} md={6}>
+                    <div className="premium-service-card">
+                        <div className="service-icon-wrapper icon-warning">
+                            <i className="fa-solid fa-bolt"></i>
+                        </div>
+                        <h3 className="service-title text-warning">Hybrid Solar Solutions</h3>
+                        <p className="service-description">
+                            Seamlessly integrate grid-tie and battery backup systems for uninterrupted power supply and maximum savings.
+                        </p>
+                        <ul className="service-list">
+                            <li><i className="fa-solid fa-check"></i> Grid-tie + Battery backup</li>
+                            <li><i className="fa-solid fa-check"></i> Smart energy management</li>
+                        </ul>
+                    </div>
+                </Col>
+
+                {/* Service 3 */}
+                <Col lg={4} md={6}>
+                    <div className="premium-service-card">
+                        <div className="service-icon-wrapper icon-success">
+                            <i className="fa-solid fa-screwdriver-wrench"></i>
+                        </div>
+                        <h3 className="service-title">Solar Maintenance</h3>
+                        <p className="service-description">
+                            Comprehensive maintenance, performance audits, and cleaning services for sustained efficiency and longevity.
+                        </p>
+                        <ul className="service-list">
+                            <li><i className="fa-solid fa-check"></i> Annual maintenance plans</li>
+                            <li><i className="fa-solid fa-check"></i> Performance monitoring</li>
+                        </ul>
+                    </div>
+                </Col>
+            </Row>
+        </Container>
+      </AnimatedSection>
+
+      {/* === Team Member Section (Dynamic + Attractive Card) === */}
       <AnimatedSection className="team-section py-5">
         <Container className="text-center">
-          <h2 className="section-title">Our Directors</h2>
-          <div className="title-underline"></div>
-          <Row className="justify-content-center g-4">
-            <Col sm={6} md={4} lg={3}>
-                <Card className="border-0 shadow-sm"><Card.Img variant="top" src={teamAbhishek} /><Card.Body><Card.Title as="h3" className="fs-5">MR. ABHISHEK MAURYA</Card.Title><Card.Text className="fw-bold">Managing Director</Card.Text></Card.Body></Card>
-            </Col>
-            <Col sm={6} md={4} lg={3}>
-                <Card className="border-0 shadow-sm"><Card.Img variant="top" src={teamShivam} /><Card.Body><Card.Title as="h3" className="fs-5">MR. SHIVAM MAURYA</Card.Title><Card.Text className="fw-bold">Operation Head</Card.Text></Card.Body></Card>
-            </Col>
-          </Row>
+            <h2 className="section-title">Our Leaders & Experts</h2>
+            <div className="title-underline mb-5"></div>
+            <Row className="justify-content-center g-5">
+                {teamMembers.length > 0 ? (
+                    teamMembers.map((member) => (
+                        <Col key={member._id} sm={6} md={4} lg={3}>
+                            <div className="team-card h-100">
+                                <div className="team-img-wrapper">
+                                    <img src={member.imageUrl} alt={member.name} />
+                                </div>
+                                <div className="team-content">
+                                    <span className="team-role-badge">{member.role}</span>
+                                    <h3 className="team-name">{member.name}</h3>
+                                    {member.bio && <p className="team-bio">{member.bio}</p>}
+                                </div>
+                            </div>
+                        </Col>
+                    ))
+                ) : (
+                    <>
+                        {/* Fallback Static Content with New Styles */}
+                        <Col sm={6} md={4} lg={3}>
+                            <div className="team-card h-100">
+                                <div className="team-img-wrapper">
+                                    <img src={teamAbhishek} alt="Mr. Abhishek Maurya" />
+                                </div>
+                                <div className="team-content">
+                                    <span className="team-role-badge">Managing Director</span>
+                                    <h3 className="team-name">MR. ABHISHEK MAURYA</h3>
+                                </div>
+                            </div>
+                        </Col>
+                        <Col sm={6} md={4} lg={3}>
+                            <div className="team-card h-100">
+                                <div className="team-img-wrapper">
+                                    <img src={teamShivam} alt="Mr. Shivam Maurya" />
+                                </div>
+                                <div className="team-content">
+                                    <span className="team-role-badge">Operation Head</span>
+                                    <h3 className="team-name">MR. SHIVAM MAURYA</h3>
+                                </div>
+                            </div>
+                        </Col>
+                    </>
+                )}
+            </Row>
         </Container>
       </AnimatedSection>
 
@@ -213,51 +332,60 @@ const HomePage = () => {
           </Container>
       </AnimatedSection>
 
-      {/* === Map & Contact Section === */}
-      <AnimatedSection className="map-contact-section">
-        <div className="map-container position-relative">
-            <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3608.206116901794!2d82.96070707516577!3d25.26365087766825!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x398e332fdf328f73%3A0x1a5c35f7c55c3ffa!2sSUN%20SQUAD%20SOLAR!5e0!3m2!1sen!2sin!4v1759347768628!5m2!1sen!2sin"
-                width="100%"
-                height="500"
-                style={{ border: 4, filter: 'grayscale(0%)' }}
-                allowFullScreen=""
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                title="Sun Squad Solar Location Map"
-            ></iframe>
-            
-            {/* Overlay Buttons Container */}
-            <Container className="contact-overlay-container">
-                <Row className="justify-content-center g-4">
-                    <Col md={4}>
-                        <a href="tel:+91 9278450045" className="contact-action-card">
-                            <div className="icon-box"><i className="fa-solid fa-phone"></i></div>
-                            <h3>Call Now</h3>
-                            <p>Instant Response</p>
-                        </a>
-                    </Col>
-                    <Col md={4}>
-                        <a href="https://wa.me/9278450045" target="_blank" rel="noopener noreferrer" className="contact-action-card">
-                            <div className="icon-box"><i className="fa-brands fa-whatsapp"></i></div>
-                            <h3>WhatsApp</h3>
-                            <p>Quick Chat</p>
-                        </a>
-                    </Col>
-                    <Col md={4}>
-                        <a href="sunsquadsolar4@gmail.com" className="contact-action-card">
-                            <div className="icon-box"><i className="fa-solid fa-envelope"></i></div>
-                            <h3>Email Us</h3>
-                            <p>Detailed Inquiry</p>
-                        </a>
-                    </Col>
-                </Row>
-            </Container>
-        </div>
-      </AnimatedSection>
+      
 
       {/* === Testimonials Section (New Grid Layout) === */}
       <TestimonialsSection />
+
+      {/* === Map & Contact Section === */}
+      <AnimatedSection className="location-connect-section">
+        <Container className="py-5">
+            {/* Google Map */}
+            <div className="map-frame-wrapper mb-5">
+                <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3608.206116901794!2d82.96070707516577!3d25.26365087766825!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x398e332fdf328f73%3A0x1a5c35f7c55c3ffa!2sSUN%20SQUAD%20SOLAR!5e0!3m2!1sen!2sin!4v1759347768628!5m2!1sen!2sin"
+                    width="100%"
+                    height="450"
+                    style={{ border: 0 }}
+                    allowFullScreen=""
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    title="Sun Squad Solar Location Map"
+                ></iframe>
+            </div>
+            
+            {/* Contact Action Cards */}
+            <Row className="g-4 justify-content-center">
+                <Col md={4}>
+                    <a href="tel:+919278450045" className="contact-action-card">
+                        <div className="action-icon-box">
+                            <i className="fa-solid fa-phone"></i>
+                        </div>
+                        <h3>Call Now</h3>
+                        <p>Instant Response</p>
+                    </a>
+                </Col>
+                <Col md={4}>
+                    <a href="https://wa.me/919278450045" target="_blank" rel="noopener noreferrer" className="contact-action-card">
+                        <div className="action-icon-box">
+                            <i className="fa-brands fa-whatsapp"></i>
+                        </div>
+                        <h3>WhatsApp</h3>
+                        <p>Quick Chat</p>
+                    </a>
+                </Col>
+                <Col md={4}>
+                    <a href="mailto:sunsquadsolar4@gmail.com" className="contact-action-card">
+                        <div className="action-icon-box">
+                            <i className="fa-solid fa-envelope"></i>
+                        </div>
+                        <h3>Email Us</h3>
+                        <p>Detailed Inquiry</p>
+                    </a>
+                </Col>
+            </Row>
+        </Container>
+      </AnimatedSection>
     </>
   );
 };
