@@ -59,8 +59,7 @@ const SlabTable = ({ title, slabs, setSlabs }) => {
 
 
 const SettingsPage = () => {
-    const [selfSlabs, setSelfSlabs] = useState([]);
-    const [teamSlabs, setTeamSlabs] = useState([]);
+    const [universalSlabs, setUniversalSlabs] = useState([]);
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
     const [message, setMessage] = useState('');
@@ -77,8 +76,7 @@ const SettingsPage = () => {
         const fetchSettings = async () => {
             try {
                 const response = await settingsService.getSettings();
-                setSelfSlabs(response.data.selfIncomeSlabs);
-                setTeamSlabs(response.data.teamIncomeSlabs);
+                setUniversalSlabs(response.data.universalIncomeSlabs || []);
                  setNotice(response.data.noticeMessage || '');
             } catch (err) {
                 setError('Failed to load settings.');
@@ -95,8 +93,7 @@ const SettingsPage = () => {
         setError('');
         try {
             const response = await settingsService.updateSettings({
-                selfIncomeSlabs: selfSlabs,
-                teamIncomeSlabs: teamSlabs,
+                universalIncomeSlabs: universalSlabs
             });
             setMessage(response.data.message);
         } catch (err) {
@@ -166,8 +163,7 @@ const SettingsPage = () => {
                 </Card.Body>
             </Card>
             
-            <SlabTable title="Self Income Commission Slabs" slabs={selfSlabs} setSlabs={setSelfSlabs} />
-            <SlabTable title="Team Income Commission Slabs" slabs={teamSlabs} setSlabs={setTeamSlabs} />
+            <SlabTable title="Universal Income Commission Slabs" slabs={universalSlabs} setSlabs={setUniversalSlabs} />
 
             <div className="mt-3 mb-5">
                 <Button variant="primary" size="lg" onClick={handleSave} disabled={saving}>

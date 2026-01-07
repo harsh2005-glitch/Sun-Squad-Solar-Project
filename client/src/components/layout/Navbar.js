@@ -27,10 +27,11 @@ const AppNavbar = () => {
   const handleShow = () => setShowOffcanvas(true);
 
   return (
-    <Navbar bg="white" expand="lg" className="app-navbar sticky-top">
+    <Navbar expand="lg" variant="dark" className="app-navbar sticky-top">
       <Container>
         <Navbar.Brand as={NavLink} to="/app/dashboard" className="d-flex align-items-center">
           <img src={logo} height="45" alt="Sun Squad Solar" />
+          <span className="ms-2 fw-bold text-white fs-4">Sun Squad Solar</span>
         </Navbar.Brand>
 
         <Navbar.Toggle aria-controls="offcanvas-navbar-nav" onClick={handleShow} className="ms-auto" />

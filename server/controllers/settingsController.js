@@ -30,8 +30,7 @@ const updateSettings = async (req, res) => {
         }
 
         // Update the fields with the data from the request body
-        settings.selfIncomeSlabs = req.body.selfIncomeSlabs || settings.selfIncomeSlabs;
-        settings.teamIncomeSlabs = req.body.teamIncomeSlabs || settings.teamIncomeSlabs;
+        settings.universalIncomeSlabs = req.body.universalIncomeSlabs || settings.universalIncomeSlabs;
         // Add any other settings you want to make editable in the future here
 
         const updatedSettings = await settings.save();

@@ -5,9 +5,12 @@ import { Carousel, Container, Row, Col, Card, Button } from 'react-bootstrap';
 // --- NEW IMPORTS for animations ---
 import CountUp from 'react-countup';
 import AnimatedSection from '../../components/common/AnimatedSection';
+import PowerFutureSection from '../../components/home/PowerFutureSection';
+import PrioritySection from '../../components/home/PrioritySection';
+import TestimonialsSection from '../../components/home/TestimonialsSection';
 
 // --- Import your images ---
-import sliderImg1 from '../../assets/images/hero-slider-1.jpg';
+import sliderImg1 from '../../assets/images/gallery/industrial-plant-1.jpg';
 import sliderImg2 from '../../assets/images/hero-slider-2.jpg';
 import sliderImg3 from '../../assets/images/hero-slider-3.jpg';
 import teamAbhishek from '../../assets/images/team-abhishek.jpg';
@@ -41,6 +44,9 @@ const HomePage = () => {
         </Carousel.Item>
       </Carousel>
 
+      {/* === Power Future Section === */}
+      <PowerFutureSection />
+
       {/* === About Us Section (Wrapped for animation) === */}
       <AnimatedSection className="about-us py-5 section-bg">
         <Container>
@@ -65,25 +71,7 @@ const HomePage = () => {
       </AnimatedSection>
 
       {/* === Customer Priority Section (Wrapped for animation) === */}
-      <AnimatedSection className="priority-section py-5">
-        <Container>
-          <Row className="align-items-center g-lg-5">
-            <Col lg={6} className="mb-4 mb-lg-0">
-              <div className="priority-content">
-                <h2 className="section-title">WE ALWAYS PROVIDE PRIORITY TO OUR CUSTOMER</h2>
-                <p>The reason why Sun Squad Solar has been able to achieve such steep success is due to our diligence toward ensuring customer satisfaction in every way possible. Right from the selection of solar for our projects to our vast and growing network, we always ensure that the process is transparent and customer friendly.</p>
-              </div>
-            </Col>
-            <Col lg={6}>
-              <div className="priority-features">
-                <div className="feature-item"><div className="feature-icon"><i className="fa-solid fa-indian-rupee-sign"></i></div><div className="feature-text"><h3>Low Cost</h3><p>Designing, developing and managing solar properties at affordable prices.</p></div></div>
-                <div className="feature-item"><div className="feature-icon"><i className="fa-solid fa-store"></i></div><div className="feature-text"><h3>Good Marketing</h3><p>Preparing studies and providing consultations regarding solar uses and sales.</p></div></div>
-                <div className="feature-item"><div className="feature-icon"><i className="fa-solid fa-handshake"></i></div><div className="feature-text"><h3>Reliable</h3><p>To be an optimum business template for the solar Industry.</p></div></div>
-              </div>
-            </Col>
-          </Row>
-        </Container>
-      </AnimatedSection>
+      <PrioritySection />
 
       {/* === Values & Vision Section (Wrapped for animation) === */}
       <AnimatedSection className="values-section py-5 section-bg">
@@ -268,46 +256,8 @@ const HomePage = () => {
         </div>
       </AnimatedSection>
 
-      {/* === Testimonials Section (Now a Carousel) === */}
-<AnimatedSection className="testimonials-carousel-section">
-  <Container>
-    <h2 className="section-title">What Our Customer Says</h2>
-    <div className="title-underline"></div>
-
-    <Carousel indicators={true} controls={false} className="testimonial-carousel">
-      {/* Testimonial 1 */}
-      <Carousel.Item interval={2000}>
-        <div className="testimonial-slide-content">
-          <h4>Mr. Jatin Singh</h4>
-          <p className="testimonial-quote">
-            "Ever since I got the solar installed, the tension regarding the electricity bill has ended. We are living happily without any tension. The worker installed the connection successfully without any fault. Everything was completed on time."
-          </p>
-        </div>
-      </Carousel.Item>
-
-      {/* Testimonial 2 */}
-      <Carousel.Item interval={2000}>
-        <div className="testimonial-slide-content">
-          <h4>Mr. Suresh</h4>
-          <p className="testimonial-quote">
-            "From the initial installation to the final installation, the staff was extremely helpful and professional. They explained everything clearly and answered all our questions without a high-pressure sales pitch."
-          </p>
-        </div>
-      </Carousel.Item>
-      
-      {/* --- ADD A NEW TESTIMONIAL HERE --- */}
-      <Carousel.Item interval={3000}>
-        <div className="testimonial-slide-content">
-          <h4>Priya Sharma</h4>
-          <p className="testimonial-quote">
-            "The quality of the panels and the installation work is top-notch. My energy savings have been significant, and I highly recommend Sun Squad Solar to anyone considering the switch to renewable energy."
-          </p>
-        </div>
-      </Carousel.Item>
-      
-    </Carousel>
-  </Container>
-</AnimatedSection>
+      {/* === Testimonials Section (New Grid Layout) === */}
+      <TestimonialsSection />
     </>
   );
 };

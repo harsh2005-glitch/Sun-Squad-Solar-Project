@@ -2166,3 +2166,384 @@ body.contact-page-bg::before {
 .text-warning {
     color: #f59e0b !important; /* Ensure the orange pops */
 }
+/* ==================================
+   Power Future Section Styling
+===================================== */
+.power-future-section {
+    padding: 100px 0;
+    background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%);
+    overflow: hidden;
+    position: relative;
+}
+
+.section-title-large {
+    font-size: 3.5rem;
+    color: var(--dark-grey);
+    font-weight: 800;
+}
+
+.dot-separator {
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    background-color: #f8c95e;
+    border-radius: 50%;
+    margin: 0 5px;
+    vertical-align: middle;
+    position: relative;
+    top: -8px;
+}
+
+.text-orange {
+    color: #f8c95e;
+}
+
+/* Decorative background elements */
+.power-future-section::before {
+    content: '';
+    position: absolute;
+    top: -100px;
+    right: -100px;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(248, 201, 94, 0.1) 0%, rgba(255,255,255,0) 70%);
+    border-radius: 50%;
+    z-index: 0;
+}
+
+.badge-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: rgba(22, 70, 38, 0.08);
+    color: var(--primary-green);
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    border: 1px solid rgba(22, 70, 38, 0.1);
+}
+
+.badge-pill .dot {
+    width: 8px;
+    height: 8px;
+    background-color: var(--primary-green);
+    border-radius: 50%;
+    margin-right: 10px;
+    box-shadow: 0 0 0 3px rgba(22, 70, 38, 0.2);
+}
+
+.text-highlight {
+    position: relative;
+    z-index: 1;
+    display: inline-block;
+}
+
+.text-highlight::after {
+    content: '';
+    position: absolute;
+    bottom: 8px;
+    left: -5px;
+    width: calc(100% + 10px);
+    height: 12px;
+    background-color: #f8c95e;
+    z-index: -1;
+    opacity: 0.5;
+    border-radius: 10px;
+    transform: rotate(-2deg);
+}
+
+.text-green {
+    color: var(--primary-green);
+}
+
+.illustration-wrapper {
+    position: relative;
+    padding: 30px;
+    z-index: 1;
+}
+
+.illustration-wrapper .main-img {
+    border-radius: 30px;
+    border: 10px solid #fff;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    aspect-ratio: 4/3;
+}
+
+.floating-card {
+    position: absolute;
+    background: #fff;
+    padding: 15px 20px;
+    border-radius: 16px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    animation: float 4s ease-in-out infinite;
+    z-index: 2;
+    min-width: 180px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.floating-card .icon-box {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.card-efficiency {
+    top: 40px;
+    right: -20px;
+    animation-delay: 0s;
+}
+
+.card-projects {
+    bottom: 80px;
+    right: -40px;
+    animation-delay: 1.5s;
+    background-color: var(--primary-green);
+    color: white;
+    border: none;
+}
+
+.card-projects .icon-box {
+    background-color: rgba(255,255,255,0.2) !important;
+}
+
+.card-projects small {
+    color: rgba(255,255,255,0.9);
+}
+
+.card-savings {
+    bottom: -20px;
+    left: 40px;
+    animation-delay: 2.5s;
+}
+
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-12px); }
+    100% { transform: translateY(0px); }
+}
+
+@media (max-width: 992px) {
+    .power-future-section {
+        padding: 60px 0;
+        text-align: center;
+    }
+    
+    .content-wrapper {
+        padding-right: 0 !important;
+    }
+    
+    .illustration-wrapper {
+        margin-top: 40px;
+        padding: 0;
+    }
+    
+    .floating-card {
+        position: relative;
+        top: auto !important;
+        right: auto !important;
+        bottom: auto !important;
+        left: auto !important;
+        margin: 10px;
+        display: inline-flex;
+        animation: none;
+        transform: none !important;
+    }
+    
+    .card-projects {
+        right: auto;
+        bottom: auto;
+    }
+    
+    .d-flex.flex-wrap {
+        justify-content: center;
+    }
+}
+
+
+/* ==================================
+   Priority Section Styling (New Card UI)
+===================================== */
+.priority-section {
+    background-color: #ffffff;
+}
+
+.text-dark-green {
+    color: #0e2c0e; /* Dark green color from root */
+}
+
+.priority-features-list {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.feature-card {
+    display: flex;
+    align-items: center;
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 15px;
+    transition: all 0.3s ease;
+    border: 1px solid transparent; /* Invisible border for layout stability */
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    border-color: #e0f2f1; /* Light cyan/green border on hover */
+}
+
+.feature-icon-wrapper {
+    flex-shrink: 0;
+    margin-right: 25px;
+}
+
+.feature-icon-circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: #e0f7fa; /* Light cyan background */
+    border: 2px solid #4dd0e1; /* Cyan border */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    color: #00bcd4; /* Cyan icon color */
+    transition: all 0.3s ease;
+}
+
+.feature-card:hover .feature-icon-circle {
+    background-color: #4dd0e1;
+    color: #ffffff;
+    box-shadow: 0 0 15px rgba(77, 208, 225, 0.5);
+}
+
+.feature-text-content h3 {
+    margin-bottom: 8px;
+}
+
+.feature-text-content p {
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+    .feature-card {
+        flex-direction: column;
+        text-align: center;
+        padding: 30px;
+    }
+    
+    .feature-icon-wrapper {
+        margin-right: 0;
+        margin-bottom: 20px;
+    }
+}
+
+
+/* ==================================
+   New Testimonials Section Styling
+===================================== */
+.testimonials-section-new {
+    background-color: #f9fafb; /* Light grey background for the section */
+}
+
+.badge-pill-green {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 20px;
+    background-color: #dcfce7; /* Light mint green */
+    color: #166534; /* Dark green text */
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    border: 1px solid #bbf7d0;
+}
+
+.testimonial-card-new {
+    background-color: #ffffff;
+    border-radius: 20px !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    transition: all 0.3s ease;
+    border: 1px solid #f3f4f6 !important;
+}
+
+/* Hover Effect: Green Border & Shadow */
+.testimonial-card-new:hover {
+    transform: translateY(-8px);
+    border-color: var(--primary-green) !important;
+    box-shadow: 0 20px 25px -5px rgba(22, 163, 74, 0.15), 0 10px 10px -5px rgba(22, 163, 74, 0.1) !important;
+}
+
+.profile-img-wrapper {
+    width: 60px;
+    height: 60px;
+}
+
+.profile-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 12px; /* Rounded square */
+}
+
+.profile-icon-badge {
+    position: absolute;
+    bottom: -5px;
+    right: -5px;
+    width: 24px;
+    height: 24px;
+    background-color: var(--primary-green); /* Default green */
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    border: 2px solid white;
+}
+
+/* Varying badge colors based on card position/type if needed, 
+   but keeping it uniform green for consistency unless specified otherwise. 
+   The image showed blue/purple, but user asked for green hover. 
+   I'll stick to green/blue/purple variety for the badges to match the image variety. */
+
+.testimonial-card-new:nth-child(2) .profile-icon-badge {
+    background-color: #3b82f6; /* Blue */
+}
+.testimonial-card-new:nth-child(3) .profile-icon-badge {
+    background-color: #a855f7; /* Purple */
+}
+.testimonial-card-new:nth-child(4) .profile-icon-badge {
+    background-color: #f97316; /* Orange */
+}
+.testimonial-card-new:nth-child(5) .profile-icon-badge {
+    background-color: #ec4899; /* Pink */
+}
+.testimonial-card-new:nth-child(6) .profile-icon-badge {
+    background-color: #6366f1; /* Indigo */
+}
+
+/* Also change the 'Saved' text color to match the badge */
+.testimonial-card-new:nth-child(2) .text-green { color: #3b82f6 !important; }
+.testimonial-card-new:nth-child(3) .text-green { color: #a855f7 !important; }
+.testimonial-card-new:nth-child(4) .text-green { color: #f97316 !important; }
+.testimonial-card-new:nth-child(5) .text-green { color: #ec4899 !important; }
+.testimonial-card-new:nth-child(6) .text-green { color: #6366f1 !important; }
+
+
+.testimonial-footer {
+    border-top: 1px solid #f3f4f6;
+}
+

@@ -19,6 +19,7 @@ import ContactPage from './pages/public/ContactPage';
 import GalleryPage from './pages/public/GalleryPage';
 import AnnouncementsPage from './pages/public/AnnouncementsPage';
 import LocationsPage from './pages/public/LocationsPage';
+import AboutPage from './pages/public/AboutPage'; // Import AboutPage
 
 // Import Auth Pages
 import LoginPage from './pages/LoginPage';
@@ -74,6 +75,7 @@ function App() {
           <Route path="/gallery" element={<GalleryPage />} />
           <Route path="/announcements" element={<AnnouncementsPage />} />
           <Route path="/locations" element={<LocationsPage />} />
+          <Route path="/about" element={<AboutPage />} /> {/* Add About Route */}
           {/* Add other public pages here */}
         </Route>
 

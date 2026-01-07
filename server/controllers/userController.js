@@ -37,10 +37,11 @@ const getDashboardData = async (req, res) => {
         const directs = await User.find({ sponsor: user._id }).select('name associateId dateOfJoining');
         const settings = await Settings.findOne({ singleton: 'main_settings' });
 
-        // Calculate dynamic level based on Team Balance
+        // Calculate dynamic level based on Total Balance (Self + Team)
         let currentLevel = 0;
-        if (settings && settings.teamIncomeSlabs) {
-            currentLevel = getPercentageLevel(user.currentTeamBalance, settings.teamIncomeSlabs);
+        if (settings && settings.universalIncomeSlabs) {
+            const totalBusiness = (user.currentSelfBalance || 0) + (user.currentTeamBalance || 0);
+            currentLevel = getPercentageLevel(totalBusiness, settings.universalIncomeSlabs);
         }
 
         res.json({

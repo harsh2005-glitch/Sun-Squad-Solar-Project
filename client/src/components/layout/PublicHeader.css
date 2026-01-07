@@ -1,0 +1,136 @@
+/* Public Header Styles */
+.public-navbar {
+    transition: all 0.4s ease-in-out;
+    padding: 0.8rem 0;
+    /* Richer green gradient relative to #123524 for depth */
+    background: linear-gradient(135deg, #123524 0%, #0d261b 100%) !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* When scrolled or on home page */
+.public-navbar.navbar-scrolled {
+    padding: 0.6rem 0;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+    background: linear-gradient(135deg, #123524 0%, #0b2218 100%) !important;
+}
+
+/* Navbar Brand & Logo Area */
+.public-navbar .navbar-brand {
+    color: #fff !important;
+    display: flex;
+    align-items: center;
+}
+
+.public-navbar .navbar-brand span {
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    letter-spacing: 0.5px;
+    /* Ensure font weight is bold as set in JS, but we can enforce here */
+    font-weight: 700 !important; 
+}
+
+/* Navigation Links */
+.public-navbar .nav-link {
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-weight: 500;
+    margin: 0 0.8rem;
+    position: relative;
+    transition: all 0.3s ease;
+    letter-spacing: 0.3px;
+    font-size: 0.95rem;
+}
+
+.public-navbar .nav-link:hover,
+.public-navbar .nav-link.active {
+    color: #ffd700 !important; /* Solar Gold on hover */
+    text-shadow: 0 0 12px rgba(255, 215, 0, 0.4);
+    transform: translateY(-1px);
+}
+
+/* Underline effect for links */
+.public-navbar .nav-link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -2px;
+    left: 50%;
+    background-color: #ffd700;
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    transform: translateX(-50%);
+    box-shadow: 0 0 6px rgba(255, 215, 0, 0.6);
+    border-radius: 2px;
+}
+
+.public-navbar .nav-link:hover::after,
+.public-navbar .nav-link.active::after {
+    width: 70%;
+}
+
+/* Mobile Toggle Button */
+.public-navbar .navbar-toggler {
+    border: none;
+    padding: 0.5rem;
+    transition: transform 0.3s ease;
+}
+
+.public-navbar .navbar-toggler:focus {
+    box-shadow: none;
+    outline: none; 
+    transform: rotate(90deg);
+}
+
+.public-navbar .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+/* === Buttons === */
+
+/* "GET AN ENQUIRY" Button - Enhanced */
+/* Note: In JS it has class 'btn-outline-primary', we override it here for the navbar context */
+.public-navbar .btn-outline-primary {
+    color: #ffd700;
+    border: 2px solid #ffd700;
+    border-radius: 50px;
+    padding: 0.5rem 1.5rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
+    background: transparent;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.1);
+    margin: 0 0.5rem;
+}
+
+.public-navbar .btn-outline-primary:hover,
+.public-navbar .btn-outline-primary:active {
+    background-color: #ffd700;
+    color: #123524; /* Dark green text */
+    border-color: #ffd700;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+    transform: translateY(-2px);
+}
+
+/* "LOGIN" Button - Enhanced */
+.public-navbar .btn-dark {
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    border-radius: 50px;
+    padding: 0.5rem 1.5rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
+    backdrop-filter: blur(4px);
+    transition: all 0.3s ease;
+    margin-left: 0.5rem;
+}
+
+.public-navbar .btn-dark:hover {
+    background-color: #fff;
+    color: #123524;
+    border-color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}

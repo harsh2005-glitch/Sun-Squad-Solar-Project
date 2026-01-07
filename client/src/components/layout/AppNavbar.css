@@ -1,7 +1,7 @@
 .app-navbar {
-  background: rgba(255, 255, 255, 0.95);
+  background: #164626; /* Using primary-green from main.css */
   backdrop-filter: blur(10px);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   padding: 0.8rem 0;
   transition: all 0.3s ease;
 }
@@ -17,7 +17,7 @@
 /* Style for the navigation links */
 .app-navbar .nav-link {
   font-weight: 600;
-  color: #4a5568 !important;
+  color: rgba(255, 255, 255, 0.9) !important;
   position: relative;
   padding: 0.5rem 1.2rem !important;
   transition: all 0.3s ease;
@@ -26,14 +26,14 @@
 }
 
 .app-navbar .nav-link:hover {
-  color: var(--bs-primary) !important;
-  background-color: rgba(13, 110, 253, 0.05);
+  color: #ffffff !important;
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 /* Active Link Style */
 .app-navbar .nav-link.active {
-  color: var(--bs-primary) !important;
-  background-color: rgba(13, 110, 253, 0.1);
+  color: #ffffff !important;
+  background-color: rgba(255, 255, 255, 0.2);
 }
 
 /* Dropdown Styling */

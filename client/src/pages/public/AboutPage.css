@@ -1,0 +1,212 @@
+/* AboutPage.css */
+
+.about-page-wrapper {
+    background-color: #fffaf4; /* Light cream background similar to the screenshot */
+    min-height: 80vh; /* Ensure it takes up space even if content is short */
+    display: flex;
+    align-items: center;
+    padding-top: 80px; /* Space for fixed navbar */
+}
+
+/* Badge Styling */
+.about-badge {
+    background-color: #ecfdf5 !important;
+    color: #059669 !important;
+    font-size: 0.9rem;
+    border: 1px solid #d1fae5;
+}
+
+.badge-dot {
+    font-size: 0.8rem;
+}
+
+/* Typography */
+.about-title {
+    color: #0f172a; /* Dark text color */
+    line-height: 1.2;
+    font-family: 'Poppins', sans-serif; /* Assuming a modern font */
+}
+
+.text-warning {
+    color: #f59e0b !important; /* Solar Yellow/Orange */
+}
+
+.text-success {
+    color: #10b981 !important; /* Green similar to screenshot */
+}
+
+.about-description {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    max-width: 90%;
+    color: #4b5563 !important;
+}
+
+/* Buttons */
+.btn-our-story {
+    background-color: #10b981;
+    border-color: #10b981;
+    transition: all 0.3s ease;
+}
+
+.btn-our-story:hover {
+    background-color: #059669;
+    border-color: #059669;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.btn-achievements {
+    border: 2px solid #e5e7eb;
+    color: #374151;
+    background: white;
+}
+
+.btn-achievements:hover {
+    border-color: #d1d5db;
+    background-color: #f9fafb;
+    color: #111827;
+    transform: translateY(-2px);
+}
+
+/* Image Section */
+.about-image-container {
+    padding: 20px;
+}
+
+.image-wrapper {
+    /* Create that white border/padding effect if needed, 
+       but here utilizing simple rounded corners and shadow */
+    border: 8px solid #ffffff;
+    border-radius: 20px;
+}
+
+/* Floating Stats Cards */
+.stat-card {
+    min-width: 180px;
+    z-index: 2;
+    transition: transform 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+}
+
+.stat-card-top-right {
+    top: -20px;
+    right: -20px;
+    animation: float 6s ease-in-out infinite;
+}
+
+.stat-card-bottom-left {
+    bottom: -20px;
+    left: -20px;
+    animation: float 6s ease-in-out infinite reverse;
+}
+
+@media (max-width: 991px) {
+    .about-page-wrapper {
+        padding-top: 100px;
+        padding-bottom: 50px;
+    }
+    
+    .stat-card-top-right {
+        top: 0;
+        right: 0;
+    }
+    
+    .stat-card-bottom-left {
+        bottom: 0;
+        left: 0;
+    }
+}
+
+/* Simple Floating Animation */
+@keyframes float {
+    0% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+/* === Mission & Vision Section Styles === */
+.mission-vision-wrapper {
+    background-color: #fffaf4; /* Clean white background */
+}
+
+/* Section Badge */
+.mv-badge {
+    background-color: #ecfdf5 !important;
+    color: #059669 !important;
+    font-size: 0.9rem;
+    border: 1px solid #d1fae5;
+    width: fit-content;
+}
+
+/* Section Title */
+.mv-title {
+    font-family: 'Poppins', sans-serif;
+    color: #0f172a;
+    line-height: 1.2;
+}
+
+/* Cards Container */
+.mv-card {
+    background: #ffffff;
+    border: 1px solid #f0f0f0;
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+.mv-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08) !important;
+    border-color: transparent;
+}
+
+/* Icon Styles */
+.mv-icon-box {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.mv-icon-mission {
+    background-color: #10b981; /* Green */
+    color: #ffffff;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+}
+
+.mv-icon-vision {
+    background-color: #f59e0b; /* Orange/Yellow */
+    color: #ffffff;
+    box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+}
+
+/* Move icons slightly on card hover */
+.mv-card:hover .mv-icon-box {
+    transform: scale(1.1) rotate(5deg);
+}
+
+/* Card Titles */
+.mv-card-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+/* Card Text */
+.mv-card-text {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: #64748b;
+}

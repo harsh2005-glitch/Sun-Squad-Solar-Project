@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom'; // Use NavLink for active styles
 import { Navbar, Nav, Container, Button } from 'react-bootstrap';
 import logo from '../../assets/images/logo.png';
+import './PublicHeader.css';
 // import ThemeToggleButton from '../common/ThemeToggleButton'; 
 
 const PublicHeader = ({ onEnquiryClick }) => {
@@ -40,7 +41,7 @@ const PublicHeader = ({ onEnquiryClick }) => {
   return (
     // Add 'public-navbar' and the conditional 'navbar-scrolled' class
     <Navbar
-      variant={shouldBeSolid ? 'light' : 'dark'} // Helps with text color inversion
+      variant="dark"
       expand="lg"
       fixed="top" // Changed from sticky to fixed for better transparency effect
       className={`public-navbar ${shouldBeSolid ? 'navbar-scrolled' : ''}`}
@@ -48,13 +49,14 @@ const PublicHeader = ({ onEnquiryClick }) => {
       onToggle={() => setExpanded(!expanded)}
     >
       <Container>
-        <Navbar.Brand as={Link} to="/" onClick={handleNavCollapse}>
+        <Navbar.Brand as={Link} to="/" onClick={handleNavCollapse} className="d-flex align-items-center">
           <img
             src={logo}
             height="50"
             className="d-inline-block align-top"
             alt="Sun Squad Solar Logo"
           />
+          <span className="ms-2 fw-bold text-white fs-4">Sun Squad Solar</span>
         </Navbar.Brand>
         
         <Link to="/login" className="btn btn-dark d-lg-none ms-auto me-2">LOGIN</Link>

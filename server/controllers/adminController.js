@@ -11,26 +11,26 @@ const generateToken = (id) => {
 
 
 /**
- * @desc    Helper function to determine the correct commission percentage for a user.
- *          It finds the highest tier a user qualifies for based on their business volume.
- * @param   {number} selfBusiness - The user's total self business.
- * @param   {number} teamBusiness - The user's total team business.
- * @param   {Array} tiers - The array of commission tiers from settings.
+ * @desc    Helper function to determine the correct commission percentage based on Total Business.
+ *          It finds the highest tier a user qualifies for based on (Self + Team) business volume.
+ * @param   {number} totalBusiness - The user's total business (Self + Team).
+ * @param   {Array} slabs - The array of commission slabs (universal).
  * @returns {number} The calculated commission percentage.
  */
-const determineCommissionPercentage = (selfBusiness, teamBusiness, tiers) => {
-    // Sort tiers by percentage in descending order to find the best one first
-    const sortedTiers = [...tiers].sort((a, b) => b.commissionPercentage - a.commissionPercentage);
+const getPercentageLevel = (totalBusiness, slabs) => {
+    if (totalBusiness <= 0 || !slabs) return 0;
 
-    for (const tier of sortedTiers) {
-        if (selfBusiness >= tier.selfBusinessMin && selfBusiness <= tier.selfBusinessMax &&
-            teamBusiness >= tier.teamBusinessMin && teamBusiness <= tier.teamBusinessMax) {
-            return tier.commissionPercentage; // Return the first (highest) tier they qualify for
+    // Sort slabs by 'from' amount
+    const sortedSlabs = [...slabs].sort((a, b) => a.from - b.from);
+    let applicablePercentage = 0;
+
+    // Find the slab that the total amount falls into
+    for (const slab of sortedSlabs) {
+        if (totalBusiness >= slab.from) {
+            applicablePercentage = slab.percentage;
         }
     }
-
-    // If no specific tier is met, return a default minimum (e.g., from the first tier)
-    return tiers[0]?.commissionPercentage || 0;
+    return applicablePercentage;
 };
 
 
@@ -140,6 +140,7 @@ const addDeposit = async (req, res) => {
     const depositAmount = Number(amount);
 
     try {
+        // Match the "getPercentageLevel" replacement to ensure no conflict with "getPercentageLevel" appearing twice
         const settings = await Settings.findOne({ singleton: 'main_settings' });
         if (!settings) throw new Error('Business settings not configured.');
 
@@ -225,47 +226,31 @@ const getTransactionHistory = async (req, res) => {
 
 
 
-// --- NEW: The Slab Calculation Engine (For Self Income - Progressive) ---
-const calculateSlabIncome = (balance, slabs) => {
+// --- NEW: The Slab Calculation Engine (Universal - Progressive with Offset) ---
+const calculateSlabIncome = (amount, slabs, startOffset) => {
     let income = 0;
-    let remainingBalance = balance;
+    
+    // Define the range for this specific deposit: [startOffset, startOffset + amount]
+    const rangeStart = startOffset;
+    const rangeEnd = startOffset + amount;
     
     // Sort slabs by 'from' amount to process them in order
     const sortedSlabs = [...slabs].sort((a, b) => a.from - b.from);
 
     for (const slab of sortedSlabs) {
-        if (remainingBalance <= 0) break;
+        // Find overlap between Slab [slab.from, slab.to] and Deposit Range [rangeStart, rangeEnd]
+        const overlapStart = Math.max(rangeStart, slab.from);
+        const overlapEnd = Math.min(rangeEnd, slab.to);
 
-        // Determine the amount of balance that falls into this slab
-        const slabRange = slab.to - slab.from + (slab.from === 0 ? 0 : 1);
-        const applicableBalance = Math.min(remainingBalance, slabRange);
-        
-        income += applicableBalance * (slab.percentage / 100);
-        
-        remainingBalance -= applicableBalance;
+        if (overlapEnd > overlapStart) {
+            const applicableAmount = overlapEnd - overlapStart;
+            income += applicableAmount * (slab.percentage / 100);
+        }
     }
     return income;
 };
 
-// --- NEW: Helper to get Percentage Level (For Team Income - Differential) ---
-const getPercentageLevel = (amount, slabs) => {
-    if (amount <= 0) return 0; // FIX: Return 0% if business is 0
-
-    // Find the slab that the total amount falls into
-    // We assume slabs cover the entire range. If amount > max slab, use the highest.
-    const sortedSlabs = [...slabs].sort((a, b) => a.from - b.from);
-    let applicablePercentage = 0;
-
-    for (const slab of sortedSlabs) {
-        if (amount >= slab.from) {
-            applicablePercentage = slab.percentage;
-        }
-    }
-    return applicablePercentage;
-};
-
-
-// --- NEW: The Master Update Function ---
+// --- NEW: The Master Update Function (Universal System) ---
 const updateUserAndUpline = async (userId, amountChange, settings) => {
     const user = await User.findById(userId);
     if (!user) return;
@@ -274,40 +259,48 @@ const updateUserAndUpline = async (userId, amountChange, settings) => {
     const change = Number(amountChange);
     if (isNaN(change)) return;
 
-    // 1. Update the user's self balance and recalculate their self income (Progressive)
-    const oldSelfIncome = user.selfIncome || 0;
+    // --- 1. SELF PROFIT CALCULATION ---
+    // Start Point = Old Total Business (Self + Team)
+    const oldSelf = user.currentSelfBalance;
+    const oldTeam = user.currentTeamBalance;
+    const startOffset = oldSelf + oldTeam;
+
+    // Update Self Balance first
     user.currentSelfBalance += change;
-    user.selfIncome = calculateSlabIncome(user.currentSelfBalance, settings.selfIncomeSlabs);
     
-    // Record Self Income Commission
-    const selfIncomeEarned = user.selfIncome - oldSelfIncome;
+    // Calculate new self income on this SPECIFIC CHUNK only
+    // Logic: calculateSlabIncome now takes (Amount, Slabs, StartOffset)
+    const selfIncomeEarned = calculateSlabIncome(change, settings.universalIncomeSlabs, startOffset);
+    
     if (selfIncomeEarned > 0) {
+        user.selfIncome += selfIncomeEarned;
         await Commission.create({
             recipient: user._id,
             amount: selfIncomeEarned,
             commissionType: 'self_business',
-            description: 'Income from Self Business',
+            description: 'Income from Self Business (Proportional)',
             sourceUser: user._id
         });
     }
 
-    // Determine the user's current level based ONLY on Team Business
-    // For the depositor, this is their existing Team Business (excluding their own new deposit)
-    const userTeamBusiness = user.currentTeamBalance;
-    let lastProcessedPercentage = getPercentageLevel(userTeamBusiness, settings.teamIncomeSlabs);
+    // Determine the user's NEW Current Level based on NEW TOTAL BUSINESS
+    // New Total = (Old Self + Change) + Old Team = startOffset + change
+    const newTotalBusiness = user.currentSelfBalance + user.currentTeamBalance;
+    let lastProcessedPercentage = getPercentageLevel(newTotalBusiness, settings.universalIncomeSlabs);
     
     await user.save();
 
-    // 2. Traverse the upline for Differential Team Income
+    // --- 2. TEAM PROFIT (UPLINE) CALCULATION ---
     let currentSponsor = await User.findById(user.sponsor);
     
     while (currentSponsor) {
         // Update the sponsor's team balance
         currentSponsor.currentTeamBalance += change;
         
-        // Determine Sponsor's Level based ONLY on their NEW Team Business
-        const sponsorTeamBusiness = currentSponsor.currentTeamBalance;
-        const sponsorPercentage = getPercentageLevel(sponsorTeamBusiness, settings.teamIncomeSlabs);
+        // Determine Sponsor's Level based on THEIR Total Business (Self + Team)
+        // Their self balance hasn't changed, only team balance increased
+        const sponsorTotalBusiness = currentSponsor.currentSelfBalance + currentSponsor.currentTeamBalance;
+        const sponsorPercentage = getPercentageLevel(sponsorTotalBusiness, settings.universalIncomeSlabs);
         
         // Calculate Gap Commission
         // Profit = (Sponsor% - Downline%) * NewDepositAmount
@@ -332,10 +325,14 @@ const updateUserAndUpline = async (userId, amountChange, settings) => {
             }
 
             // The sponsor now becomes the new "floor" for the next upline
+            // We set the floor to the sponsor's ACTUAL level
             lastProcessedPercentage = sponsorPercentage;
         } else {
             // If Sponsor% <= Downline%, they get 0.
-            // The "floor" for the next upline is the max of the two.
+            // The "floor" for the next upline is at least the current max
+            // But typically in gap, if the downline is higher, the floor is the downline.
+            // If sponsor is higher (but paid), floor is sponsor.
+            // So we take the max as the new floor.
             lastProcessedPercentage = Math.max(lastProcessedPercentage, sponsorPercentage);
         }
 
