@@ -226,3 +226,72 @@
     padding-bottom: 5px;
 }
 
+/* Blog Section */
+.blog-card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.blog-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+}
+
+.blog-date {
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    color: #10b981 !important;
+}
+
+.learn-more-btn {
+    position: relative;
+    padding-left: 0;
+    transition: padding-left 0.3s ease;
+}
+
+.learn-more-btn:hover {
+    padding-left: 5px;
+}
+
+/* FAQ Section */
+.custom-accordion .accordion-item {
+    background: #fff;
+    border: none;
+    margin-bottom: 20px;
+    border-radius: 15px !important;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+}
+
+.custom-accordion .accordion-button {
+    background: transparent;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #1f2937; /* Dark gray */
+    padding: 1.25rem 1.5rem;
+    box-shadow: none;
+}
+
+.custom-accordion .accordion-button:not(.collapsed) {
+    color: #10b981; /* Green when open */
+    background-color: rgba(16, 185, 129, 0.05); /* Light green bg */
+    box-shadow: none;
+}
+
+.custom-accordion .accordion-button:focus {
+    border-color: rgba(16, 185, 129, 0.5);
+    box-shadow: 0 0 0 0.25rem rgba(16, 185, 129, 0.25);
+}
+
+.custom-accordion .accordion-body {
+    font-size: 1rem;
+    color: #6b7280;
+    line-height: 1.6;
+    padding: 1.5rem;
+    background: #fff;
+    border-top: 1px solid rgba(0,0,0,0.05);
+}
+

@@ -67,6 +67,7 @@ const PublicHeader = ({ onEnquiryClick }) => {
           <Nav className="ms-auto align-items-center">
             <Nav.Link as={NavLink} to="/" onClick={handleNavCollapse}>Home</Nav.Link>
             <Nav.Link as={NavLink} to="/about" onClick={handleNavCollapse}>About Us</Nav.Link>
+            <Nav.Link as={NavLink} to="/partner" onClick={handleNavCollapse} className="text-warning fw-bold">Become a Partner</Nav.Link>
             <Nav.Link as={NavLink} to="/locations" onClick={handleNavCollapse}>Our Project Location</Nav.Link>
             <Nav.Link as={NavLink} to="/gallery" onClick={handleNavCollapse}>Gallery</Nav.Link>
             <Nav.Link as={NavLink} to="/announcements" onClick={handleNavCollapse}>Announcement</Nav.Link>

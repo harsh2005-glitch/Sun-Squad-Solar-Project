@@ -1,0 +1,41 @@
+/* SolarCalculatorPage.css */
+
+.calculator-page {
+    background-color: #f9fafb;
+    min-height: 100vh;
+}
+
+.calculator-card {
+    border-radius: 20px;
+}
+
+.result-panel {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    position: relative;
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.1);
+}
+
+.circle-1, .circle-2 {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.1);
+    pointer-events: none;
+}
+
+.circle-1 {
+    width: 200px;
+    height: 200px;
+    top: -50px;
+    right: -50px;
+}
+
+.circle-2 {
+    width: 300px;
+    height: 300px;
+    bottom: -100px;
+    left: -50px;
+}
+
+.tracking-wider {
+    letter-spacing: 2px;
+}

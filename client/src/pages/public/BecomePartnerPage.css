@@ -1,0 +1,90 @@
+/* BecomePartnerPage.css */
+
+.become-partner-page {
+    /* Global page styles */
+}
+
+/* Hero Section */
+.partner-hero-section {
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('../../assets/images/hero-slider-2.jpg'); /* Use an existing image */
+    background-size: cover;
+    background-position: center;
+    padding: 150px 0 100px; /* Adjust padding for navbar */
+    min-height: 80vh;
+}
+
+.section-bg-light {
+    background-color: #f9fafb;
+}
+
+.text-highlight-green {
+    color: #10b981;
+    position: relative;
+    display: inline-block;
+}
+
+.bg-soft-success {
+    background-color: rgba(16, 185, 129, 0.1);
+}
+
+.bg-soft-primary {
+    background-color: rgba(59, 130, 246, 0.1);
+}
+
+.bg-soft-warning {
+    background-color: rgba(245, 158, 11, 0.1);
+}
+
+.hover-lift {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-lift:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1) !important;
+}
+
+/* Timeline */
+.process-timeline {
+    position: relative;
+    padding: 20px 0;
+}
+
+.timeline-line {
+    position: absolute;
+    top: 40px;
+    left: 10%;
+    right: 10%;
+    height: 4px;
+    background: #e5e7eb;
+    z-index: 0;
+}
+
+.step-circle {
+    width: 60px;
+    height: 60px;
+    position: relative;
+    z-index: 1;
+    border: 4px solid #fff; /* White border to separate from line */
+}
+
+/* CTA Section */
+.cta-section {
+    background: #111827; /* Dark Gray */
+}
+
+.partner-cta-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
+}
+
+/* Reusing Accordion Styles from HomePage (or ensure they are globally available or copied here) */
+.custom-accordion .accordion-button:not(.collapsed) {
+    color: #10b981;
+    background-color: rgba(16, 185, 129, 0.05);
+}
+
+.custom-accordion .accordion-button:focus {
+    box-shadow: none;
+    border-color: rgba(0,0,0,0.125);
+}

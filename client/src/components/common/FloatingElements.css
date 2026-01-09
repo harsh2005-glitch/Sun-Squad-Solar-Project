@@ -1,0 +1,140 @@
+/* Floating Action Buttons Container */
+.floating-actions-container {
+    position: fixed;
+    z-index: 1050; /* Higher than most elements, lower than modals (usually 1055) */
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-end;
+}
+
+/* WhatsApp Widget */
+.whatsapp-widget-btn {
+    width: 60px;
+    height: 60px;
+    background-color: #25D366;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transition: all 0.3s ease;
+    border: none;
+    text-decoration: none;
+    position: relative;
+    cursor: pointer;
+}
+
+.whatsapp-widget-btn:hover {
+    transform: scale(1.1);
+    background-color: #128C7E;
+    color: white;
+}
+
+.whatsapp-tooltip {
+    position: absolute;
+    right: 70px;
+    background: white;
+    padding: 8px 15px;
+    border-radius: 20px 20px 5px 20px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #333;
+    white-space: nowrap;
+    opacity: 0;
+    transform: translateX(10px);
+    transition: all 0.3s ease;
+    pointer-events: none;
+}
+
+.whatsapp-widget-btn:hover .whatsapp-tooltip {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Sticky "Get Quote" Side Button */
+.sticky-quote-btn {
+    position: fixed;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%) rotate(-90deg) translateY(50%); /* Rotate and adjust */
+    transform-origin: bottom right;
+    background: linear-gradient(135deg, #FFD93D 0%, #FF6B6B 100%);
+    color: #111;
+    font-weight: 800;
+    padding: 12px 25px;
+    border-radius: 10px 10px 0 0;
+    cursor: pointer;
+    box-shadow: -4px 0 15px rgba(0,0,0,0.1);
+    z-index: 1040;
+    font-size: 1rem;
+    border: none;
+    transition: all 0.3s ease;
+    letter-spacing: 0.5px;
+    margin-right: -45px; /* Offset for the rotation trick usually needed */
+}
+
+/* Reset transform for side tab style */
+.sticky-quote-side-tab {
+    position: fixed;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    z-index: 1040;
+}
+
+.side-quote-btn {
+    background: #FFD93D;
+    color: #000;
+    font-weight: 700;
+    padding: 15px 10px;
+    border-radius: 8px 0 0 8px;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.1rem;
+}
+
+.side-quote-btn i {
+    transform: rotate(90deg); /* Icon rotation fix */
+}
+
+.side-quote-btn:hover {
+    padding-right: 20px;
+    background: #ffca2c;
+    box-shadow: -5px 0 15px rgba(0,0,0,0.15);
+}
+
+/* Exit Intent Popup */
+.exit-intent-modal .modal-content {
+    background: url('../../assets/images/gallery/industrial-plant-1.jpg') no-repeat center center; /* Fixed path */
+    background-size: cover;
+    color: white;
+    border: none;
+    border-radius: 15px;
+    overflow: hidden;
+    position: relative;
+}
+
+.exit-intent-overlay {
+    background: rgba(0, 0, 0, 0.75); /* Dark overlay */
+    padding: 3rem;
+    height: 100%;
+    width: 100%;
+}
+
+.exit-highlight-text {
+    color: #FFD93D;
+    font-weight: 800;
+}

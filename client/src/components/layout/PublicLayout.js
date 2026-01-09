@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import PublicHeader from './PublicHeader';
 import PublicFooter from './PublicFooter';
-import EnquiryModal from './ui/EnquiryModal'; // <-- IMPORT THE NEW COMPONENT
+import EnquiryModal from './ui/EnquiryModal'; 
+import FloatingActions from '../common/FloatingActions';
+import ExitIntentPopup from '../common/ExitIntentPopup';
 
 const PublicLayout = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -26,8 +28,11 @@ const PublicLayout = () => {
       
       <PublicFooter />
 
-      {/* === NEW: The Modal is now a self-contained component === */}
-      {/* It is only rendered when `isModalOpen` is true */}
+      {/* === Conversion Boosters === */}
+      <FloatingActions />
+      <ExitIntentPopup />
+
+      {/* === Global Modals === */}
       <EnquiryModal show={isModalOpen} handleClose={closeModal} />
     </div>
   );

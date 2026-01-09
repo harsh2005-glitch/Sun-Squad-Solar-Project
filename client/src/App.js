@@ -20,6 +20,13 @@ import GalleryPage from './pages/public/GalleryPage';
 import AnnouncementsPage from './pages/public/AnnouncementsPage';
 import LocationsPage from './pages/public/LocationsPage';
 import AboutPage from './pages/public/AboutPage'; // Import AboutPage
+import BecomePartnerPage from './pages/public/BecomePartnerPage'; // Import BecomePartnerPage
+import SolarCalculatorPage from './pages/public/SolarCalculatorPage'; // Import SolarCalculatorPage
+
+// Import Blog Pages
+import SolarSubsidyPage from './pages/public/blog/SolarSubsidyPage';
+import GridVsOffGridPage from './pages/public/blog/GridVsOffGridPage';
+import MaintenanceTipsPage from './pages/public/blog/MaintenanceTipsPage';
 
 // Import Auth Pages
 import LoginPage from './pages/LoginPage';
@@ -48,6 +55,7 @@ import SettingsPage from './pages/admin/SettingsPage';
 import ManageGalleryPage from './pages/admin/ManageGalleryPage';
 import ManageAnnouncementsPage from './pages/admin/ManageAnnouncementsPage';
 import ManageTeamPage from './pages/admin/ManageTeamPage';
+import ManageInquiriesPage from './pages/admin/ManageInquiriesPage'; // New Import
 
 
 
@@ -76,8 +84,16 @@ function App() {
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/gallery" element={<GalleryPage />} />
           <Route path="/announcements" element={<AnnouncementsPage />} />
-          <Route path="/locations" element={<LocationsPage />} />
-          <Route path="/about" element={<AboutPage />} /> {/* Add About Route */}
+          <Route path="/location" element={<LocationsPage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/partner" element={<BecomePartnerPage />} />
+          <Route path="/calculator" element={<SolarCalculatorPage />} /> {/* New Calculator Route */}
+
+          {/* Blog Routes */}
+          <Route path="/blog/solar-subsidy" element={<SolarSubsidyPage />} />
+          <Route path="/blog/on-grid-vs-off-grid" element={<GridVsOffGridPage />} />
+          <Route path="/blog/maintenance-tips" element={<MaintenanceTipsPage />} />
+
           {/* Add other public pages here */}
         </Route>
 
@@ -114,6 +130,7 @@ function App() {
              <Route path="gallery" element={<ManageGalleryPage />} />
               <Route path="announcements" element={<ManageAnnouncementsPage />} />
               <Route path="team" element={<ManageTeamPage />} />
+              <Route path="inquiries" element={<ManageInquiriesPage />} /> {/* New Route */}
             {/* We will add the deposits page route here next */}
           </Route>
         </Route>

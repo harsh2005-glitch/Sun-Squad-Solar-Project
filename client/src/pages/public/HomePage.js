@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Carousel, Container, Row, Col, Card, Button } from 'react-bootstrap';
+import { Carousel, Container, Row, Col, Card, Button, Accordion } from 'react-bootstrap';
 import './HomePage.css'; // Importing custom styles
 import './HomePageMap.css'; // Importing map section styles
+import EligibilityModal from '../../components/public/EligibilityModal'; // Import the Modal
 
 // --- NEW IMPORTS for animations ---
 import CountUp from 'react-countup';
@@ -22,6 +23,7 @@ import teamShivam from '../../assets/images/team-shivam.jpg';
 
 const HomePage = () => {
     const [teamMembers, setTeamMembers] = useState([]);
+    const [showQuiz, setShowQuiz] = useState(false); // State for Quiz Modal
 
     useEffect(() => {
         const fetchTeam = async () => {
@@ -44,6 +46,11 @@ const HomePage = () => {
           <Carousel.Caption className="d-none d-md-block">
             <h3>Powerful Solar Solutions</h3>
             <p>Harness the power of the sun for a brighter future.</p>
+            {/* Added Interactive Buttons */}
+            <div className="mt-3">
+                <Button variant="warning" size="lg" className="me-3 fw-bold rounded-pill" onClick={() => setShowQuiz(true)}>Am I Eligible?</Button>
+                <Button as={Link} to="/calculator" variant="outline-light" size="lg" className="fw-bold rounded-pill">Calculate Savings</Button>
+            </div>
           </Carousel.Caption>
         </Carousel.Item>
         <Carousel.Item interval={3000}>
@@ -51,6 +58,9 @@ const HomePage = () => {
           <Carousel.Caption className="d-none d-md-block">
             <h3>Sustainable Energy for Everyone</h3>
             <p>Join us in the renewable energy revolution.</p>
+             <div className="mt-3">
+                <Button variant="warning" size="lg" className="me-3 fw-bold rounded-pill" onClick={() => setShowQuiz(true)}>Start My Solar Journey</Button>
+            </div>
           </Carousel.Caption>
         </Carousel.Item>
         <Carousel.Item interval={3000}>
@@ -332,6 +342,96 @@ const HomePage = () => {
           </Container>
       </AnimatedSection>
 
+      {/* === Solar Knowledge Hub / Blog Section === */}
+      <AnimatedSection className="blog-section py-5">
+        <Container>
+            <div className="text-center mb-5">
+                <h2 className="section-title display-5 fw-bold mb-3">Solar Knowledge <span className="text-highlight-green">Hub</span></h2>
+                <p className="text-muted fs-5 mx-auto" style={{maxWidth: '800px'}}>
+                    Stay informed with the latest insights, tips, and news about solar energy.
+                </p>
+            </div>
+            <Row className="g-4">
+                {/* Blog 1 */}
+                <Col md={4}>
+                    <Card className="h-100 blog-card">
+                        <Card.Body>
+                            <div className="blog-date mb-2 text-muted fw-bold small">UPDATED 2024</div>
+                            <Card.Title as="h4" className="mb-3">Solar Subsidy in UP/India 2024</Card.Title>
+                            <Card.Text>
+                                Discover the latest government subsidies available for solar installations in Uttar Pradesh and across India. Save significantly on your green energy investment.
+                            </Card.Text>
+                            <Button as={Link} to="/blog/solar-subsidy" variant="link" className="px-0 text-success fw-bold text-decoration-none learn-more-btn">Read Article <i className="fa-solid fa-arrow-right ms-2"></i></Button>
+                        </Card.Body>
+                    </Card>
+                </Col>
+                 {/* Blog 2 */}
+                <Col md={4}>
+                    <Card className="h-100 blog-card">
+                        <Card.Body>
+                             <div className="blog-date mb-2 text-muted fw-bold small">GUIDE</div>
+                            <Card.Title as="h4" className="mb-3">On-Grid vs Off-Grid Solar</Card.Title>
+                            <Card.Text>
+                                Confused between On-Grid and Off-Grid systems? 
+                                We break down the differences, pros, and cons to help you choose the right setup for your home.
+                            </Card.Text>
+                            <Button as={Link} to="/blog/on-grid-vs-off-grid" variant="link" className="px-0 text-success fw-bold text-decoration-none learn-more-btn">Read Article <i className="fa-solid fa-arrow-right ms-2"></i></Button>
+                        </Card.Body>
+                    </Card>
+                </Col>
+                 {/* Blog 3 */}
+                <Col md={4}>
+                    <Card className="h-100 blog-card">
+                        <Card.Body>
+                             <div className="blog-date mb-2 text-muted fw-bold small">MAINTENANCE</div>
+                            <Card.Title as="h4" className="mb-3">Solar Maintenance Tips</Card.Title>
+                            <Card.Text>
+                                Keep your solar panels operating at peak efficiency with these simple maintenance tips. Learn how to clean and care for your system effectively.
+                            </Card.Text>
+                            <Button as={Link} to="/blog/maintenance-tips" variant="link" className="px-0 text-success fw-bold text-decoration-none learn-more-btn">Read Article <i className="fa-solid fa-arrow-right ms-2"></i></Button>
+                        </Card.Body>
+                    </Card>
+                </Col>
+            </Row>
+        </Container>
+      </AnimatedSection>
+
+      {/* === FAQ Section === */}
+      <AnimatedSection className="faq-section py-5 section-bg">
+        <Container>
+             <div className="text-center mb-5">
+                <h2 className="section-title display-5 fw-bold mb-3">Frequently Asked <span className="text-highlight-green">Questions</span></h2>
+                <p className="text-muted fs-5 mx-auto" style={{maxWidth: '800px'}}>
+                    Have questions? We have answers. Check out our most common queries below.
+                </p>
+            </div>
+            <Row className="justify-content-center">
+                <Col lg={8}>
+                    <Accordion defaultActiveKey="0" className="custom-accordion">
+                        <Accordion.Item eventKey="0" className="mb-3 border-0 shadow-sm rounded-3 overflow-hidden">
+                            <Accordion.Header>How much does a solar system cost?</Accordion.Header>
+                            <Accordion.Body>
+                                The cost of a solar system depends on various factors such as the capacity (kW), type of system (On-Grid, Off-Grid, or Hybrid), and the brand of components used. Generally, a residential system can range from ₹50,000 to ₹80,000 per kW. We offer free consultations to provide a precise quote tailored to your needs.
+                            </Accordion.Body>
+                        </Accordion.Item>
+                        <Accordion.Item eventKey="1" className="mb-3 border-0 shadow-sm rounded-3 overflow-hidden">
+                            <Accordion.Header>Is there a government subsidy available?</Accordion.Header>
+                            <Accordion.Body>
+                                Yes! The Government of India and various state governments offer subsidies for residential rooftop solar installations. Under the PM Surya Ghar: Muft Bijli Yojana, you can avail significant financial assistance. Our team assists you with the entire documentation and application process to ensure you get the benefits.
+                            </Accordion.Body>
+                        </Accordion.Item>
+                         <Accordion.Item eventKey="2" className="mb-3 border-0 shadow-sm rounded-3 overflow-hidden">
+                            <Accordion.Header>What happens at night or during cloudy days?</Accordion.Header>
+                            <Accordion.Body>
+                                Solar panels do not generate electricity at night. However, if you have an On-Grid system, you draw power from the grid during the night. The units you exported during the day are adjusted against this usage (Net Metering). For Off-Grid or Hybrid systems with batteries, the stored energy powers your home at night or during power cuts.
+                            </Accordion.Body>
+                        </Accordion.Item>
+                    </Accordion>
+                </Col>
+            </Row>
+        </Container>
+      </AnimatedSection>
+
       
 
       {/* === Testimonials Section (New Grid Layout) === */}
@@ -386,8 +486,12 @@ const HomePage = () => {
             </Row>
         </Container>
       </AnimatedSection>
+
+      {/* Global Modals in HomePage context */}
+      <EligibilityModal show={showQuiz} handleClose={() => setShowQuiz(false)} />
     </>
   );
 };
+
 
 export default HomePage;
