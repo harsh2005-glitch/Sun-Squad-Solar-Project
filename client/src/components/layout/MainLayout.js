@@ -1,6 +1,5 @@
 import React from 'react';
 import { Outlet , useNavigate } from 'react-router-dom';
-import Navbar from './Navbar';
 import AppNavbar from './Navbar';
 import { Alert, Button } from 'react-bootstrap';
 

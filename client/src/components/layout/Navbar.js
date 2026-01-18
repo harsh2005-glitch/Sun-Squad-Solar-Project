@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { Navbar, Nav, Container, Button, NavDropdown, Offcanvas, Image } from 'react-bootstrap';
+import { Navbar, Nav, Container, NavDropdown, Offcanvas, Image } from 'react-bootstrap';
 import logo from '../../assets/images/logo.png';
 import './AppNavbar.css'; 
 
 const AppNavbar = () => {
   const navigate = useNavigate();
-  const [expanded, setExpanded] = useState(false);
   const [showOffcanvas, setShowOffcanvas] = useState(false);
   const [user, setUser] = useState(null);
 
