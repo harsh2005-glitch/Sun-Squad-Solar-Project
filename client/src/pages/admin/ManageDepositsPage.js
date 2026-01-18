@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import adminService from '../../services/adminService';
 import { toast } from 'react-toastify';
-import { Form, Button, Card, Table, Tabs, Tab, InputGroup, Spinner, Badge, Row, Col, Pagination } from 'react-bootstrap';
+import { Form, Button, Card, Table, InputGroup, Spinner, Badge, Row, Col, Pagination } from 'react-bootstrap';
 
 const ManageDepositsPage = () => {
   const [depositData, setDepositData] = useState({ associateId: '', amount: '', description: '' });

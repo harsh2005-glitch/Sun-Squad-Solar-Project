@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Table, Badge, Button, Form, Modal } from 'react-bootstrap';
+import { Table, Badge, Button, Modal } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 
 const ManageInquiriesPage = () => {
@@ -11,6 +11,7 @@ const ManageInquiriesPage = () => {
 
     useEffect(() => {
         fetchInquiries();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
