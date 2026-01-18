@@ -1,0 +1,32 @@
+.breadcrumb-wrapper {
+    background-color: #f8f9fa;
+    padding: 10px 0;
+    border-bottom: 1px solid #e9ecef;
+    margin-bottom: 2rem;
+}
+
+.breadcrumb {
+    margin-bottom: 0;
+    font-size: 0.9rem;
+}
+
+.breadcrumb-item a {
+    color: #0d6efd;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.breadcrumb-item a:hover {
+    color: #0a58ca;
+    text-decoration: underline;
+}
+
+.breadcrumb-item.active {
+    color: #6c757d;
+}
+
+/* Adjust main content padding when breadcrumbs are present */
+.content-beneath-navbar {
+    /* If breadcrumbs are added inside PublicLayout but outside specific pages top sections, 
+       we might need to ensure spacing is correct. */
+}

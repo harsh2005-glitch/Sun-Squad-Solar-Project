@@ -6,11 +6,21 @@
 
 /* Hero Section */
 .partner-hero-section {
-    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('../../assets/images/hero-slider-2.jpg'); /* Use an existing image */
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('../../assets/images/hero-slider-2.jpg'); 
     background-size: cover;
     background-position: center;
-    padding: 150px 0 100px; /* Adjust padding for navbar */
+    padding: 150px 0 100px;
     min-height: 80vh;
+    color: #ffffff; /* FORCE TEXT WHITE */
+}
+
+/* Ensure headings inside hero are also white */
+.partner-hero-section h1, 
+.partner-hero-section h2, 
+.partner-hero-section h3, 
+.partner-hero-section p {
+    color: #ffffff !important;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5); /* Add shadow for better readability over images */
 }
 
 .section-bg-light {
@@ -71,6 +81,11 @@
 /* CTA Section */
 .cta-section {
     background: #111827; /* Dark Gray */
+    color: #ffffff;
+}
+
+.cta-section h2 {
+    color: #ffffff !important;
 }
 
 .partner-cta-btn:hover {

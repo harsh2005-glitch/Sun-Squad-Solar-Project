@@ -53,15 +53,13 @@ const PublicHeader = ({ onEnquiryClick }) => {
           <img
             src={logo}
             height="50"
-            className="d-inline-block align-top"
+            className="d-inline-block align-top logo-img"
             alt="Sun Squad Solar Logo"
           />
-          <span className="ms-2 fw-bold text-white fs-4">Sun Squad Solar</span>
+          <span className="ms-2 fw-bold text-white brand-text">Sun Squad Solar</span>
         </Navbar.Brand>
         
-        <Link to="/login" className="btn btn-dark d-lg-none ms-auto me-2">LOGIN</Link>
-
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        <Navbar.Toggle aria-controls="basic-navbar-nav" className="ms-auto" />
 
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto align-items-center">

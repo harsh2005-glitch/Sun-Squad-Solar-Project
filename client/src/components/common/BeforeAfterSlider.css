@@ -1,0 +1,101 @@
+.before-after-container {
+    position: relative;
+    width: 100%;
+    height: 400px; /* Adjust as needed */
+    overflow: hidden;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    cursor: col-resize;
+    user-select: none;
+    background-color: #f0f0f0;
+}
+
+.img-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.img-layer img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none; /* Prevent image dragging */
+}
+
+/* The After image is placed on top, but we clip its width */
+.after-img {
+    width: 50%; /* Initial state */
+    z-index: 2;
+    border-right: 2px solid white;
+}
+
+.before-img {
+    z-index: 1;
+}
+
+/* Labels */
+.label-badge {
+    position: absolute;
+    top: 20px;
+    padding: 5px 15px;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    pointer-events: none;
+    backdrop-filter: blur(4px);
+}
+
+.before-label {
+    right: 20px;
+}
+
+.after-label {
+    left: 20px;
+}
+
+/* Slider Handle */
+.slider-handle {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: white;
+    z-index: 10;
+    cursor: col-resize;
+    display: flex; /* Centering the circle handle */
+    align-items: center;
+    justify-content: center;
+    transform: translateX(-50%); /* Center handle on the line */
+}
+
+.handle-circle {
+    width: 40px;
+    height: 40px;
+    background: white;
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #123524; /* Theme Dark Green */
+    font-size: 1.1rem;
+    transition: transform 0.2s ease;
+}
+
+.before-after-container:hover .handle-circle {
+    transform: scale(1.1);
+}
+
+@media (max-width: 768px) {
+    .before-after-container {
+        height: 250px;
+    }
+}

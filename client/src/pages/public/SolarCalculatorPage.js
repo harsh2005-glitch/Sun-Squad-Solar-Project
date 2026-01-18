@@ -148,6 +148,11 @@ const SolarCalculatorPage = () => {
                         </Card>
                     </Col>
                 </Row>
+                <div className="text-center mt-4">
+                     <p className="text-muted small fst-italic">
+                        * Note: The expected savings and calculations are estimates based on general data available on the internet. Actual savings may vary based on location, usage, and other factors.
+                    </p>
+                </div>
             </Container>
             
             <AnimatedSection className="mt-5 py-5 section-bg">

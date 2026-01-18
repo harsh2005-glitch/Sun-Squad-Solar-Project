@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Carousel, Container, Row, Col, Card, Button, Accordion } from 'react-bootstrap';
 import './HomePage.css'; // Importing custom styles
@@ -8,34 +8,21 @@ import EligibilityModal from '../../components/public/EligibilityModal'; // Impo
 // --- NEW IMPORTS for animations ---
 import CountUp from 'react-countup';
 import AnimatedSection from '../../components/common/AnimatedSection';
+import PartnersStrip from '../../components/common/PartnersStrip'; // Import Partners Strip
 import PowerFutureSection from '../../components/home/PowerFutureSection';
 import PrioritySection from '../../components/home/PrioritySection';
-import TestimonialsSection from '../../components/home/TestimonialsSection';
-import teamService from '../../services/teamService';
+// import TestimonialsSection from '../../components/home/TestimonialsSection'; // Replaced by new Google Widget
+import CertificationStrip from '../../components/common/CertificationStrip';
+import GoogleReviewsWidget from '../../components/common/GoogleReviewsWidget';
 
 
 // --- Import your images ---
 import sliderImg1 from '../../assets/images/gallery/industrial-plant-1.jpg';
 import sliderImg2 from '../../assets/images/hero-slider-2.jpg';
 import sliderImg3 from '../../assets/images/hero-slider-3.jpg';
-import teamAbhishek from '../../assets/images/team-abhishek.jpg';
-import teamShivam from '../../assets/images/team-shivam.jpg';
 
 const HomePage = () => {
-    const [teamMembers, setTeamMembers] = useState([]);
     const [showQuiz, setShowQuiz] = useState(false); // State for Quiz Modal
-
-    useEffect(() => {
-        const fetchTeam = async () => {
-            try {
-                const data = await teamService.getTeamMembers();
-                setTeamMembers(data);
-            } catch (error) {
-                console.error("Failed to load team members", error);
-            }
-        };
-        fetchTeam();
-    }, []);
 
   return (
     <>
@@ -72,6 +59,12 @@ const HomePage = () => {
         </Carousel.Item>
       </Carousel>
 
+      {/* === Trusted Partners Strip === */}
+      <PartnersStrip />
+      
+      {/* === Certification Strip (New) === */}
+      <CertificationStrip />
+
       {/* === Power Future Section === */}
       <PowerFutureSection />
 
@@ -105,10 +98,54 @@ const HomePage = () => {
       <AnimatedSection className="values-section py-5 section-bg">
         <Container>
             <Row className="g-4">
-                <Col xs={12} lg={3}><Card className="h-100 text-white" style={{ backgroundColor: '#33A1E0' }}><Card.Body className="d-flex flex-column"><Card.Title as="h3">Why Choose Us</Card.Title><Card.Text>Sun Squad Solar. We use a combination of both online and offline marketing...</Card.Text><Button as={Link} to="/about" variant="outline-light" className="mt-auto">Learn More</Button></Card.Body></Card></Col>
-                <Col xs={12} md={4} lg={3}><Card className="h-100 text-center shadow-sm"><Card.Body className="d-flex flex-column"><div className="value-icon"><i className="fa-solid fa-eye"></i></div><Card.Title as="h3">Our Vision</Card.Title><Card.Text>Promoting renewable energy adoption, and ensuring a cleaner, greener, and brighter future...</Card.Text><Button as={Link} to="/about" variant="outline-primary" className="mt-auto">Learn More</Button></Card.Body></Card></Col>
-                <Col xs={12} md={4} lg={3}><Card className="h-100 text-center shadow-sm"><Card.Body className="d-flex flex-column"><div className="value-icon"><i className="fa-solid fa-bullseye"></i></div><Card.Title as="h3">Our Mission</Card.Title><Card.Text>We Mission to offer added value to our customers by providing a "whole of life" client support...</Card.Text><Button as={Link} to="/about" variant="outline-primary" className="mt-auto">Learn More</Button></Card.Body></Card></Col>
-                <Col xs={12} md={4} lg={3}><Card className="h-100 text-center shadow-sm"><Card.Body className="d-flex flex-column"><div className="value-icon"><i className="fa-solid fa-people-group"></i></div><Card.Title as="h3">Our Strategy</Card.Title><Card.Text>Manufacturing specialized solar accessories like brackets and junction boxes...</Card.Text><Button as={Link} to="/about" variant="outline-primary" className="mt-auto">Learn More</Button></Card.Body></Card></Col>
+                {/* Card 1: Why Choose Us */}
+                <Col xs={12} lg={3}>
+                    <Card className="value-card-enhanced">
+                        <Card.Body className="d-flex flex-column align-items-center w-100">
+                             {/* Added Icon for consistency, even if not originally there, fits the layout better */}
+                            <div className="value-icon-enhanced"><i className="fa-regular fa-thumbs-up"></i></div> 
+                            <Card.Title as="h3">Why Choose Us</Card.Title>
+                            <Card.Text>Sun Squad Solar. We use a combination of both online and offline marketing...</Card.Text>
+                            <Button as={Link} to="/about" variant="outline-light">Learn More</Button>
+                        </Card.Body>
+                    </Card>
+                </Col>
+
+                {/* Card 2: Vision */}
+                <Col xs={12} md={4} lg={3}>
+                    <Card className="value-card-enhanced">
+                        <Card.Body className="d-flex flex-column align-items-center w-100">
+                            <div className="value-icon-enhanced"><i className="fa-solid fa-eye"></i></div>
+                            <Card.Title as="h3">Our Vision</Card.Title>
+                            <Card.Text>Promoting renewable energy adoption, and ensuring a cleaner, greener, and brighter future...</Card.Text>
+                            <Button as={Link} to="/about" variant="outline-light">Learn More</Button>
+                        </Card.Body>
+                    </Card>
+                </Col>
+
+                {/* Card 3: Mission */}
+                <Col xs={12} md={4} lg={3}>
+                    <Card className="value-card-enhanced">
+                        <Card.Body className="d-flex flex-column align-items-center w-100">
+                             <div className="value-icon-enhanced"><i className="fa-solid fa-bullseye"></i></div>
+                            <Card.Title as="h3">Our Mission</Card.Title>
+                            <Card.Text>We Mission to offer added value to our customers by providing a "whole of life" client support...</Card.Text>
+                            <Button as={Link} to="/about" variant="outline-light">Learn More</Button>
+                        </Card.Body>
+                    </Card>
+                </Col>
+
+                {/* Card 4: Strategy */}
+                <Col xs={12} md={4} lg={3}>
+                    <Card className="value-card-enhanced">
+                        <Card.Body className="d-flex flex-column align-items-center w-100">
+                            <div className="value-icon-enhanced"><i className="fa-solid fa-people-group"></i></div>
+                            <Card.Title as="h3">Our Strategy</Card.Title>
+                            <Card.Text>Manufacturing specialized solar accessories like brackets and junction boxes...</Card.Text>
+                            <Button as={Link} to="/about" variant="outline-light">Learn More</Button>
+                        </Card.Body>
+                    </Card>
+                </Col>
             </Row>
         </Container>
       </AnimatedSection>
@@ -170,7 +207,7 @@ const HomePage = () => {
 
                   <div className="d-flex flex-wrap gap-3">
                     <Button variant="light" size="lg" className="rounded-pill fw-bold px-4">
-                      <i className="fa-solid fa-phone me-2"></i> Call Now: +91 6306693936
+                      <i className="fa-solid fa-phone me-2"></i> Call Now: +91 9278450045
                     </Button>
                     <Button variant="outline-light" size="lg" className="rounded-pill fw-bold px-4">
                       <i className="fa-brands fa-whatsapp me-2"></i> WhatsApp Chat
@@ -184,7 +221,7 @@ const HomePage = () => {
       </AnimatedSection>
 
       {/* === Premium Services Section (NEW) === */}
-      <AnimatedSection className="premium-services-section py-5">
+      <AnimatedSection id="premium-services" className="premium-services-section py-5">
         <Container>
             <div className="text-center mb-5">
                 <h2 className="section-title display-5 fw-bold mb-3">Premium Solar <span className="text-highlight-green">Services</span></h2>
@@ -248,75 +285,23 @@ const HomePage = () => {
         </Container>
       </AnimatedSection>
 
-      {/* === Team Member Section (Dynamic + Attractive Card) === */}
-      <AnimatedSection className="team-section py-5">
-        <Container className="text-center">
-            <h2 className="section-title">Our Leaders & Experts</h2>
-            <div className="title-underline mb-5"></div>
-            <Row className="justify-content-center g-5">
-                {teamMembers.length > 0 ? (
-                    teamMembers.map((member) => (
-                        <Col key={member._id} sm={6} md={4} lg={3}>
-                            <div className="team-card h-100">
-                                <div className="team-img-wrapper">
-                                    <img src={member.imageUrl} alt={member.name} />
-                                </div>
-                                <div className="team-content">
-                                    <span className="team-role-badge">{member.role}</span>
-                                    <h3 className="team-name">{member.name}</h3>
-                                    {member.bio && <p className="team-bio">{member.bio}</p>}
-                                </div>
-                            </div>
-                        </Col>
-                    ))
-                ) : (
-                    <>
-                        {/* Fallback Static Content with New Styles */}
-                        <Col sm={6} md={4} lg={3}>
-                            <div className="team-card h-100">
-                                <div className="team-img-wrapper">
-                                    <img src={teamAbhishek} alt="Mr. Abhishek Maurya" />
-                                </div>
-                                <div className="team-content">
-                                    <span className="team-role-badge">Managing Director</span>
-                                    <h3 className="team-name">MR. ABHISHEK MAURYA</h3>
-                                </div>
-                            </div>
-                        </Col>
-                        <Col sm={6} md={4} lg={3}>
-                            <div className="team-card h-100">
-                                <div className="team-img-wrapper">
-                                    <img src={teamShivam} alt="Mr. Shivam Maurya" />
-                                </div>
-                                <div className="team-content">
-                                    <span className="team-role-badge">Operation Head</span>
-                                    <h3 className="team-name">MR. SHIVAM MAURYA</h3>
-                                </div>
-                            </div>
-                        </Col>
-                    </>
-                )}
-            </Row>
-        </Container>
-      </AnimatedSection>
-
       {/* === Statistics Section (Wrapped and with CountUp) === */}
       <AnimatedSection className="stats-section py-5 section-bg">
           <Container>
               <Row className="g-4 text-center">
-                  <Col md={4}><div className="stat-card p-4"><div className="stat-icon"><i className="fa-regular fa-user"></i></div>
+                  <Col md={4}><div className="stat-card"><div className="stat-icon"><i className="fa-regular fa-user"></i></div>
                     <span className="stat-number">
                         <CountUp end={1000} duration={3} enableScrollSpy />+
                     </span>
                     <p className="stat-label">Our Customer</p>
                   </div></Col>
-                  <Col md={4}><div className="stat-card p-4"><div className="stat-icon"><i className="fa-solid fa-warehouse"></i></div>
+                  <Col md={4}><div className="stat-card"><div className="stat-icon"><i className="fa-solid fa-warehouse"></i></div>
                     <span className="stat-number">
                         <CountUp end={2} duration={3} enableScrollSpy />+
                     </span>
                     <p className="stat-label">Our Branch</p>
                   </div></Col>
-                  <Col md={4}><div className="stat-card p-4"><div className="stat-icon"><i className="fa-solid fa-people-roof"></i></div>
+                  <Col md={4}><div className="stat-card"><div className="stat-icon"><i className="fa-solid fa-people-roof"></i></div>
                     <span className="stat-number">
                         <CountUp end={100} duration={3} enableScrollSpy />+
                     </span>
@@ -431,11 +416,8 @@ const HomePage = () => {
             </Row>
         </Container>
       </AnimatedSection>
-
-      
-
-      {/* === Testimonials Section (New Grid Layout) === */}
-      <TestimonialsSection />
+      {/* === Google Reviews Section (Replaces Old Testimonials) === */}
+      <GoogleReviewsWidget />
 
       {/* === Map & Contact Section === */}
       <AnimatedSection className="location-connect-section">

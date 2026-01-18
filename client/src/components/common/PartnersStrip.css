@@ -1,0 +1,73 @@
+.partners-strip-container {
+    background-color: #f8fafc; /* Very light grey */
+    padding: 2rem 0;
+    overflow: hidden;
+    white-space: nowrap;
+    position: relative;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.partners-strip-container h5 {
+    text-align: center;
+    color: #64748b;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 1.5rem;
+}
+
+.partners-track {
+    display: inline-block;
+    animation: scroll 30s linear infinite;
+}
+
+.partners-logo-item {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 60px;
+    margin: 0 40px;
+    opacity: 0.6;
+    filter: grayscale(100%);
+    transition: all 0.3s ease;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #475569;
+    font-family: 'Outfit', sans-serif; /* Ensure typography overrides */
+}
+
+/* If using images later, this will handle them */
+.partners-logo-item img {
+    height: 100%;
+    width: auto;
+    object-fit: contain;
+}
+
+.partners-logo-item:hover {
+    opacity: 1;
+    filter: grayscale(0%);
+    color: #0f172a;
+    transform: scale(1.05);
+}
+
+@keyframes scroll {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%); /* Move half the width (since we duplicated the list) */
+    }
+}
+
+/* Pause animation on hover for user interest */
+.partners-strip-container:hover .partners-track {
+    animation-play-state: paused;
+}
+
+@media (max-width: 768px) {
+    .partners-logo-item {
+        margin: 0 20px;
+        font-size: 1.2rem;
+    }
+}

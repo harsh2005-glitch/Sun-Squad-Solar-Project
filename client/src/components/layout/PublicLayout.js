@@ -5,6 +5,8 @@ import PublicFooter from './PublicFooter';
 import EnquiryModal from './ui/EnquiryModal'; 
 import FloatingActions from '../common/FloatingActions';
 import ExitIntentPopup from '../common/ExitIntentPopup';
+import CookieConsent from '../common/CookieConsent';
+import Breadcrumbs from '../common/Breadcrumbs';
 
 const PublicLayout = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -23,6 +25,7 @@ const PublicLayout = () => {
       <PublicHeader onEnquiryClick={handleEnquiryClick} />
       
       <main className="content-beneath-navbar">
+        <Breadcrumbs />
         <Outlet />
       </main>
       
@@ -31,6 +34,7 @@ const PublicLayout = () => {
       {/* === Conversion Boosters === */}
       <FloatingActions />
       <ExitIntentPopup />
+      <CookieConsent />
 
       {/* === Global Modals === */}
       <EnquiryModal show={isModalOpen} handleClose={closeModal} />

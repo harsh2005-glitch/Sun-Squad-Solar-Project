@@ -12,9 +12,11 @@ import AdminLayout from './components/layout/AdminLayout';
 // Import Guards
 import ProtectedRoute from './routes/ProtectedRoute';
 import AdminRoute from './routes/AdminRoute';
+import ScrollToTop from './components/common/ScrollToTop'; // Import ScrollToTop
 
 // Import Public Pages
 import HomePage from './pages/public/HomePage';
+import NotFoundPage from './pages/public/NotFoundPage';
 import ContactPage from './pages/public/ContactPage';
 import GalleryPage from './pages/public/GalleryPage';
 import AnnouncementsPage from './pages/public/AnnouncementsPage';
@@ -22,6 +24,11 @@ import LocationsPage from './pages/public/LocationsPage';
 import AboutPage from './pages/public/AboutPage'; // Import AboutPage
 import BecomePartnerPage from './pages/public/BecomePartnerPage'; // Import BecomePartnerPage
 import SolarCalculatorPage from './pages/public/SolarCalculatorPage'; // Import SolarCalculatorPage
+
+// Import Legal Pages
+import PrivacyPolicyPage from './pages/public/PrivacyPolicyPage';
+import TermsServicePage from './pages/public/TermsServicePage';
+import RefundPolicyPage from './pages/public/RefundPolicyPage';
 
 // Import Blog Pages
 import SolarSubsidyPage from './pages/public/blog/SolarSubsidyPage';
@@ -65,6 +72,7 @@ import ManageInquiriesPage from './pages/admin/ManageInquiriesPage'; // New Impo
 function App() {
   return (
     <div>
+      <ScrollToTop />
        <ToastContainer
         position="top-right"
         autoClose={5000} // Auto close after 5 seconds
@@ -84,15 +92,23 @@ function App() {
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/gallery" element={<GalleryPage />} />
           <Route path="/announcements" element={<AnnouncementsPage />} />
-          <Route path="/location" element={<LocationsPage />} />
+          <Route path="/locations" element={<LocationsPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/partner" element={<BecomePartnerPage />} />
           <Route path="/calculator" element={<SolarCalculatorPage />} /> {/* New Calculator Route */}
+
+          {/* Legal Routes */}
+          <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+          <Route path="/terms-of-service" element={<TermsServicePage />} />
+          <Route path="/refund-policy" element={<RefundPolicyPage />} />
 
           {/* Blog Routes */}
           <Route path="/blog/solar-subsidy" element={<SolarSubsidyPage />} />
           <Route path="/blog/on-grid-vs-off-grid" element={<GridVsOffGridPage />} />
           <Route path="/blog/maintenance-tips" element={<MaintenanceTipsPage />} />
+
+          {/* 404 Not Found - Must be last in PublicLayout */}
+          <Route path="*" element={<NotFoundPage />} />
 
           {/* Add other public pages here */}
         </Route>

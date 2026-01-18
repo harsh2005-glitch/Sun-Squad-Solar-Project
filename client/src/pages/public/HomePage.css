@@ -9,48 +9,40 @@
 .team-section,
 .stats-section,
 .amenities-section,
-.testimonials-section-new {
+.testimonials-section-new,
+.certification-strip-wrapper,
+.partners-strip-container,
+.blog-section,
+.faq-section,
+.google-reviews-section {
     background-color: #effcf4 !important; /* The uploaded very light green color */
 }
 
 
-/* Premium Services Section */
+/* Premium Services Section - UNIFIED NAVY STYLE */
 .premium-services-section {
     position: relative;
     overflow: hidden;
 }
 
 .premium-service-card {
-    background: #ffffff;
+    background: var(--primary-navy); /* Deep Navy Background */
     border-radius: 20px;
     padding: 2.5rem 2rem;
     height: 100%;
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    border: 1px solid rgba(0,0,0,0.04);
+    border: none;
     position: relative;
     overflow: hidden;
     z-index: 1;
-    box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 15px 40px -10px rgba(0, 0, 0, 0.3); /* Softer shadow for dark card */
 }
 
-/* Glossy/Glassy shine effect */
-.premium-service-card::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 100%);
-    z-index: -1;
-    opacity: 0.5;
-}
-
-/* Hover Effect - Primary Green */
+/* Hover Effect - Scale & Green */
 .premium-service-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 20px 40px -5px rgba(16, 185, 129, 0.15); /* Green shadow */
-    border-bottom: 5px solid #10b981;
+    transform: scale(1.05);
+    background: var(--primary-green);
+    box-shadow: 0 25px 60px -12px rgba(16, 185, 129, 0.3);
 }
 
 .service-icon-wrapper {
@@ -62,35 +54,30 @@
     justify-content: center;
     font-size: 1.8rem;
     margin-bottom: 1.5rem;
-    transition: transform 0.3s ease;
-}
-
-/* Icon colors specific to cards */
-.icon-success {
-    background-color: #10b981;
+    background: rgba(255,255,255,0.1); /* Translucent White */
     color: white;
-    box-shadow: 0 8px 16px rgba(16, 185, 129, 0.2);
-}
-
-.icon-warning {
-    background-color: #f59e0b;
-    color: white;
-    box-shadow: 0 8px 16px rgba(245, 158, 11, 0.2);
+    transition: all 0.4s ease;
 }
 
 .premium-service-card:hover .service-icon-wrapper {
     transform: scale(1.1) rotate(5deg);
+    background: white;
+    color: var(--primary-green);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
 }
+
+/* Icon colors specific to cards - Overridden by general wrapper above, 
+   but we can keep unique glows if needed. For uniformity, keeping standard. */
 
 .service-title {
     font-size: 1.5rem;
     font-weight: 700;
-    color: #1f2937;
+    color: white; /* White Text */
     margin-bottom: 1rem;
 }
 
 .service-description {
-    color: #6b7280;
+    color: rgba(255,255,255,0.8); /* Muted White Text */
     line-height: 1.6;
     margin-bottom: 1.5rem;
     font-size: 0.95rem;
@@ -106,23 +93,29 @@
     display: flex;
     align-items: center;
     margin-bottom: 0.75rem;
-    color: #4b5563;
+    color: rgba(255,255,255,0.9); /* White Text */
     font-size: 0.9rem;
     font-weight: 500;
 }
 
 .service-list li i {
-    color: #10b981;
+    color: white;
     margin-right: 10px;
-    background: #ecfdf5;
+    background: rgba(255,255,255,0.2);
     padding: 4px;
     border-radius: 50%;
     font-size: 0.7rem;
+    transition: all 0.3s ease;
+}
+
+.premium-service-card:hover .service-list li i {
+    color: var(--primary-green);
+    background: white;
 }
 
 /* Section Typography overrides */
 .text-highlight-green {
-    color: #10b981;
+    color: var(--primary-green);
     position: relative;
     display: inline-block;
 }
@@ -138,35 +131,138 @@
     z-index: -1;
 }
 
+/* === ENHANCED VALUE CARDS (Vision, Mission, etc) === */
+.value-card-enhanced {
+    background: var(--primary-navy); /* Dark Navy Background */
+    border-radius: 20px;
+    padding: 2.5rem 2rem;
+    color: white; /* White Text */
+    height: 100%;
+    border: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    overflow: hidden; /* Needed for any shine effects */
+    box-shadow: 0 15px 40px -10px rgba(0,0,0,0.3); /* Softer shadow */
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Bouncy Transition */
+}
+
+/* Background Shine Effect */
+.value-card-enhanced::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0) 100%);
+    pointer-events: none;
+}
+
+/* Hover State - Bulge & Color Change */
+.value-card-enhanced:hover {
+    transform: scale(1.05); /* Bulging out */
+    background: var(--primary-green); /* Change to Green */
+    box-shadow: 0 25px 60px -12px rgba(16, 185, 129, 0.3);
+}
+
+.value-card-enhanced .card-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    color: white;
+}
+
+.value-card-enhanced .card-text {
+    font-size: 0.95rem;
+    opacity: 0.9;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    flex-grow: 1; /* Pushes button to bottom */
+}
+
+/* Icon Styles */
+.value-icon-enhanced {
+    width: 70px;
+    height: 70px;
+    background: rgba(255,255,255,0.15); /* Translucent White */
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.75rem;
+    color: var(--primary-yellow); /* Keep the existing yellow brand highlight */
+    margin-bottom: 1.5rem;
+    transition: all 0.4s ease;
+}
+
+.value-card-enhanced:hover .value-icon-enhanced {
+    background: white; /* Solid white on green bg */
+    transform: scale(1.1) rotate(10deg);
+    color: var(--primary-green); /* Icon turns green */
+    box-shadow: 0 0 20px rgba(255,255,255,0.5); /* Glow */
+}
+
+/* Button override inside the card */
+.value-card-enhanced .btn {
+    margin-top: auto;
+    border-radius: 50px;
+    padding: 0.5rem 2rem;
+    font-weight: 600;
+    border: 2px solid rgba(255,255,255,0.3);
+    color: white;
+    background: transparent;
+    transition: all 0.3s ease;
+}
+
+.value-card-enhanced:hover .btn {
+    background: white;
+    color: var(--primary-green);
+    border-color: white;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
 /* Team Section Styles */
 .team-card {
-    background: #10b981; /* Primary Green */
+    background: #fff; /* Clean White */
     border-radius: 20px;
     overflow: hidden;
     transition: all 0.4s ease;
     border: none;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
-    position: relative;
+    box-shadow: 0 10px 40px -10px rgba(0,0,0,0.1); /* Softer, diffuse shadow */
     height: 100%;
-    padding: 15px; /* Margin from border for the internal elements */
+    position: relative;
+    text-align: left;
 }
 
 .team-card:hover {
     transform: translateY(-10px);
-    box-shadow: 0 15px 30px rgba(16, 185, 129, 0.4);
+    box-shadow: 0 25px 50px -12px rgba(0,0,0,0.15); /* deeper diffuse shadow on hover */
 }
 
 .team-img-wrapper {
     height: 320px;
     overflow: hidden;
     position: relative;
-    border-radius: 15px; /* Rectangle shape with slight rounded corners */
-    background: #fff;
     margin-bottom: 0;
 }
 
+/* Professional Overlay for text readability or style */
+.team-img-wrapper::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    background: linear-gradient(to top, rgba(0,0,0,0.4) 0%, transparent 100%);
+    pointer-events: none;
+}
+
 .team-img-wrapper img {
-    transition: transform 0.5s ease;
+    transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -177,73 +273,212 @@
     transform: scale(1.05);
 }
 
-/* Glossy Overlay on Image */
-.team-img-wrapper::after {
+
+/* Stats Section Enchancement */
+.stats-section {
+    position: relative;
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+}
+
+.stat-card {
+    background: var(--primary-navy); /* CHANGED to Navy */
+    padding: 2.5rem 1.5rem;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 15px 40px -10px rgba(0,0,0,0.3);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Bouncy transition */
+    border: none;
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card:hover {
+    transform: scale(1.05); /* Bulging out effect */
+    background: var(--primary-green); /* Change color on hover */
+    box-shadow: 0 25px 60px -12px rgba(16, 185, 129, 0.3);
+}
+
+.stat-icon {
+    width: 90px;
+    height: 90px;
+    margin: 0 auto 1.5rem auto;
+    background: rgba(255,255,255,0.1);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 2.2rem;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    transition: transform 0.4s ease;
+}
+
+.stat-card:hover .stat-icon {
+    transform: scale(1.1) rotate(10deg);
+    background: rgba(255,255,255,0.2);
+    color: white;
+}
+
+.stat-number {
+    display: block;
+    font-size: 3rem;
+    font-weight: 800;
+    color: white; /* White text on navy bg */
+    line-height: 1;
+    margin-bottom: 0.5rem;
+    text-shadow: 2px 2px 0 rgba(0,0,0,0.1);
+}
+
+.stat-label {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: rgba(255,255,255,0.8); /* Muted white text */
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Amenities Section Enhancement */
+.amenities-section {
+    position: relative;
+    padding-bottom: 5rem;
+}
+
+.amenities-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--primary-navy);
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, var(--primary-navy) 0%, #334155 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.amenities-title span {
+    color: var(--primary-green);
+    -webkit-text-fill-color: var(--primary-green); /* Ensure green highlight stays green */
+}
+
+/* New Amenities Card (Neumorphic / Clean) */
+.amenity-card {
+    background: var(--primary-navy); /* CHANGED to Navy */
+    padding: 2rem 1rem;
+    border-radius: 16px;
+    text-align: center;
+    border: none;
+    box-shadow: 0 10px 40px -10px rgba(0,0,0,0.2);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Bouncy transition */
+    position: relative;
+    z-index: 1;
+    height: 100%;
+    overflow: hidden; /* Needed for shine */
+}
+
+/* Shine Effect */
+.amenity-card::before {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(to top, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0) 60%);
+    background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0) 100%);
     pointer-events: none;
 }
 
-.team-content {
-    padding: 1.5rem 0.5rem 0.5rem;
-    text-align: center;
-    position: relative;
+.amenity-card:hover {
+    transform: scale(1.05); /* Bulging out */
+    box-shadow: 0 25px 50px -12px rgba(16, 185, 129, 0.25);
+    background: var(--primary-green); /* Change to Green on hover */
+}
+
+.amenity-icon {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 1.25rem auto;
+    background-color: rgba(255,255,255,0.1); /* Translucent white */
+    border-radius: 50%;
     color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.amenity-card:hover .amenity-icon {
+    background-color: white; /* Solid white background on green */
+    color: var(--primary-green); /* Green Icon */
+    transform: scale(1.1) rotate(10deg); /* Rotate like other cards */
+    box-shadow: 0 0 15px rgba(255,255,255,0.4);
+}
+
+.amenity-card h4 {
+    color: white; /* White text */
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0;
+    transition: color 0.3s ease;
+}
+
+.amenity-card:hover h4 {
+    color: white; 
+}
+
+.team-content {
+    padding: 1.5rem;
+    position: relative;
+    background: #fff;
 }
 
 .team-role-badge {
-    background: #ffffff;
-    color: #10b981;
-    padding: 5px 15px;
-    border-radius: 20px;
+    background: rgba(16, 185, 129, 0.1); /* Light green bg */
+    color: var(--primary-green);        /* Darker green text */
+    padding: 5px 12px;
+    border-radius: 50px;
     font-size: 0.75rem;
-    font-weight: 800;
+    font-weight: 700;
     text-transform: uppercase;
     display: inline-block;
     margin-bottom: 12px;
-    letter-spacing: 0.5px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    letter-spacing: 0.5px; /* Refined spacing */
+    box-shadow: none;
 }
 
 .team-name {
     font-weight: 800;
-    margin-bottom: 8px;
-    color: #ffffff;
+    margin-bottom: 5px;
+    color: var(--primary-navy); /* Navy */
     font-size: 1.25rem;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    text-shadow: none;
 }
 
 .team-bio {
     font-size: 0.9rem;
-    color: rgba(255,255,255,0.9);
+    color: #64748b; /* Slate-500 */
+    line-height: 1.6;
     margin-bottom: 0;
-    line-height: 1.5;
-    padding-bottom: 5px;
+    padding-bottom: 0;
 }
 
 /* Blog Section */
 .blog-card {
     border: none;
     border-radius: 15px;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+    box-shadow: 0 10px 30px -5px rgba(0,0,0,0.05);
     transition: all 0.3s ease;
     overflow: hidden;
 }
 
 .blog-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    box-shadow: 0 20px 40px -5px rgba(0,0,0,0.1);
 }
 
 .blog-date {
     font-size: 0.8rem;
     letter-spacing: 1px;
-    color: #10b981 !important;
+    color: var(--primary-green);
 }
 
 .learn-more-btn {
@@ -270,13 +505,13 @@
     background: transparent;
     font-weight: 700;
     font-size: 1.1rem;
-    color: #1f2937; /* Dark gray */
+    color: var(--primary-navy); /* Deep Navy */
     padding: 1.25rem 1.5rem;
     box-shadow: none;
 }
 
 .custom-accordion .accordion-button:not(.collapsed) {
-    color: #10b981; /* Green when open */
+    color: var(--primary-green); /* Green when open */
     background-color: rgba(16, 185, 129, 0.05); /* Light green bg */
     box-shadow: none;
 }

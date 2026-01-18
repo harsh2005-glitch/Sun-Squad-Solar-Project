@@ -1,10 +1,33 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Badge, Button, Card } from 'react-bootstrap';
 import { FaBookOpen, FaMedal, FaUsers, FaCalendarAlt, FaBullseye, FaEye } from 'react-icons/fa'; // Importing icons
 import './AboutPage.css';
 import headerImage from '../../assets/images/project.jpg'; // Using an existing image as placeholder
+import teamService from '../../services/teamService';
+import teamAbhishek from '../../assets/images/team-abhishek.jpg';
+import teamShivam from '../../assets/images/team-shivam.jpg';
 
 const AboutPage = () => {
+    const [teamMembers, setTeamMembers] = useState([]);
+    const [loading, setLoading] = useState(true); // Added loading state
+
+    useEffect(() => {
+        const fetchTeam = async () => {
+            try {
+                // Simulate a slight delay to show off the skeleton (optional, remove setTimeout in prod if fast)
+                // setTimeout(async () => { 
+                    const data = await teamService.getTeamMembers();
+                    setTeamMembers(data);
+                    setLoading(false);
+                // }, 1000);
+            } catch (error) {
+                console.error("Failed to load team members", error);
+                setLoading(false);
+            }
+        };
+        fetchTeam();
+    }, []);
+
   return (
     <div className="page-container">
       {/* === Hero Section (Existing) === */}
@@ -32,10 +55,10 @@ const AboutPage = () => {
                 </p>
                 
                 <div className="d-flex gap-3">
-                  <Button variant="success" size="lg" className="px-4 py-2 rounded-pill fw-bold btn-our-story">
+                  <Button variant="success" size="lg" className="px-4 py-2 rounded-pill fw-bold btn-our-story hover-lift hover-shine">
                     <FaBookOpen className="me-2" /> Our Story
                   </Button>
-                  <Button variant="outline-dark" size="lg" className="px-4 py-2 rounded-pill fw-bold btn-achievements">
+                  <Button variant="outline-dark" size="lg" className="px-4 py-2 rounded-pill fw-bold btn-achievements hover-lift">
                     <FaMedal className="me-2" /> Our Achievements
                   </Button>
                 </div>
@@ -132,6 +155,87 @@ const AboutPage = () => {
           </Row>
         </Container>
       </div>
+
+      {/* === Our Leaders & Experts Section (Moved from Home) === */}
+      <section className="team-section-about py-5">
+        <Container>
+            <div className="text-center mb-5">
+                <Badge bg="light" text="success" className="mb-3 px-3 py-2 rounded-pill mv-badge mx-auto">
+                    <FaUsers className="me-2" /> Leadership
+                </Badge>
+                <h2 className="display-5 fw-bold mv-title">
+                    Meet Our <span className="text-success">Experts</span>
+                </h2>
+                <p className="text-muted lead mx-auto" style={{maxWidth: '700px'}}>
+                    The visionaries and technically skilled professionals driving our mission forward.
+                </p>
+            </div>
+
+            <Row className="justify-content-center g-4">
+                {loading ? (
+                    // Skeleton Loader Loop (Show 4 placeholder cards)
+                    [1, 2, 3, 4].map((n) => (
+                        <Col key={n} sm={6} md={4} lg={3}>
+                            <div className="skeleton-card">
+                                <div className="skeleton-card-img"></div>
+                                <div className="skeleton-card-body">
+                                    <div className="skeleton-card-title"></div>
+                                    <div className="skeleton-card-role"></div>
+                                </div>
+                            </div>
+                        </Col>
+                    ))
+                ) : teamMembers.length > 0 ? (
+                    teamMembers.map((member) => (
+                        <Col key={member._id} sm={6} md={4} lg={3}>
+                            <div className="team-card-modern h-100 hover-lift"> {/* Added hover-lift */}
+                                <div className="team-img-modern">
+                                    <img src={member.imageUrl} alt={member.name} />
+                                    <div className="team-social-overlay">
+                                        {/* Placeholder social links - you can make these dynamic later */}
+                                        <a href="#!"><i className="fa-brands fa-linkedin-in"></i></a>
+                                        <a href="#!"><i className="fa-brands fa-twitter"></i></a>
+                                    </div>
+                                </div>
+                                <div className="team-content-modern text-center">
+                                    <h4 className="team-name-modern">{member.name}</h4>
+                                    <span className="team-role-modern">{member.role}</span>
+                                    {member.bio && <p className="team-bio-modern mt-3">{member.bio}</p>}
+                                </div>
+                            </div>
+                        </Col>
+                    ))
+                ) : (
+                    <>
+                        {/* Fallback Static Content with Hover Effect */}
+                        <Col sm={6} md={4} lg={3}>
+                            <div className="team-card-modern h-100 hover-lift">
+                                <div className="team-img-modern">
+                                    <img src={teamAbhishek} alt="Mr. Abhishek Maurya" />
+                                </div>
+                                <div className="team-content-modern text-center">
+                                    <h4 className="team-name-modern">MR. ABHISHEK MAURYA</h4>
+                                    <span className="team-role-modern">Managing Director</span>
+                                </div>
+                            </div>
+                        </Col>
+                        <Col sm={6} md={4} lg={3}>
+                            <div className="team-card-modern h-100 hover-lift">
+                                <div className="team-img-modern">
+                                    <img src={teamShivam} alt="Mr. Shivam Maurya" />
+                                </div>
+                                <div className="team-content-modern text-center">
+                                    <h4 className="team-name-modern">MR. SHIVAM MAURYA</h4>
+                                    <span className="team-role-modern">Operation Head</span>
+                                </div>
+                            </div>
+                        </Col>
+                    </>
+                )}
+            </Row>
+        </Container>
+      </section>
+
     </div>
   );
 };

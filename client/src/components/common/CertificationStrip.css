@@ -1,0 +1,51 @@
+.certification-strip-wrapper {
+    background: #ffffff;
+    border-top: 1px solid #e5e7eb;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 2rem 0;
+}
+
+.cert-strip-inner {
+    /* Optional constraints if needed */
+}
+
+.cert-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.7;
+    transition: all 0.3s ease;
+    cursor: default;
+}
+
+.cert-item:hover {
+    opacity: 1;
+    transform: translateY(-2px);
+}
+
+.cert-icon {
+    font-size: 2rem;
+    color: #0f172a; /* Navy */
+    margin-bottom: 0.5rem;
+}
+
+.cert-text {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #4b5563; /* Gray */
+    line-height: 1.3;
+}
+
+.cert-divider {
+    height: 40px;
+    width: 1px;
+    background-color: #e5e7eb;
+}
+
+/* Specific colors for fake logos to make them look distinct */
+.cert-item:nth-child(1) .cert-icon { color: #2563eb; } /* Blue for ISO */
+.cert-item:nth-child(3) .cert-icon { color: #ea580c; } /* Orange for MNRE/Gov */
+.cert-item:nth-child(5) .cert-icon { color: #dc2626; } /* Red for BIS */
+.cert-item:nth-child(7) .cert-icon { color: #ca8a04; } /* Gold for Tier 1 */
+.cert-item:nth-child(9) .cert-icon { color: #16a34a; } /* Green for Eco */

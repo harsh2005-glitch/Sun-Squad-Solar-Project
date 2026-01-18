@@ -1,0 +1,46 @@
+.google-reviews-section {
+    padding: 4rem 0;
+    background-color: #f9f9f9;
+}
+
+.google-rating-score {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #202124;
+    line-height: 1;
+}
+
+.google-review-card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08); /* Clean shadow like Google cards */
+    transition: transform 0.3s ease;
+}
+
+.google-review-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+}
+
+.reviewer-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.review-text {
+    font-size: 0.95rem;
+    color: #4b5563;
+    line-height: 1.5;
+    font-style: italic;
+}
+
+.review-stars {
+    font-size: 0.8rem;
+}

@@ -1,13 +1,15 @@
 /* main styles */ 
 /* === CSS Variables (Root) === */
 :root {
-    --primary-green: #164626;
-    --dark-grey: #0e2c0e;
+    --primary-green: #10b981; /* Emerald Green */
+    --dark-grey: #0f172a; /* Deep Navy */
     --white-color: #ffffff;
-    --medium-green-bg :#164626;
-    --light-grey: #f8f9fa;
-    --text-color: #fdf3f3;
-    --font-family: 'Poppins', sans-serif; /* A nice, modern font */
+    --medium-green-bg: #10b981;
+    --light-grey: #f8fafc; /* Lighter Slate */
+    --text-color: #334155; /* Slate 700 - Professional Dark Text */
+    --font-family: 'Outfit', sans-serif;
+    --gradient-green: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    --gradient-navy: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
 }
 
 /* === Global Styles === */
@@ -214,8 +216,9 @@ ul {
 .btn.btn-read-more {
     display: inline-block; /* Allows for margin-top */
     margin-top: 15px;
-    background-color: var(--primary-green);
+    background: var(--gradient-green); /* Updated to gradient */
     color: var(--white-color);
+    border: none;
     padding: 12px 25px;
     border-radius: 5px;
     font-weight: 600;

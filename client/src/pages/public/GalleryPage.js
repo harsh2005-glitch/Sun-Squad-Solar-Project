@@ -1,9 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { Spinner, Alert, Container, Row, Col } from 'react-bootstrap';
 // --- IMPORT our new galleryService ---
 import galleryService from '../../services/galleryService';
-// Import Bootstrap components for a better loading/error state
-import { Spinner, Alert } from 'react-bootstrap';
-
 
 const GalleryPage = () => {
   const [allItems, setAllItems] = useState([]); // <-- State to hold items from the API
@@ -51,6 +49,7 @@ const GalleryPage = () => {
 
   return (
     <main>
+
       <section className="gallery-section">
         <h2 className="section-title">Our Project Gallery</h2>
         <div className="title-underline"></div>
