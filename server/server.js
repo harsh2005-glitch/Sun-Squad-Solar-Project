@@ -14,6 +14,7 @@ const publicGalleryRoutes = require('./routes/publicGallery');
 const contactRoutes = require('./routes/contact');
 const publicAnnouncementsRoutes = require('./routes/publicAnnouncements'); 
 const teamRoutes = require('./routes/team');
+const calculatorRoutes = require('./routes/calculator');
 
 // Load environment variables
 dotenv.config();
@@ -102,6 +103,7 @@ app.use('/api/gallery', publicGalleryRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/announcements', publicAnnouncementsRoutes);
 app.use('/api/team', teamRoutes);
+app.use('/api/calculator', calculatorRoutes);
 
 // A simple test route to make sure the server is running
 app.get('/', (req, res) => {

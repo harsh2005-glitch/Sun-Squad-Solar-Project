@@ -63,7 +63,7 @@ import ManageGalleryPage from './pages/admin/ManageGalleryPage';
 import ManageAnnouncementsPage from './pages/admin/ManageAnnouncementsPage';
 import ManageTeamPage from './pages/admin/ManageTeamPage';
 import ManageInquiriesPage from './pages/admin/ManageInquiriesPage'; // New Import
-
+import ManageCalculatorPage from './pages/admin/ManageCalculatorPage'; // New Import
 
 
 // --- Create a temporary Dashboard Page for now ---
@@ -147,6 +147,7 @@ function App() {
               <Route path="announcements" element={<ManageAnnouncementsPage />} />
               <Route path="team" element={<ManageTeamPage />} />
               <Route path="inquiries" element={<ManageInquiriesPage />} /> {/* New Route */}
+              <Route path="calculator" element={<ManageCalculatorPage />} />
             {/* We will add the deposits page route here next */}
           </Route>
         </Route>

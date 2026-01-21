@@ -1,170 +1,316 @@
-import React, { useState } from 'react';
-import { Container, Row, Col, Card, Form, Button, InputGroup } from 'react-bootstrap';
+import React, { useState, useEffect } from 'react';
+import { Container, Row, Col, Card, Form, Button, InputGroup, Table, Badge } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import AnimatedSection from '../../components/common/AnimatedSection';
+import calculatorService from '../../services/calculatorService';
 import './SolarCalculatorPage.css';
 
 const SolarCalculatorPage = () => {
-    const [monthlyBill, setMonthlyBill] = useState('');
-    const [results, setResults] = useState(null);
+    // Data State
+    const [data, setData] = useState({
+        panels: [],
+        inverters: [],
+        batteries: [],
+        wires: [],
+        installation: []
+    });
+    const [loading, setLoading] = useState(true);
 
-    const calculateSavings = (e) => {
+    // User Selection State
+    const [gridType, setGridType] = useState('On-Grid');
+    const [systemSize, setSystemSize] = useState(3); // Default 3kW
+    
+    const [selectedPanelId, setSelectedPanelId] = useState('');
+    const [selectedInverterId, setSelectedInverterId] = useState('');
+    const [selectedBatteryId, setSelectedBatteryId] = useState('');
+    const [selectedWireId, setSelectedWireId] = useState('');
+    const [wireLength, setWireLength] = useState(50); // Default 50m
+    
+    // Results State
+    const [breakdown, setBreakdown] = useState(null);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const result = await calculatorService.getActiveComponents();
+                setData(result);
+            } catch (error) {
+                console.error("Failed to load calculator data", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchData();
+    }, []);
+
+    // Filtered Options based on Grid Type
+    const filteredPanels = data.panels.filter(p => p.type === gridType);
+    
+    // Inverters: hybrid works for both, otherwise match exact type
+    const filteredInverters = data.inverters.filter(i => {
+        if (i.type === 'Hybrid') return true;
+        return i.type === gridType;
+    });
+
+    const filteredBatteries = gridType === 'Off-Grid' ? data.batteries : [];
+
+    const handleCalculate = (e) => {
         e.preventDefault();
-        const bill = parseFloat(monthlyBill);
+        
+        const panel = data.panels.find(p => p._id === selectedPanelId);
+        const inverter = data.inverters.find(i => i._id === selectedInverterId);
+        const battery = data.batteries.find(b => b._id === selectedBatteryId);
+        const wire = data.wires.find(w => w._id === selectedWireId);
 
-        if (isNaN(bill) || bill <= 0) {
-            alert("Please enter a valid monthly bill amount.");
+        if (!panel || !inverter || !wire || (gridType === 'Off-Grid' && !battery)) {
+            alert("Please select all required components.");
             return;
         }
 
-        // Assumptions
-        const avgUnitRate = 8; // Rs per unit
-        const unitsPerKWPerMonth = 120; // 1kW generates ~120 units/month
-        const carbonFactor = 0.82; // kg CO2 per kWh
+        // Calculations
+        // Required Panels = (System Size in kW * 1000) / Panel Watt
+        const numberOfPanels = Math.ceil((systemSize * 1000) / panel.watt);
+        const totalPanelCost = numberOfPanels * panel.price;
+
+        const totalInverterCost = inverter.price; // Usually 1 inverter for home systems
+
+        const totalBatteryCost = gridType === 'Off-Grid' ? battery.price : 0; 
         
-        const monthlyUnits = bill / avgUnitRate;
-        const requiredSystemSize = monthlyUnits / unitsPerKWPerMonth;
-        
-        // Rounding to nearest 0.5 kW for practical sizing, min 1kW
-        let recommendedSize = Math.ceil(requiredSystemSize * 2) / 2;
-        if (recommendedSize < 1) recommendedSize = 1;
+        const totalWireCost = wireLength * wire.pricePerMeter;
 
-        const annualGeneraton = recommendedSize * unitsPerKWPerMonth * 12;
-        const annualSavings = annualGeneraton * avgUnitRate;
-        const carbonReduction = (annualGeneraton * carbonFactor) / 1000; // in Tonnes
+        // Installation
+        let installationCost = 0;
+        const installRule = data.installation[0]; // Assume first active rule applies
+        if (installRule) {
+            if (installRule.type === 'PerkW') {
+                installationCost = systemSize * installRule.price;
+            } else {
+                installationCost = installRule.price;
+            }
+        }
 
-        const treesPlanted = Math.round(carbonReduction * 45); // Approx 45 trees absorb 1 tonne CO2
+        const grandTotal = totalPanelCost + totalInverterCost + totalBatteryCost + totalWireCost + installationCost;
 
-        setResults({
-            recommendedSize: recommendedSize.toFixed(1),
-            annualSavings: Math.round(annualSavings).toLocaleString('en-IN'),
-            monthlySavings: Math.round(annualSavings / 12).toLocaleString('en-IN'),
-            carbonReduction: carbonReduction.toFixed(2),
-            treesPlanted: treesPlanted,
-            roiYears: (recommendedSize * 60000 / annualSavings).toFixed(1) // Approx cost 60k/kW
+        setBreakdown({
+            panels: {
+                name: `${panel.brand} (${panel.watt}W)`,
+                qty: numberOfPanels,
+                cost: totalPanelCost
+            },
+            inverter: {
+                name: `${inverter.brand} (${inverter.capacity}kW)`,
+                qty: 1,
+                cost: totalInverterCost
+            },
+            battery: gridType === 'Off-Grid' ? {
+                name: `${battery.brand} (${battery.capacity})`,
+                qty: 1, // Simplified
+                cost: totalBatteryCost
+            } : null,
+            wire: {
+                name: `${wire.type} (${wireLength}m)`,
+                cost: totalWireCost
+            },
+            installation: {
+                cost: installationCost
+            },
+            total: grandTotal
         });
     };
+
+    if (loading) return <div className="text-center py-5">Loading calculator data...</div>;
 
     return (
         <div className="calculator-page pt-5 pb-5">
             <Container>
                 <div className="text-center mb-5 mt-5">
-                    <h1 className="fw-bold display-5">Solar Savings <span className="text-warning">Calculator</span></h1>
-                    <p className="lead text-muted">See how much you can save by switching to solar.</p>
+                    <h1 className="fw-bold display-5">Installation Cost <span className="text-warning">Calculator</span></h1>
+                    <p className="lead text-muted">Get a detailed estimate for your solar installation.</p>
                 </div>
 
                 <Row className="justify-content-center">
-                    <Col lg={10} xl={8}>
+                    <Col lg={10} xl={9}>
                         <Card className="border-0 shadow-lg overflow-hidden calculator-card">
                             <Row className="g-0">
-                                <Col md={6} className="bg-white p-4 p-md-5">
-                                    <h4 className="fw-bold mb-4">Enter Your Details</h4>
-                                    <Form onSubmit={calculateSavings}>
-                                        <Form.Group className="mb-4">
-                                            <Form.Label className="fw-bold text-muted small text-uppercase">Average Monthly Electricity Bill (₹)</Form.Label>
-                                            <InputGroup size="lg">
-                                                <InputGroup.Text className="bg-light border-end-0 fw-bold">₹</InputGroup.Text>
-                                                <Form.Control 
-                                                    type="number" 
-                                                    placeholder="e.g. 2500" 
-                                                    className="border-start-0 bg-light"
-                                                    value={monthlyBill}
-                                                    onChange={(e) => setMonthlyBill(e.target.value)}
-                                                    required
+                                <Col md={7} className="bg-white p-4 p-md-5">
+                                    <h4 className="fw-bold mb-4">System Configuration</h4>
+                                    <Form onSubmit={handleCalculate}>
+                                        
+                                        {/* Grid Type */}
+                                        <Form.Group className="mb-3">
+                                            <Form.Label className="fw-bold small text-muted text-uppercase">Grid Type</Form.Label>
+                                            <div className="d-flex gap-3">
+                                                <Form.Check 
+                                                    type="radio"
+                                                    label="On-Grid"
+                                                    name="gridType"
+                                                    id="ongrid"
+                                                    checked={gridType === 'On-Grid'}
+                                                    onChange={() => setGridType('On-Grid')}
+                                                    className="fw-bold"
                                                 />
-                                            </InputGroup>
-                                            <Form.Text className="text-muted">
-                                                Enter your average bill amount for accurate estimation.
-                                            </Form.Text>
+                                                <Form.Check 
+                                                    type="radio"
+                                                    label="Off-Grid"
+                                                    name="gridType"
+                                                    id="offgrid"
+                                                    checked={gridType === 'Off-Grid'}
+                                                    onChange={() => setGridType('Off-Grid')}
+                                                    className="fw-bold"
+                                                />
+                                            </div>
                                         </Form.Group>
 
-                                      {/* Future inputs like State, Roof Area could go here */}
+                                        {/* System Size */}
+                                        <Form.Group className="mb-3">
+                                            <Form.Label className="fw-bold small text-muted text-uppercase">System Size (kW)</Form.Label>
+                                            <Form.Control 
+                                                type="number" 
+                                                min="1" 
+                                                step="0.5"
+                                                value={systemSize} 
+                                                onChange={(e) => setSystemSize(parseFloat(e.target.value))} 
+                                                required 
+                                            />
+                                        </Form.Group>
 
-                                        <div className="d-grid">
-                                            <Button variant="success" size="lg" type="submit" className="fw-bold text-uppercase py-3">
-                                                Calculate Savings
+                                        {/* Components Selection */}
+                                        <Row>
+                                            <Col md={6}>
+                                                <Form.Group className="mb-3">
+                                                    <Form.Label className="fw-bold small text-muted">Solar Panel</Form.Label>
+                                                    <Form.Select 
+                                                        value={selectedPanelId} 
+                                                        onChange={(e) => setSelectedPanelId(e.target.value)}
+                                                        required
+                                                    >
+                                                        <option value="">Select Brand & Watt</option>
+                                                        {filteredPanels.map(p => (
+                                                            <option key={p._id} value={p._id}>{p.brand} - {p.watt}W (₹{p.price})</option>
+                                                        ))}
+                                                    </Form.Select>
+                                                </Form.Group>
+                                            </Col>
+                                            <Col md={6}>
+                                                 <Form.Group className="mb-3">
+                                                    <Form.Label className="fw-bold small text-muted">Inverter</Form.Label>
+                                                    <Form.Select 
+                                                        value={selectedInverterId} 
+                                                        onChange={(e) => setSelectedInverterId(e.target.value)}
+                                                        required
+                                                    >
+                                                        <option value="">Select Brand & Capacity</option>
+                                                        {filteredInverters.map(i => (
+                                                            <option key={i._id} value={i._id}>{i.brand} - {i.capacity}kW (₹{i.price})</option>
+                                                        ))}
+                                                    </Form.Select>
+                                                </Form.Group>
+                                            </Col>
+                                        </Row>
+
+                                        {gridType === 'Off-Grid' && (
+                                            <Form.Group className="mb-3">
+                                                <Form.Label className="fw-bold small text-muted">Battery</Form.Label>
+                                                <Form.Select 
+                                                    value={selectedBatteryId} 
+                                                    onChange={(e) => setSelectedBatteryId(e.target.value)}
+                                                    required
+                                                >
+                                                    <option value="">Select Brand & Capacity</option>
+                                                    {filteredBatteries.map(b => (
+                                                        <option key={b._id} value={b._id}>{b.brand} - {b.capacity} (₹{b.price})</option>
+                                                    ))}
+                                                </Form.Select>
+                                            </Form.Group>
+                                        )}
+
+                                        <Row>
+                                            <Col md={6}>
+                                                <Form.Group className="mb-3">
+                                                    <Form.Label className="fw-bold small text-muted">Wire Type</Form.Label>
+                                                    <Form.Select 
+                                                        value={selectedWireId} 
+                                                        onChange={(e) => setSelectedWireId(e.target.value)}
+                                                        required
+                                                    >
+                                                        <option value="">Select Type</option>
+                                                        {data.wires.map(w => (
+                                                            <option key={w._id} value={w._id}>{w.type} (₹{w.pricePerMeter}/m)</option>
+                                                        ))}
+                                                    </Form.Select>
+                                                </Form.Group>
+                                            </Col>
+                                            <Col md={6}>
+                                                 <Form.Group className="mb-3">
+                                                    <Form.Label className="fw-bold small text-muted">Wire Length (Meters)</Form.Label>
+                                                    <Form.Control 
+                                                        type="number" 
+                                                        value={wireLength} 
+                                                        onChange={(e) => setWireLength(parseFloat(e.target.value))} 
+                                                        required 
+                                                    />
+                                                </Form.Group>
+                                            </Col>
+                                        </Row>
+
+                                        <div className="d-grid mt-4">
+                                            <Button variant="success" size="lg" type="submit" className="fw-bold text-uppercase">
+                                                Calculate Cost
                                             </Button>
                                         </div>
                                     </Form>
-
-                                    {results && (
-                                         <div className="mt-4 text-center">
-                                             <p className="small text-muted mb-2">Ready to start saving?</p>
-                                             <Button as={Link} to="/contact" variant="outline-dark" className="w-100 fw-bold">Request a Detailed Quote</Button>
-                                         </div>
-                                    )}
                                 </Col>
 
-                                <Col md={6} className="bg-success text-white p-4 p-md-5 d-flex flex-column justify-content-center position-relative overflow-hidden result-panel">
-                                    {!results ? (
-                                        <div className="text-center opacity-75">
-                                            <i className="fa-solid fa-calculator display-1 mb-3"></i>
-                                            <h3>Your Savings Await!</h3>
-                                            <p>Enter your bill amount to see your potential solar savings and environmental impact.</p>
+                                <Col md={5} className="bg-light p-4 p-md-5 d-flex flex-column">
+                                    <h4 className="fw-bold mb-4">Cost Breakdown</h4>
+                                    {breakdown ? (
+                                        <div className="breakdown-content flex-grow-1 d-flex flex-column">
+                                            <div className="mb-3 pb-3 border-bottom">
+                                                <div className="d-flex justify-content-between mb-2">
+                                                    <span><strong>Solar Panels</strong> <br/><small className="text-muted">{breakdown.panels.qty} x {breakdown.panels.name}</small></span>
+                                                    <span className="fw-bold">₹{breakdown.panels.cost.toLocaleString()}</span>
+                                                </div>
+                                                <div className="d-flex justify-content-between mb-2">
+                                                    <span><strong>Inverter</strong> <br/><small className="text-muted">{breakdown.inverter.name}</small></span>
+                                                    <span className="fw-bold">₹{breakdown.inverter.cost.toLocaleString()}</span>
+                                                </div>
+                                                {breakdown.battery && (
+                                                    <div className="d-flex justify-content-between mb-2">
+                                                        <span><strong>Battery</strong> <br/><small className="text-muted">{breakdown.battery.name}</small></span>
+                                                        <span className="fw-bold">₹{breakdown.battery.cost.toLocaleString()}</span>
+                                                    </div>
+                                                )}
+                                                <div className="d-flex justify-content-between mb-2">
+                                                    <span><strong>Wiring</strong> <br/><small className="text-muted">{breakdown.wire.name}</small></span>
+                                                    <span className="fw-bold">₹{breakdown.wire.cost.toLocaleString()}</span>
+                                                </div>
+                                                <div className="d-flex justify-content-between">
+                                                    <span><strong>Installation</strong></span>
+                                                    <span className="fw-bold">₹{breakdown.installation.cost.toLocaleString()}</span>
+                                                </div>
+                                            </div>
+
+                                            <div className="mt-auto bg-success text-white p-3 rounded-3 text-center shadow-sm">
+                                                <small className="text-uppercase text-white-50 fw-bold">Total Estimated Cost</small>
+                                                <div className="display-6 fw-bold">₹{breakdown.total.toLocaleString()}</div>
+                                            </div>
+                                            
+                                            <div className="mt-4 text-center">
+                                                <Button as={Link} to="/contact" variant="outline-dark" size="sm" className="w-100">Request Official Quote</Button>
+                                            </div>
                                         </div>
                                     ) : (
-                                        <div className="results-content animate__animated animate__fadeIn">
-                                            <div className="mb-4 text-center">
-                                                <span className="text-white-50 text-uppercase small fw-bold tracking-wider">Estimated Annual Savings</span>
-                                                <div className="display-4 fw-bold">₹{results.annualSavings}</div>
-                                            </div>
-
-                                            <div className="row g-3 mb-4">
-                                                <div className="col-6">
-                                                    <div className="p-3 bg-white bg-opacity-10 rounded-3 text-center h-100">
-                                                        <i className="fa-solid fa-solar-panel mb-2 fs-4"></i>
-                                                        <div className="fw-bold fs-5">{results.recommendedSize} kW</div>
-                                                        <div className="small text-white-50">System Size</div>
-                                                    </div>
-                                                </div>
-                                                <div className="col-6">
-                                                     <div className="p-3 bg-white bg-opacity-10 rounded-3 text-center h-100">
-                                                        <i className="fa-solid fa-chart-line mb-2 fs-4"></i>
-                                                        <div className="fw-bold fs-5">{results.roiYears} Yrs</div>
-                                                        <div className="small text-white-50">Payback Period</div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div className="environmental-impact pt-3 border-top border-white border-opacity-25">
-                                                <h6 className="fw-bold mb-3"><i className="fa-solid fa-earth-americas me-2"></i>Environmental Impact</h6>
-                                                <div className="d-flex align-items-center mb-2">
-                                                    <span className="me-2 fs-5">🌿</span>
-                                                    <span><strong>{results.treesPlanted}</strong> Trees Planted</span>
-                                                </div>
-                                                <div className="d-flex align-items-center">
-                                                    <span className="me-2 fs-5">☁️</span>
-                                                    <span><strong>{results.carbonReduction}</strong> Tonnes CO₂ Saved/Yr</span>
-                                                </div>
-                                            </div>
+                                        <div className="text-center text-muted col my-auto opacity-50">
+                                            <i className="fa-solid fa-receipt display-1 mb-3"></i>
+                                            <p>Fill out the form to see the cost breakdown.</p>
                                         </div>
                                     )}
-                                    
-                                    {/* Abstract Circles for design */}
-                                    <div className="circle-1"></div>
-                                    <div className="circle-2"></div>
                                 </Col>
                             </Row>
                         </Card>
                     </Col>
                 </Row>
-                <div className="text-center mt-4">
-                     <p className="text-muted small fst-italic">
-                        * Note: The expected savings and calculations are estimates based on general data available on the internet. Actual savings may vary based on location, usage, and other factors.
-                    </p>
-                </div>
             </Container>
-            
-            <AnimatedSection className="mt-5 py-5 section-bg">
-                <Container className="text-center">
-                    <h3 className="fw-bold mb-3">Not sure about specific details?</h3>
-                    <p className="lead text-muted mb-4">Our experts can perform a detailed site survey to give you an exact quote.</p>
-                    <div className="d-flex justify-content-center gap-3">
-                         <Button as={Link} to="/contact" variant="primary" size="lg" className="rounded-pill px-5">Book Free Site Survey</Button>
-                         <Button href="tel:+916306693936" variant="outline-dark" size="lg" className="rounded-pill px-5"><i className="fa-solid fa-phone me-2"></i>Call Expert</Button>
-                    </div>
-                </Container>
-            </AnimatedSection>
         </div>
     );
 };

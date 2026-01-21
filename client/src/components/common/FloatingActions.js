@@ -1,33 +1,46 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './FloatingElements.css';
 import WhatsAppWidget from './WhatsAppWidget';
 import QuoteModal from './QuoteModal';
 
 const FloatingActions = () => {
     const [showQuoteModal, setShowQuoteModal] = useState(false);
+    const navigate = useNavigate();
 
     return (
         <>
             {/* The Sticky Side Button (Desktop mainly) */}
             <div className="sticky-quote-side-tab d-none d-md-block">
                 <button className="side-quote-btn" onClick={() => setShowQuoteModal(true)}>
-                    <i className="fa-solid fa-calculator"></i>
-                    GET A FREE QUOTE
+                    <i className="fa-solid fa-file-invoice-dollar"></i>
+                    GET QUOTE
                 </button>
             </div>
 
             {/* Bottom Right Floating Container */}
             <div className="floating-actions-container">
-                {/* Mobile "Get Quote" Floating Button (Above WhatsApp) */}
+                
+                {/* 1. Solar Calculator Floating Button */}
                 <button 
-                    className="whatsapp-widget-btn bg-warning border-0 d-md-none mb-2 text-dark" 
-                    onClick={() => setShowQuoteModal(true)}
-                    style={{width: '50px', height: '50px'}}
+                    className="floating-action-btn calculator-btn mb-2" 
+                    onClick={() => navigate('/calculator')}
+                    title="Calculate Cost"
                 >
-                    <i className="fa-solid fa-file-invoice-dollar fs-5"></i>
+                    <i className="fa-solid fa-calculator"></i>
+                     <span className="tooltip-text">Calculator</span>
                 </button>
 
-                {/* WhatsApp Widget */}
+                 {/* 2. Mobile Look "Get Quote" Button (Hidden on Desktop) */}
+                 <button 
+                    className="floating-action-btn quote-mobile-btn d-md-none mb-2" 
+                    onClick={() => setShowQuoteModal(true)}
+                    title="Get a Quote"
+                >
+                    <i className="fa-solid fa-file-invoice-dollar"></i>
+                </button>
+
+                {/* 3. WhatsApp Widget */}
                 <WhatsAppWidget />
             </div>
 

@@ -138,3 +138,72 @@
     color: #FFD93D;
     font-weight: 800;
 }
+
+/* === New Floating Button Styles === */
+.floating-action-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: none;
+    position: relative;
+    cursor: pointer;
+    color: white;
+}
+
+.floating-action-btn:hover {
+    transform: scale(1.1) translateY(-3px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.25);
+}
+
+/* Calculator Button Specifics */
+.calculator-btn {
+    background: linear-gradient(135deg, #FFD93D, #FF9F1C);
+    color: #212529;
+}
+
+.calculator-btn:hover {
+    background: linear-gradient(135deg, #ffe066, #ffb347);
+}
+
+/* Quote Button Mobile Specifics */
+.quote-mobile-btn {
+    background: linear-gradient(135deg, #10b981, #059669);
+}
+
+/* Tooltips */
+.tooltip-text {
+    position: absolute;
+    right: 60px;
+    background: #333;
+    color: #fff;
+    padding: 5px 12px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+    font-weight: 600;
+}
+
+.tooltip-text::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: -5px;
+    margin-top: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent transparent #333;
+}
+
+.floating-action-btn:hover .tooltip-text {
+    opacity: 1;
+}
+
