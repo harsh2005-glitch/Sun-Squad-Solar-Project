@@ -3,6 +3,7 @@ const Inverter = require('../models/inverter');
 const Battery = require('../models/battery');
 const Wire = require('../models/wire');
 const InstallationCharge = require('../models/installationCharge');
+const SolarPackage = require('../models/solarPackage');
 
 // Helper to get model by type
 const getModel = (type) => {
@@ -12,6 +13,7 @@ const getModel = (type) => {
         case 'battery': return Battery;
         case 'wire': return Wire;
         case 'installation': return InstallationCharge;
+        case 'package': return SolarPackage;
         default: return null;
     }
 };
@@ -34,19 +36,14 @@ exports.getAllItems = async (req, res) => {
 
 // Get active items (Public)
 exports.getActiveItems = async (req, res) => {
-    // For the public calculator, we probably want to fetch all active data at once 
-    // or provide endpoints for each. 
-    // Let's provide a combined endpoint for efficiency or individual ones.
-    // The requirement says "The system must automatically decide...".
-    // So the frontend needs the list of active components to apply logic.
-    
     try {
-        const [panels, inverters, batteries, wires, installation] = await Promise.all([
+        const [panels, inverters, batteries, wires, installation, packages] = await Promise.all([
             SolarPanel.find({ status: 'Active' }),
             Inverter.find({ status: 'Active' }),
             Battery.find({ status: 'Active' }),
             Wire.find({ status: 'Active' }),
-            InstallationCharge.find({ status: 'Active' })
+            InstallationCharge.find({ status: 'Active' }),
+            SolarPackage.find({ status: 'Active' }).sort({ systemSize: 1 })
         ]);
 
         res.json({
@@ -54,7 +51,8 @@ exports.getActiveItems = async (req, res) => {
             inverters,
             batteries,
             wires,
-            installation
+            installation,
+            packages
         });
     } catch (err) {
          console.error(err);

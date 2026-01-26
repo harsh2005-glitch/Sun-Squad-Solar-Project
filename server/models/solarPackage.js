@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
-const solarPanelSchema = new mongoose.Schema({
-  brand: {
+const solarPackageSchema = new mongoose.Schema({
+  name: {
     type: String,
     required: true,
   },
@@ -10,13 +10,17 @@ const solarPanelSchema = new mongoose.Schema({
     enum: ['On-Grid', 'Off-Grid', 'Hybrid'],
     required: true,
   },
-  watt: {
+  systemSize: {
     type: Number,
     required: true,
+    index: true
   },
   price: {
     type: Number,
-    required: false,
+    required: true,
+  },
+  description: {
+    type: String,
   },
   status: {
     type: String,
@@ -25,4 +29,4 @@ const solarPanelSchema = new mongoose.Schema({
   },
 }, { timestamps: true });
 
-module.exports = mongoose.model('SolarPanel', solarPanelSchema);
+module.exports = mongoose.model('SolarPackage', solarPackageSchema);

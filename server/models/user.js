@@ -37,7 +37,6 @@ const userSchema = new mongoose.Schema({
     aadharCardUrl: { type: String, default: '' },
     panCardUrl: { type: String, default: '' },
     bankDocumentUrl: { type: String, default: '' },
-    status: { type: String, enum: ['pendingOnboarding', 'active'], default: 'pendingOnboarding' },
     dateOfJoining: { type: Date, default: Date.now }
 }, { timestamps: true });
 

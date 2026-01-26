@@ -60,13 +60,19 @@ const signupUser = async (req, res) => {
 // @route   POST /api/auth/login
 const loginUser = async (req, res) => {
     const { phone, password } = req.body;
+    console.log(`Login attempt for phone: ${phone}`);
 
     try {
         // 1. Find the user by phone number
         const user = await User.findOne({ phone });
 
+        if (!user) {
+            console.log(`User not found for phone: ${phone}`);
+            return res.status(401).json({ message: 'Invalid phone number or password.' });
+        }
+
         // 2. Check if user exists and if password matches
-        if (user && (await bcrypt.compare(password, user.password))) {
+        if (await bcrypt.compare(password, user.password)) {
 
             if (!user.isActive) {
                 return res.status(403).json({ message: 'Your account has been deactivated. Please contact support.' }); // 403 Forbidden
@@ -82,9 +88,11 @@ const loginUser = async (req, res) => {
                 role: user.role // <-- MAKE SURE THIS LINE IS HERE
             });
         } else {
+            console.log(`Invalid password for phone: ${phone}`);
             res.status(401).json({ message: 'Invalid phone number or password.' });
         }
     } catch (error) {
+        console.error("LOGIN ERROR:", error);
         res.status(500).json({ message: 'Server error during login.', error: error.message });
     }
 };

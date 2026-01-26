@@ -11,7 +11,7 @@ const wireSchema = new mongoose.Schema({
   },
   pricePerMeter: {
     type: Number,
-    required: true,
+    required: false,
   },
   status: {
     type: String,

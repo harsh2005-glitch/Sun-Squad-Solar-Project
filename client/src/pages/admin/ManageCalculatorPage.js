@@ -95,15 +95,12 @@ const ManageCalculatorPage = () => {
                                 <option value="">Select Type</option>
                                 <option value="On-Grid">On-Grid</option>
                                 <option value="Off-Grid">Off-Grid</option>
+                                <option value="Hybrid">Hybrid</option>
                             </Form.Select>
                         </Form.Group>
                         <Form.Group className="mb-3">
                             <Form.Label>Watt Rating</Form.Label>
                             <Form.Control type="number" name="watt" value={formData.watt || ''} onChange={handleChange} required />
-                        </Form.Group>
-                        <Form.Group className="mb-3">
-                            <Form.Label>Price (₹)</Form.Label>
-                            <Form.Control type="number" name="price" value={formData.price || ''} onChange={handleChange} required />
                         </Form.Group>
                     </>
                 );
@@ -124,12 +121,8 @@ const ManageCalculatorPage = () => {
                             </Form.Select>
                         </Form.Group>
                         <Form.Group className="mb-3">
-                            <Form.Label>Capacity (kW)</Form.Label>
+                            <Form.Label>Capacity (W)</Form.Label>
                             <Form.Control type="number" name="capacity" value={formData.capacity || ''} onChange={handleChange} required />
-                        </Form.Group>
-                        <Form.Group className="mb-3">
-                            <Form.Label>Price (₹)</Form.Label>
-                            <Form.Control type="number" name="price" value={formData.price || ''} onChange={handleChange} required />
                         </Form.Group>
                     </>
                 );
@@ -148,10 +141,6 @@ const ManageCalculatorPage = () => {
                             <Form.Label>Voltage (V) - Optional</Form.Label>
                             <Form.Control type="number" name="voltage" value={formData.voltage || ''} onChange={handleChange} />
                         </Form.Group>
-                        <Form.Group className="mb-3">
-                            <Form.Label>Price (₹)</Form.Label>
-                            <Form.Control type="number" name="price" value={formData.price || ''} onChange={handleChange} required />
-                        </Form.Group>
                     </>
                 );
             case 'wire':
@@ -165,30 +154,35 @@ const ManageCalculatorPage = () => {
                             <Form.Label>Description</Form.Label>
                             <Form.Control type="text" name="description" value={formData.description || ''} onChange={handleChange} />
                         </Form.Group>
-                        <Form.Group className="mb-3">
-                            <Form.Label>Price per Meter (₹)</Form.Label>
-                            <Form.Control type="number" name="pricePerMeter" value={formData.pricePerMeter || ''} onChange={handleChange} required />
-                        </Form.Group>
                     </>
                 );
-            case 'installation':
+            case 'package':
                 return (
                     <>
                         <Form.Group className="mb-3">
-                            <Form.Label>Charge Type</Form.Label>
+                            <Form.Label>Package Name</Form.Label>
+                            <Form.Control type="text" name="name" value={formData.name || ''} onChange={handleChange} required />
+                        </Form.Group>
+                        <Form.Group className="mb-3">
+                            <Form.Label>System Type</Form.Label>
                             <Form.Select name="type" value={formData.type || ''} onChange={handleChange} required>
                                 <option value="">Select Type</option>
-                                <option value="PerkW">Price Per kW</option>
-                                <option value="Fixed">Fixed Price</option>
+                                <option value="On-Grid">On-Grid</option>
+                                <option value="Off-Grid">Off-Grid</option>
+                                <option value="Hybrid">Hybrid</option>
                             </Form.Select>
                         </Form.Group>
                         <Form.Group className="mb-3">
-                             <Form.Label>Description</Form.Label>
-                             <Form.Control type="text" name="description" value={formData.description || ''} onChange={handleChange} />
+                            <Form.Label>System Size (kW)</Form.Label>
+                            <Form.Control type="number" step="0.1" name="systemSize" value={formData.systemSize || ''} onChange={handleChange} required />
                         </Form.Group>
                         <Form.Group className="mb-3">
-                            <Form.Label>Price (₹)</Form.Label>
+                            <Form.Label>Total Price (₹)</Form.Label>
                             <Form.Control type="number" name="price" value={formData.price || ''} onChange={handleChange} required />
+                        </Form.Group>
+                        <Form.Group className="mb-3">
+                             <Form.Label>Description</Form.Label>
+                             <Form.Control as="textarea" rows={3} name="description" value={formData.description || ''} onChange={handleChange} placeholder="Details about this package..."/>
                         </Form.Group>
                     </>
                 );
@@ -198,11 +192,11 @@ const ManageCalculatorPage = () => {
 
     const renderTableHeaders = () => {
         switch (key) {
-            case 'panel': return <tr><th>Brand</th><th>Type</th><th>Watt</th><th>Price</th><th>Status</th><th>Actions</th></tr>;
-            case 'inverter': return <tr><th>Brand</th><th>Type</th><th>Capacity (kW)</th><th>Price</th><th>Status</th><th>Actions</th></tr>;
-            case 'battery': return <tr><th>Brand</th><th>Capacity</th><th>Price</th><th>Status</th><th>Actions</th></tr>;
-            case 'wire': return <tr><th>Type</th><th>Description</th><th>Price/Meter</th><th>Status</th><th>Actions</th></tr>;
-            case 'installation': return <tr><th>Type</th><th>Description</th><th>Price</th><th>Status</th><th>Actions</th></tr>;
+            case 'panel': return <tr><th>Brand</th><th>Type</th><th>Watt</th><th>Status</th><th>Actions</th></tr>;
+            case 'inverter': return <tr><th>Brand</th><th>Type</th><th>Capacity (W)</th><th>Status</th><th>Actions</th></tr>;
+            case 'battery': return <tr><th>Brand</th><th>Capacity</th><th>Status</th><th>Actions</th></tr>;
+            case 'wire': return <tr><th>Type</th><th>Description</th><th>Status</th><th>Actions</th></tr>;
+            case 'package': return <tr><th>Name</th><th>Type</th><th>Size (kW)</th><th>Price</th><th>Status</th><th>Actions</th></tr>;
             default: return null;
         }
     };
@@ -212,30 +206,27 @@ const ManageCalculatorPage = () => {
             <tr key={item._id}>
                 {key === 'panel' && <>
                     <td>{item.brand}</td>
-                    <td><Badge bg={item.type === 'On-Grid' ? 'info' : 'warning'}>{item.type}</Badge></td>
+                    <td><Badge bg={item.type === 'Hybrid' ? 'success' : item.type === 'On-Grid' ? 'info' : 'warning'}>{item.type}</Badge></td>
                     <td>{item.watt} W</td>
-                    <td>₹{item.price}</td>
                 </>}
                 {key === 'inverter' && <>
                     <td>{item.brand}</td>
                     <td><Badge bg={item.type === 'Hybrid' ? 'success' : item.type === 'On-Grid' ? 'info' : 'warning'}>{item.type}</Badge></td>
-                    <td>{item.capacity} kW</td>
-                    <td>₹{item.price}</td>
+                    <td>{item.capacity} W</td>
                 </>}
                 {key === 'battery' && <>
                     <td>{item.brand}</td>
                     <td>{item.capacity}</td>
-                    <td>₹{item.price}</td>
                 </>}
                 {key === 'wire' && <>
                     <td>{item.type}</td>
                     <td>{item.description}</td>
-                    <td>₹{item.pricePerMeter}</td>
                 </>}
-                {key === 'installation' && <>
-                    <td>{item.type === 'PerkW' ? 'Per kW' : 'Fixed'}</td>
-                    <td>{item.description}</td>
-                    <td>₹{item.price}</td>
+                {key === 'package' && <>
+                    <td>{item.name}</td>
+                    <td><Badge bg={item.type === 'Hybrid' ? 'success' : item.type === 'On-Grid' ? 'info' : 'warning'}>{item.type}</Badge></td>
+                    <td>{item.systemSize} kW</td>
+                    <td>₹{item.price.toLocaleString()}</td>
                 </>}
                 
                 <td>
@@ -263,7 +254,7 @@ const ManageCalculatorPage = () => {
                 <Tab eventKey="inverter" title="Inverters"></Tab>
                 <Tab eventKey="battery" title="Batteries"></Tab>
                 <Tab eventKey="wire" title="Wires"></Tab>
-                <Tab eventKey="installation" title="Installation"></Tab>
+                <Tab eventKey="package" title="Full Packages"></Tab>
             </Tabs>
 
             <div className="d-flex justify-content-end mb-3">

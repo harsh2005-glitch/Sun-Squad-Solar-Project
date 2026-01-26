@@ -18,7 +18,7 @@ const batterySchema = new mongoose.Schema({
   },
   price: {
     type: Number,
-    required: true,
+    required: false,
   },
   status: {
     type: String,

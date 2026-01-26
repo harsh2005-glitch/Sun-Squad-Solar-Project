@@ -33,7 +33,7 @@ const LoginPage = () => {
         navigate('/app/dashboard');
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || 'An error occurred during login.');
+      toast.error(error.response?.data?.message || error.message || 'An error occurred during login.');
     } finally {
       setLoading(false);
     }
