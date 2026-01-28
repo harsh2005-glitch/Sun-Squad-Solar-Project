@@ -14,7 +14,6 @@ import PrioritySection from '../../components/home/PrioritySection';
 // import TestimonialsSection from '../../components/home/TestimonialsSection'; // Replaced by new Google Widget
 import CertificationStrip from '../../components/common/CertificationStrip';
 import GoogleReviewsWidget from '../../components/common/GoogleReviewsWidget';
-import CaseStudiesSection from '../../components/home/CaseStudiesSection'; // Import the new Case Studies Section
 
 
 // --- Import your images ---
@@ -65,10 +64,7 @@ const HomePage = () => {
       
       {/* === Certification Strip (New) === */}
       <CertificationStrip />
-Case Studies Section (Interactive Slider) === */}
-      <CaseStudiesSection />
 
-      {/* === 
       {/* === Power Future Section === */}
       <PowerFutureSection />
 
