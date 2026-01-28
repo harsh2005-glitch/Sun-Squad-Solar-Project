@@ -1,0 +1,59 @@
+/* RoofVisualizer.css */
+
+.roof-visualizer-page {
+    background-color: #f8f9fa;
+    min-height: 100vh;
+}
+
+.visualizer-hero {
+    background: linear-gradient(rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.8)), url('../assets/images/hero-slider-3.jpg');
+    background-size: cover;
+    background-position: center;
+    padding: 6rem 0;
+    position: relative;
+}
+
+.search-card {
+    transition: transform 0.3s ease;
+}
+
+.search-card:hover {
+    transform: translateY(-5px);
+}
+
+.map-placeholder-container {
+    background: #e2e8f0;
+    border: 4px solid #fff;
+}
+
+/* This creates a fake grid overlay to look like 'analysis' is happening */
+.analysis-grid {
+    width: 100%;
+    height: 100%;
+    background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+    background-size: 50px 50px;
+    opacity: 0.5;
+}
+
+.result-card-gradient {
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+}
+
+.letter-spacing-1 {
+    letter-spacing: 1px;
+}
+
+.pointer-events-none {
+    pointer-events: none;
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.8s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}

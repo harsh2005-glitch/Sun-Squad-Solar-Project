@@ -1,0 +1,53 @@
+.forecast-card {
+    background: #ffffff;
+    border-radius: 16px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.forecast-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08) !important;
+}
+
+.weather-bg-glow {
+    position: absolute;
+    top: -50px;
+    right: -50px;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    filter: blur(60px);
+    opacity: 0.15;
+    z-index: 0;
+}
+
+.sunny-glow {
+    background: orange;
+}
+
+.cloudy-glow {
+    background: #6c757d;
+}
+
+.main-forecast-display {
+    background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.01));
+    border-radius: 12px;
+}
+
+.bg-success-subtle {
+    background-color: #d1e7dd;
+}
+
+.bg-warning-subtle {
+    background-color: #fff3cd;
+}
+
+.hover-bg-light:hover {
+    background-color: #f8f9fa;
+}
+
+/* Spinner centering helper */
+.forecast-card .spinner-border {
+    width: 3rem;
+    height: 3rem;
+}

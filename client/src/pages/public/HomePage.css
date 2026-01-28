@@ -1,4 +1,21 @@
-/* HomePage.css */
+/* Mobile Hero Image Responsive Fix */
+.hero-image {
+    height: 85vh; /* Desktop default */
+    object-fit: cover;
+}
+
+@media (max-width: 768px) {
+    .hero-image {
+        height: 50vh; /* Reduced height for tablet/mobile */
+        object-position: center;
+    }
+}
+
+@media (max-width: 576px) {
+    .hero-image {
+        height: 60vh; /* Slightly taller for very small screens to fit portrait panels well */
+    }
+}
 
 /* === GLOBAL BACKGROUND OVERRIDE FOR SECTIONS === */
 .power-future-section,

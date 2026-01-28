@@ -14,6 +14,7 @@ import PrioritySection from '../../components/home/PrioritySection';
 // import TestimonialsSection from '../../components/home/TestimonialsSection'; // Replaced by new Google Widget
 import CertificationStrip from '../../components/common/CertificationStrip';
 import GoogleReviewsWidget from '../../components/common/GoogleReviewsWidget';
+import CaseStudiesSection from '../../components/home/CaseStudiesSection'; // Import the new Case Studies Section
 
 
 // --- Import your images ---
@@ -29,7 +30,7 @@ const HomePage = () => {
       {/* === Carousel Section (No scroll animation needed here) === */}
       <Carousel fade className="content-beneath-navbar">
         <Carousel.Item interval={3000}>
-          <img className="d-block w-100" src={sliderImg1} alt="First slide" style={{ height: '85vh', objectFit: 'cover' }} />
+          <img className="d-block w-100 hero-image" src={sliderImg1} alt="First slide" />
           <Carousel.Caption className="d-none d-md-block">
             <h3>Powerful Solar Solutions</h3>
             <p>Harness the power of the sun for a brighter future.</p>
@@ -41,7 +42,7 @@ const HomePage = () => {
           </Carousel.Caption>
         </Carousel.Item>
         <Carousel.Item interval={3000}>
-          <img className="d-block w-100" src={sliderImg2} alt="Second slide" style={{ height: '85vh', objectFit: 'cover' }} />
+          <img className="d-block w-100 hero-image" src={sliderImg2} alt="Second slide" />
           <Carousel.Caption className="d-none d-md-block">
             <h3>Sustainable Energy for Everyone</h3>
             <p>Join us in the renewable energy revolution.</p>
@@ -51,7 +52,7 @@ const HomePage = () => {
           </Carousel.Caption>
         </Carousel.Item>
         <Carousel.Item interval={3000}>
-          <img className="d-block w-100" src={sliderImg3} alt="Third slide" style={{ height: '85vh', objectFit: 'cover' }} />
+          <img className="d-block w-100 hero-image" src={sliderImg3} alt="Third slide" />
           <Carousel.Caption className="d-none d-md-block">
             <h3>Expert Installation & Service</h3>
             <p>Quality and reliability you can trust.</p>
@@ -64,7 +65,10 @@ const HomePage = () => {
       
       {/* === Certification Strip (New) === */}
       <CertificationStrip />
+Case Studies Section (Interactive Slider) === */}
+      <CaseStudiesSection />
 
+      {/* === 
       {/* === Power Future Section === */}
       <PowerFutureSection />
 

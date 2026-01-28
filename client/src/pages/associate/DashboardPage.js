@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import userService from '../../services/userService';
-import { Container, Row, Col, Card, Table, Spinner, Alert, Image, Badge } from 'react-bootstrap';
+import { Container, Row, Col, Card, Table, Alert, Image, Badge } from 'react-bootstrap';
 import './DashboardPage.css';
+import '../../styles/DigitalBusinessCard.css'; // Import the new CSS
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell, AreaChart, Area } from 'recharts';
+import SkeletonLoader from '../../components/common/SkeletonLoader';
+import SolarForecastWidget from '../../components/dashboard/SolarForecastWidget'; // New Widget Import
 
 const PIE_CHART_COLORS = ['#0d6efd', '#0dcaf0', '#ffc107', '#dc3545', '#6610f2', '#20c997'];
 
@@ -15,6 +18,8 @@ const DashboardPage = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      // Simulate slightly longer delay to show off skeleton
+      // await new Promise(r => setTimeout(r, 1000)); 
       try {
         const [dashResponse, incomeResponse, teamResponse] = await Promise.all([
             userService.getDashboardData(),
@@ -25,7 +30,7 @@ const DashboardPage = () => {
         setIncomeChartData(incomeResponse.data);
         setTeamChartData(teamResponse.data);
       } catch (err) {
-        setError('Failed to fetch dashboard data.');
+        setError('Failed to fetch dashboard data.' + err.message);
       } finally {
         setLoading(false);
       }
@@ -34,7 +39,52 @@ const DashboardPage = () => {
   }, []);
 
   if (loading) {
-    return <div className="d-flex justify-content-center align-items-center" style={{ height: '80vh' }}><Spinner animation="border" variant="primary" /></div>;
+    return (
+      <Container fluid className="dashboard-container px-4 py-4">
+        {/* Welcome Skeleton */}
+        <div className="mb-5">
+           <Row className="align-items-center">
+             <Col md={8}>
+               <SkeletonLoader type="title" width="60%" />
+               <SkeletonLoader type="text" width="40%" />
+               <div className="d-flex gap-2 mt-3">
+                 <SkeletonLoader type="rect" width={100} height={30} style={{borderRadius:'20px'}} />
+                 <SkeletonLoader type="rect" width={100} height={30} style={{borderRadius:'20px'}} />
+               </div>
+             </Col>
+             <Col md={4} className="text-end">
+               <SkeletonLoader type="circle" />
+             </Col>
+           </Row>
+        </div>
+        {/* Cards Skeleton */}
+        <Row className="g-4 mb-5">
+          {[1,2,3,4].map(i => (
+            <Col md={6} lg={3} key={i}>
+              <div className="skeleton-card">
+                <SkeletonLoader type="text" width="50%" className="mb-3"/>
+                <SkeletonLoader type="title" width="80%" />
+              </div>
+            </Col>
+          ))}
+        </Row>
+        {/* Charts Skeleton */}
+        <Row className="g-4 mb-5">
+           <Col lg={8}>
+             <div className="skeleton-card">
+                <SkeletonLoader type="title" width="30%" />
+                <SkeletonLoader type="rect" height={300} />
+             </div>
+           </Col>
+           <Col lg={4}>
+             <div className="skeleton-card">
+                <SkeletonLoader type="title" width="50%" />
+                <SkeletonLoader type="circle" width={200} height={200} style={{margin:'20px auto'}} />
+             </div>
+           </Col>
+        </Row>
+      </Container>
+    );
   }
   if (error) {
     return <Alert variant="danger" className="m-4 shadow-sm">{error}</Alert>;
@@ -169,6 +219,8 @@ const DashboardPage = () => {
                 </Card.Body>
             </Card>
         </Col>
+        
+        {/* Team Contribution Pie Chart (Swapped Position) */}
         <Col lg={4}>
             <Card className="chart-card h-100">
                 <Card.Body>
@@ -200,14 +252,97 @@ const DashboardPage = () => {
         </Col>
       </Row>
 
-      {/* Recent Directs Table */}
-      <Row>
-        <Col>
-          <Card className="chart-card border-0">
+      {/* Team Stats & Digital Business Card */}
+      <Row className="g-4 mb-5">
+        <Col lg={4}>
+            {/* Solar Forecast Widget (Swapped Position) */}
+            <SolarForecastWidget />
+        </Col>
+        
+        <Col lg={4}>
+            <div className="digital-biz-card h-100">
+                 {/* Decorative Glows */}
+                 <div className="biz-card-glow-1"></div>
+                 <div className="biz-card-glow-2"></div>
+                
+                <div className="biz-card-content d-flex flex-column align-items-center justify-content-center">
+                    <div className="text-center mb-2">
+                        <div className="d-inline-block bg-warning bg-opacity-10 p-2 rounded-circle mb-2">
+                            <i className="fa-solid fa-id-card text-warning fs-4"></i>
+                        </div>
+                        <h4 className="fw-bold mb-1 text-white">Digital Business Card</h4>
+                        <p className="text-white-50 small mb-0">Scan to Join My Team</p>
+                    </div>
+
+                    <div className="qr-code-frame">
+                        <img 
+                            src={`https://api.qrserver.com/v1/create-qr-code/?size=250&data=${encodeURIComponent(`${window.location.origin}/signup?ref=${userInfo?.associateId}`)}&bgcolor=ffffff`} 
+                            alt="Referral QR Code" 
+                        />
+                         <div className="qr-logo-overlay">
+                             <i className="fa-solid fa-solar-panel"></i>
+                         </div>
+                    </div>
+
+                    <div className="text-center w-100 mt-2">
+                        <h5 className="user-name-title">{userInfo?.name || 'Associate Name'}</h5>
+                        <div className="d-inline-block bg-success bg-opacity-25 text-success border border-success border-opacity-25 px-3 py-1 rounded-pill mb-4 small fw-bold">
+                            ID: {userInfo?.associateId || '---'}
+                        </div>
+                        
+                        <a 
+                            href={`https://wa.me/?text=Join%20my%20solar%20team!%20${encodeURIComponent(`${window.location.origin}/signup?ref=${userInfo?.associateId}`)}`} 
+                            target="_blank" 
+                            rel="noreferrer" 
+                            className="btn btn-success text-white w-100 share-btn-animated d-flex align-items-center justify-content-center"
+                        >
+                            <i className="fa-brands fa-whatsapp fa-lg me-2"></i> Share on WhatsApp
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </Col>
+
+        {/* Quick Links / Tools Placeholder (To balance 3rd column) */}
+        <Col lg={4}>
+            <Card className="chart-card h-100 border-0 bg-light">
+                 <Card.Body className="d-flex flex-column justify-content-center align-items-center text-center p-4">
+                    <div className="mb-3 p-3 bg-white rounded-circle shadow-sm text-primary">
+                        <i className="fa-solid fa-toolbox fa-2x"></i>
+                    </div>
+                    <h5 className="fw-bold mb-3">Quick Tools</h5>
+                    
+                    <div className="d-grid gap-3 w-100">
+                        <a href="/visualizer" className="btn btn-white shadow-sm fw-bold border text-start p-3 d-flex align-items-center hover-lift">
+                            <i className="fa-solid fa-house-chimney text-warning me-3 fa-lg"></i>
+                            <div>
+                                <div className="small text-muted text-uppercase" style={{fontSize: '0.7rem'}}>Design Tool</div>
+                                <div>Roof Visualizer</div>
+                            </div>
+                            <i className="fa-solid fa-chevron-right ms-auto text-muted"></i>
+                        </a>
+                        <a href="/calculator" className="btn btn-white shadow-sm fw-bold border text-start p-3 d-flex align-items-center hover-lift">
+                            <i className="fa-solid fa-calculator text-success me-3 fa-lg"></i>
+                            <div>
+                                <div className="small text-muted text-uppercase" style={{fontSize: '0.7rem'}}>Estimator</div>
+                                <div>Cost Calculator</div>
+                            </div>
+                            <i className="fa-solid fa-chevron-right ms-auto text-muted"></i>
+                        </a>
+                    </div>
+                 </Card.Body>
+            </Card>
+        </Col>
+      </Row>
+
+      {/* Recent Directs Full Width */}
+      <Row className="g-4">
+        <Col lg={12}>
+          <Card className="chart-card border-0 h-100">
             <Card.Body>
                 <div className="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
                     <Card.Title className="mb-0 border-0 pb-0">My Direct Sponsors</Card.Title>
-                    <Badge bg="light" text="dark" className="border">Total: {directSponsors.length}</Badge>
+                    <Badge bg="light" text="dark" className="border">Total: {directSponsors ? directSponsors.length : 0}</Badge>
                 </div>
               
               <div className="table-responsive">
@@ -216,13 +351,12 @@ const DashboardPage = () => {
                     <tr>
                         <th>#</th>
                         <th>Associate Name</th>
-                        <th>Associate ID</th>
                         <th>Status</th>
                         <th>Date of Joining</th>
                     </tr>
                     </thead>
                     <tbody>
-                    {directSponsors.length > 0 ? (
+                    {directSponsors && directSponsors.length > 0 ? (
                         directSponsors.map((direct, index) => (
                             <tr key={direct._id}>
                             <td>{index + 1}</td>
@@ -231,10 +365,12 @@ const DashboardPage = () => {
                                     <div className="bg-light rounded-circle d-flex align-items-center justify-content-center me-3" style={{width: '35px', height: '35px'}}>
                                         <span className="fw-bold text-primary">{direct.name.charAt(0)}</span>
                                     </div>
-                                    <span className="fw-bold text-dark">{direct.name}</span>
+                                    <div>
+                                        <div className="fw-bold text-dark">{direct.name}</div>
+                                        <div className="text-muted small" style={{fontSize: '0.75rem'}}>{direct.associateId}</div>
+                                    </div>
                                 </div>
                             </td>
-                            <td><span className="font-monospace text-muted">{direct.associateId}</span></td>
                             <td><Badge bg="success" className="rounded-pill px-3">Active</Badge></td>
                             <td className="text-muted">{new Date(direct.dateOfJoining).toLocaleDateString()}</td>
                             </tr>

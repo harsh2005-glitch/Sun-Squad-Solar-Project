@@ -1,0 +1,66 @@
+.case-studies-section {
+    background-color: #f8f9fa;
+    position: relative;
+}
+
+.ls-1 {
+    letter-spacing: 1px;
+}
+
+.absolute-slider-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.absolute-slider-layer .before-after-container {
+    height: 100% !important; /* Force fill the column */
+}
+
+/* Stats Grid */
+.stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    background: #f1f5f9;
+    padding: 1.5rem;
+    border-radius: 12px;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-item.full-width {
+    grid-column: span 2;
+    border-top: 1px solid #e2e8f0;
+    padding-top: 1rem;
+    margin-top: 0.5rem;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.stat-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: #64748b;
+    font-weight: 700;
+    margin-bottom: 4px;
+    letter-spacing: 0.5px;
+}
+
+.stat-value {
+    font-size: 1.25rem;
+    font-weight: 800;
+}
+
+@media (max-width: 992px) {
+    .absolute-slider-layer {
+        position: relative;
+        height: 400px;
+    }
+}

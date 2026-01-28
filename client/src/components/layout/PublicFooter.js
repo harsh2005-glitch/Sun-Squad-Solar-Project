@@ -34,8 +34,12 @@ const PublicFooter = () => {
                     <li><Link to="/"><i className="fa-solid fa-angle-right me-2"></i>Home</Link></li>
                     <li><Link to="/about"><i className="fa-solid fa-angle-right me-2"></i>About Us</Link></li>
                     <li><Link to="/gallery"><i className="fa-solid fa-angle-right me-2"></i>Gallery</Link></li>
-                    <li><Link to="/locations"><i className="fa-solid fa-angle-right me-2"></i>Projects</Link></li>
+                    <li><Link to="/projects"><i className="fa-solid fa-angle-right me-2"></i>Projects</Link></li>
                     <li><Link to="/calculator"><i className="fa-solid fa-angle-right me-2"></i>Solar Calculator</Link></li>
+                    {/* New Features */}
+                    <li><Link to="/track-order"><i className="fa-solid fa-angle-right me-2"></i>Track Order</Link></li>
+                    <li><Link to="/visualizer"><i className="fa-solid fa-angle-right me-2"></i>Roof Visualizer</Link></li>
+                    <li><Link to="/shop"><i className="fa-solid fa-angle-right me-2"></i>Solar Shop</Link></li>
                     <li><Link to="/Announcement"><i className="fa-solid fa-angle-right me-2"></i>Updates</Link></li>
                 </ul>
             </div>

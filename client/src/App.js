@@ -1,6 +1,6 @@
 
-import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Routes, Route, Link } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -69,6 +69,71 @@ import ManageCalculatorPage from './pages/admin/ManageCalculatorPage'; // New Im
 // --- Create a temporary Dashboard Page for now ---
 // const DashboardPage = () => <div><h1>Welcome to your Dashboard!</h1><p>This page is protected.</p></div>;
 // const AdminDashboardPage = () => <div><h1>Admin Dashboard</h1></div>;
+
+import RoofVisualizerPage from './pages/public/RoofVisualizerPage'; // Import the new Real Page
+
+/* --- NEW FEATURES (Inline) --- */
+const TrackOrderPage = () => {
+  const [orderId, setOrderId] = useState('');
+  const [status, setStatus] = useState(null);
+  const handleTrack = (e) => {
+    e.preventDefault();
+    if (orderId === '12345') {
+      setStatus({ 
+        stages: [ 
+          { name: 'Site Survey', date: '2023-10-01', completed: true }, 
+          { name: 'System Design', date: '2023-10-05', completed: true }, 
+          { name: 'Permit Approval', date: 'In Progress', completed: true },
+          { name: 'Installation', date: 'Pending', completed: false }
+        ] 
+      });
+    } else { alert('Order not found. Try ID: 12345'); }
+  };
+  return (
+    <div style={{padding: '120px 2rem', maxWidth: '800px', margin: '0 auto', textAlign: 'center'}}>
+      <h1 style={{color: '#1e293b', marginBottom: '1rem'}}>Track Your Solar Journey</h1>
+      <div style={{background: 'white', padding: '2rem', borderRadius: '16px', boxShadow: '0 4px 20px rgba(0,0,0,0.05)'}}>
+        <form onSubmit={handleTrack} style={{display: 'flex', gap: '10px', marginBottom: '2rem'}}>
+          <input type="text" placeholder="Enter Order ID (e.g., 12345)" value={orderId} onChange={(e) => setOrderId(e.target.value)} style={{flex: 1, padding: '10px', border: '1px solid #cbd5e1', borderRadius: '8px'}} />
+          <button type="submit" style={{background: '#10b981', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '8px', cursor: 'pointer'}}>Track</button>
+        </form>
+        {status && <div style={{textAlign: 'left'}}>
+          {status.stages.map((s, i) => (
+            <div key={i} style={{padding: '15px 0', borderBottom: '1px solid #eee', color: s.completed ? '#10b981' : '#64748b'}}>
+              <strong>{s.name}</strong> - {s.date} {s.completed ? '✅' : '⏳'}
+            </div>
+          ))}
+        </div>}
+      </div>
+    </div>
+  );
+};
+
+const ShopPage = () => {
+  const products = [
+    { id: 1, name: 'Solar Cleaning Kit', price: '$49.99' },
+    { id: 2, name: 'Smart Energy Monitor', price: '$199.99' },
+    { id: 3, name: 'Backup Battery', price: '$899.00' }
+  ];
+  return (
+    <div style={{padding: '120px 2rem', maxWidth: '1200px', margin: '0 auto'}}>
+      <h1 style={{textAlign: 'center', color: '#1e293b', marginBottom: '3rem'}}>Solar Marketplace</h1>
+      <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '2rem'}}>
+        {products.map(p => (
+          <div key={p.id} style={{background: 'white', borderRadius: '12px', boxShadow: '0 4px 6px rgba(0,0,0,0.05)', overflow: 'hidden', textAlign: 'center'}}>
+            <div style={{height: '200px', background: '#f1f5f9'}}></div>
+            <div style={{padding: '1.5rem'}}>
+              <h3>{p.name}</h3>
+              <p style={{color: '#10b981', fontWeight: 'bold'}}>{p.price}</p>
+              <button style={{background: '#10b981', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '6px', cursor: 'pointer'}}>Add to Cart</button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 function App() {
   return (
     <div>
@@ -85,6 +150,7 @@ function App() {
         pauseOnHover
         theme="light"
       />
+
       <Routes>
         {/* === Public Website Routes === */}
         <Route element={<PublicLayout />}>
@@ -96,6 +162,9 @@ function App() {
           <Route path="/about" element={<AboutPage />} />
           <Route path="/partner" element={<BecomePartnerPage />} />
           <Route path="/calculator" element={<SolarCalculatorPage />} /> {/* New Calculator Route */}
+          <Route path="/track-order" element={<TrackOrderPage />} />
+          <Route path="/visualizer" element={<RoofVisualizerPage />} />
+          <Route path="/shop" element={<ShopPage />} />
 
           {/* Legal Routes */}
           <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />

@@ -76,6 +76,28 @@ const AppNavbar = () => {
               <Nav.Link as={NavLink} to="/app/payout/income" onClick={handleClose} className="mx-2">
                 <i className="fa-solid fa-wallet me-2 text-success"></i>Payout / Income
               </Nav.Link>
+              
+              <NavDropdown 
+                title={
+                    <span>
+                        <i className="fa-solid fa-rocket me-2 text-warning"></i>
+                        New Features
+                    </span>
+                } 
+                id="features-dropdown"
+                className="mx-2"
+              >
+                <NavDropdown.Item as={NavLink} to="/track-order" onClick={handleClose}>
+                    <i className="fa-solid fa-truck-fast me-2 text-info"></i>Track Order
+                </NavDropdown.Item>
+                <NavDropdown.Item as={NavLink} to="/visualizer" onClick={handleClose}>
+                    <i className="fa-solid fa-house-chimney me-2 text-primary"></i>Roof Visualizer
+                </NavDropdown.Item>
+                <NavDropdown.Item as={NavLink} to="/shop" onClick={handleClose}>
+                    <i className="fa-solid fa-cart-shopping me-2 text-success"></i>Solar Shop
+                </NavDropdown.Item>
+              </NavDropdown>
+
               <Nav.Link as={NavLink} to="/app/documents" onClick={handleClose} className="mx-2">
                 <i className="fa-solid fa-file-upload me-2 text-info"></i>Upload Documents
               </Nav.Link>

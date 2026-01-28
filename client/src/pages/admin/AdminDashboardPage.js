@@ -1,10 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import adminService from '../../services/adminService';
-import { Card, Row, Col, Spinner, Table, Badge } from 'react-bootstrap';
+import { Card, Row, Col, Spinner, Table, Badge, Container } from 'react-bootstrap';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from 'recharts';
+import SkeletonLoader from '../../components/common/SkeletonLoader';
 
 const AdminDashboardPage = () => {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  // Mock data for visualization demo (since API update might be needed for real history)
+  const mockGrowthData = [
+    { name: 'Jan', users: 40, deposits: 2400 },
+    { name: 'Feb', users: 30, deposits: 1398 },
+    { name: 'Mar', users: 20, deposits: 9800 },
+    { name: 'Apr', users: 27, deposits: 3908 },
+    { name: 'May', users: 18, deposits: 4800 },
+    { name: 'Jun', users: 23, deposits: 3800 },
+  ];
 
   useEffect(() => {
     adminService.getDashboardStats()
@@ -16,7 +28,25 @@ const AdminDashboardPage = () => {
   }, []);
 
   if (loading) {
-    return <Spinner animation="border" />;
+    return (
+        <Container fluid className="p-4">
+             <h1 className="mb-4"><SkeletonLoader type="title" width="300px" /></h1>
+             <Row className="mb-4">
+                {[1,2,3,4].map(i => (
+                    <Col md={3} className="mb-3" key={i}>
+                        <div className="skeleton-card">
+                            <div className="d-flex justify-content-center mb-3"><SkeletonLoader type="circle" /></div>
+                            <div className="text-center"><SkeletonLoader type="text" width="60%" /> <SkeletonLoader type="title" width="80%" /></div>
+                        </div>
+                    </Col>
+                ))}
+             </Row>
+             <Row>
+                 <Col md={8}><div className="skeleton-card"><SkeletonLoader type="rect" height={300} /></div></Col>
+                 <Col md={4}><div className="skeleton-card"><SkeletonLoader type="rect" height={300} /></div></Col>
+             </Row>
+        </Container>
+    );
   }
 
   return (
@@ -64,6 +94,51 @@ const AdminDashboardPage = () => {
               </Card.Text>
             </Card.Body>
           </Card>
+        </Col>
+      </Row>
+      
+      {/* --- CHARTS SECTION --- */}
+      <Row className="mb-4">
+        <Col md={8}>
+            <Card className="shadow-sm border-0 h-100">
+                <Card.Body>
+                    <Card.Title>Business Growth & User Acquisition (Last 6 Months)</Card.Title>
+                    <div style={{ width: '100%', height: 300 }}>
+                        <ResponsiveContainer>
+                            <LineChart data={mockGrowthData}>
+                                <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                                <XAxis dataKey="name" axisLine={false} tickLine={false} />
+                                <YAxis yAxisId="left" axisLine={false} tickLine={false} />
+                                <YAxis yAxisId="right" orientation="right" axisLine={false} tickLine={false} />
+                                <Tooltip />
+                                <Legend />
+                                <Line yAxisId="left" type="monotone" dataKey="deposits" stroke="#8884d8" activeDot={{ r: 8 }} name="Deposits (Rs)" />
+                                <Line yAxisId="right" type="monotone" dataKey="users" stroke="#82ca9d" name="New Users" />
+                            </LineChart>
+                        </ResponsiveContainer>
+                    </div>
+                </Card.Body>
+            </Card>
+        </Col>
+        <Col md={4}>
+            <Card className="shadow-sm border-0 h-100">
+                <Card.Body>
+                    <Card.Title>Transaction Volume</Card.Title>
+                    <div style={{ width: '100%', height: 300 }}>
+                        <ResponsiveContainer>
+                            <BarChart data={[{name: 'Finance', Deposit: stats ? stats.totalBusiness : 0, Withdrawal: stats ? stats.totalWithdrawals : 0}]}>
+                                <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                                <XAxis dataKey="name" axisLine={false} tickLine={false} />
+                                <YAxis axisLine={false} tickLine={false} />
+                                <Tooltip cursor={{fill: 'transparent'}} />
+                                <Legend />
+                                <Bar dataKey="Deposit" fill="#198754" radius={[4, 4, 0, 0]} />
+                                <Bar dataKey="Withdrawal" fill="#dc3545" radius={[4, 4, 0, 0]} />
+                            </BarChart>
+                        </ResponsiveContainer>
+                    </div>
+                </Card.Body>
+            </Card>
         </Col>
       </Row>
 
